@@ -209,7 +209,7 @@ class HGGGlobal {
 
     void scoreboard_add_team_entry(cString &scoreboard, int id, int max_len) {
         cTeam @team = @G_GetTeam(id);
-        string_add_maxed(scoreboard, "&t " + id + " " + team.stats.score + " 0 ", max_len);
+        string_add_maxed(scoreboard, "&t " + id + " " + team.stats.score + " " + team.ping + " ", max_len);
     }
 
     void scoreboard_add_team_player_entries(cString &scoreboard, int id, int max_len) {
@@ -259,20 +259,12 @@ class HGGGlobal {
     }
 
     void give_spawn_weapons(cClient @client) {
-    }
-
-    void give_spawn_weapons_instagib(cClient @client) {
         weapons.give_default(client);
     }
 
     void respawn(cClient @client) {
-        if (gametype.isInstagib())
-            give_spawn_weapons_instagib(client);
-        else
-            give_spawn_weapons(client);
-
+        give_spawn_weapons(client);
         weapons.select_best(client);
-
         client.getEnt().respawnEffect();
     }
 
@@ -312,8 +304,8 @@ class HGGGlobal {
         client.addAward(S_COLOR_ROW + rows[client.playerNum()] + "!");
     }
 
-    void award(cClient @client) {
-        int weapon = weapons.award(rows[client.playerNum()]);
+    void award(cClient @client, int row) {
+        int weapon = weapons.award(row);
         if (weapon == WEAP_NONE)
             return;
 
@@ -321,6 +313,10 @@ class HGGGlobal {
             award_weapon(client, weapon, weapons.ammo(weapon));
         else
             show_row(client);
+    }
+
+    void award(cClient @client) {
+        award(client, rows[client.playerNum()]);
     }
 
     void player_killed(cEntity @target, cEntity @attacker, cEntity @inflictor) {
