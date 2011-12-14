@@ -64,7 +64,7 @@ void set_spawn_system(int spawn_system) {
 
 bool is_vowel(cString character) {
     character = character.substr(0,1).tolower();
-    return character == "i" || character == "e";
+    return character == "a" || character == "e" || character == "o" || character == "i" || character == "u";
 }
 
 void give_weapon(cClient @client, int weapon, int ammo) {
