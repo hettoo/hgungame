@@ -223,7 +223,7 @@ class HGGGlobal {
         if (ent.client.isReady())
             readyIcon = icons.yes;
         cString entry = "&p " + ent.playerNum() + " " + ent.client.getClanName()
-            + " " + "0" + " " + ent.client.stats.score + " " + ent.client.ping + " "
+            + " " + ent.client.stats.score + " " + "0" + " " + ent.client.ping + " "
             + readyIcon + " ";
         string_add_maxed(scoreboard, entry, max_len);
     }
