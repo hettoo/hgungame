@@ -291,7 +291,7 @@ class HGGGlobal {
         cString msg = target.getName() + S_COLOR_ACHIEVEMENT + " made a row of " + S_COLOR_ROW + row + S_COLOR_ACHIEVEMENT + "!";
         if (@attacker != null)
             msg += " He was killed by " + S_COLOR_RESET + attacker.getName() + S_COLOR_ACHIEVEMENT + "!";
-        G_PrintMsg(null, msg + "\n");
+        notify(msg);
     }
 
     void check_row(cClient @target, cClient @attacker) {

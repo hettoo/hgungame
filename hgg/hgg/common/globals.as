@@ -109,3 +109,7 @@ bool decrease_ammo(cClient @client, int weapon) {
     }
     return false;
 }
+
+void notify(cString &msg) {
+    G_PrintMsg(null, msg + "\n");
+}
