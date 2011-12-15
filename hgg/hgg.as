@@ -288,10 +288,10 @@ class HGGGlobal {
     void announce_row(cClient @target, cClient @attacker) {
         int row = rows[target.playerNum()];
         target.addAward(S_COLOR_ACHIEVEMENT + "You made a row of " + S_COLOR_ROW + row + S_COLOR_ACHIEVEMENT + "!");
-        G_PrintMsg(null, target.getName() + S_COLOR_ACHIEVEMENT + " made a row of " + S_COLOR_ROW + row + S_COLOR_ACHIEVEMENT + "!");
+        cString msg = target.getName() + S_COLOR_ACHIEVEMENT + " made a row of " + S_COLOR_ROW + row + S_COLOR_ACHIEVEMENT + "!";
         if (@attacker != null)
-            G_PrintMsg(null, " He was killed by " + S_COLOR_RESET + attacker.getName() + S_COLOR_ACHIEVEMENT + "!");
-        G_PrintMsg(null, "\n");
+            msg += " He was killed by " + S_COLOR_RESET + attacker.getName() + S_COLOR_ACHIEVEMENT + "!";
+        G_PrintMsg(null, msg + "\n");
     }
 
     void check_row(cClient @target, cClient @attacker) {
