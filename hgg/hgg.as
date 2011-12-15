@@ -305,6 +305,7 @@ class HGGGlobal {
     }
 
     void award(cClient @client, int row) {
+        client.stats.addScore(1);
         int weapon = weapons.award(row);
         if (weapon == WEAP_NONE)
             return;
