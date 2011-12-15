@@ -59,7 +59,6 @@ class HGGGlobal {
     }
 
     void welcome_all() {
-        G_Print(max_playernum + "\n");
         for (int i = 0; i <= max_playernum; i++) {
             cEntity @ent = G_GetEntity(i);
             if (@ent != null && @ent.client != null)
