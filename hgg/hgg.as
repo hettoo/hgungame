@@ -101,15 +101,10 @@ class HGGGlobal {
 
     void score_event(cClient @client, cString &score_event, cString &args) {
         if (score_event == "kill") {
-            cEntity @attacker = null;
+            cClient @target = G_GetEntity(args.getToken(0).toInt()).client;
+            cClient @inflictor = G_GetEntity(args.getToken(1).toInt()).client;
 
-            if (@client != null)
-                @attacker = @client.getEnt();
-
-            cEntity @target = G_GetEntity(args.getToken(0).toInt());
-            cEntity @inflictor = G_GetEntity(args.getToken(1).toInt());
-
-            player_killed(target, attacker, inflictor);
+            player_killed(target, client, inflictor);
         } else if (score_event == "award") {
         }
     }
@@ -319,19 +314,19 @@ class HGGGlobal {
         award(client, rows[client.playerNum()]);
     }
 
-    void player_killed(cEntity @target, cEntity @attacker, cEntity @inflictor) {
-        if (match.getState() > MATCH_STATE_PLAYTIME || @target.client == null)
+    void player_killed(cClient @target, cClient @attacker, cClient @inflictor) {
+        if (match.getState() > MATCH_STATE_PLAYTIME || @target == null)
             return;
 
-        target.client.printMessage("** You have been killed by " + attacker.client.getName() + "\n");
-        check_row(target.client, attacker.client);
+        target.printMessage("** You have been killed by " + attacker.getName() + "\n");
+        check_row(target, attacker);
 
-        if (@attacker == null || @attacker.client == null || @attacker == @target)
+        if (@attacker == null || @attacker == @target)
             return;
 
-        rows[attacker.client.playerNum()]++;
-        award(attacker.client);
-        check_decrease_ammo(attacker.client, attacker.client.weapon); // TODO: mod
+        rows[attacker.playerNum()]++;
+        award(attacker);
+        check_decrease_ammo(attacker, attacker.weapon); // TODO: mod
     }
 }
 
