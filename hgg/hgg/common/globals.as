@@ -25,7 +25,7 @@ const int HEAVY_AMMO = 7;
 
 const cString S_COLOR_ITEM_AWARD = S_COLOR_GREEN;
 const cString S_COLOR_ACHIEVEMENT = S_COLOR_YELLOW;
-const cString S_COLOR_ROW = S_COLOR_RED;
+const cString S_COLOR_ROW = S_COLOR_ORANGE;
 const cString S_COLOR_BAD = S_COLOR_RED;
 const cString S_COLOR_RESET = S_COLOR_WHITE;
 

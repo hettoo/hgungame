@@ -239,10 +239,10 @@ class HGGGlobal {
         int row = rows[target.playerNum()];
         target.addAward(S_COLOR_ACHIEVEMENT + "You made a row of " + S_COLOR_ROW + row + S_COLOR_ACHIEVEMENT + "!");
         cString msg = target.getName() + S_COLOR_ACHIEVEMENT + " made a row of " + S_COLOR_ROW + row + S_COLOR_ACHIEVEMENT + "!";
-        if (@attacker != null)
-            msg += " He was killed by " + S_COLOR_RESET + attacker.getName() + S_COLOR_ACHIEVEMENT + "!";
-        else if (@target == @attacker)
+        if (@target == @attacker)
             msg += " He killed " + S_COLOR_BAD + "himself" + S_COLOR_ACHIEVEMENT + "!";
+        else if (@attacker != null)
+            msg += " He was killed by " + S_COLOR_RESET + attacker.getName() + S_COLOR_ACHIEVEMENT + "!";
         notify(msg);
     }
 
