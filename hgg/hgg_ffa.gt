@@ -14,6 +14,7 @@ hgg/ffa.as;
 
 hgg/common/callbacks.as;
 hgg/common/globals.as;
+hgg/common/gametype.as;
 hgg/common/config.as;
 hgg/common/weapons.as;
 hgg/common/icons.as;

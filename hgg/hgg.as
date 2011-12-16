@@ -146,7 +146,7 @@ class HGGGlobal {
     void init_gametype() {
         set_gametype_settings();
         config.init();
-        check_default_config();
+        gt.check_default_config();
 
         G_ConfigString(CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 52 %i 52 %l 48 %p 18");
         G_ConfigString(CS_SCB_PLAYERTAB_TITLES, "Name Clan Frags Row Ping R");
