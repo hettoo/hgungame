@@ -1,15 +1,18 @@
 VERSION = 0.0-dev
 
 VERSION_WORD = $(subst .,_,$(VERSION))
+PK3 = hgg-$(VERSION_WORD).pk3
 
-all:
+all: $(PK3)
+
+$(PK3): $(shell find hgg/)
 	rm -rf temp
 	mkdir temp
 	mkdir temp/progs
 	mkdir temp/progs/gametypes
 	rm -f *.pk3
 	cp -r hgg/* temp/progs/gametypes
-	cd temp && zip ../hgg-$(VERSION_WORD).pk3 -r -xi *
+	cd temp && zip ../$(PK3) -r -xi *
 	rm -r temp
 
 local:
