@@ -26,11 +26,11 @@ class Commands {
 
     bool handle(cClient @client, cString &cmd, cString &args, int argc) {
         if (cmd == "drop")
-            return this.cmd_drop(client, args, argc);
+            return cmd_drop(client, args, argc);
         else if (cmd == "cvarinfo")
-            return this.cmd_cvarinfo(client, args, argc);
+            return cmd_cvarinfo(client, args, argc);
         else if (cmd == "gametype")
-            return this.cmd_gametype(client, args, argc);
+            return cmd_gametype(client, args, argc);
 
         return false;
     }
