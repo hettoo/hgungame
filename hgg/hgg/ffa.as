@@ -19,6 +19,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 class HGG : HGGGlobal {
     void set_gametype_settings() {
+        HGGGlobal::set_gametype_settings();
+
         gametype.isTeamBased = false;
         gametype.hasChallengersQueue = false;
         gametype.maxPlayersPerTeam = 0;
@@ -27,13 +29,10 @@ class HGG : HGGGlobal {
         gametype.scoreAnnouncementEnabled = false;
         gametype.canShowMinimap = false;
         gametype.teamOnlyMinimap = false;
-
-        HGGGlobal::set_gametype_settings();
     }
 
     void init_gametype() {
         gt = GT_FFA;
-
         HGGGlobal::init_gametype();
     }
 
