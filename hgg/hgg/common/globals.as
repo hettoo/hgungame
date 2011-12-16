@@ -55,7 +55,8 @@ void set_spawn_system(int spawn_system) {
 
 bool is_vowel(cString character) {
     character = character.substr(0,1).tolower();
-    return character == "a" || character == "e" || character == "o" || character == "i" || character == "u";
+    return character == "a" || character == "e" || character == "o"
+        || character == "i" || character == "u";
 }
 
 void give_weapon(cClient @client, int weapon, int ammo) {
@@ -66,19 +67,22 @@ void give_weapon(cClient @client, int weapon, int ammo) {
     cItem @weak_ammo_item = G_GetItem(item.weakAmmoTag);
 
     if (ammo == 0) {
-        client.inventorySetCount(ammo_item.tag, (weapon == WEAP_GUNBLADE ? 4 : INFINITE_AMMO));
+        client.inventorySetCount(ammo_item.tag,
+                (weapon == WEAP_GUNBLADE ? 4 : INFINITE_AMMO));
         client.inventorySetCount(weak_ammo_item.tag, 0);
     }
     else{
         client.inventorySetCount(ammo_item.tag, ammo);
-        client.inventorySetCount(weak_ammo_item.tag, (weapon == WEAP_GUNBLADE ? INFINITE_AMMO : 0));
+        client.inventorySetCount(weak_ammo_item.tag,
+                (weapon == WEAP_GUNBLADE ? INFINITE_AMMO : 0));
     }
 }
 
 void show_item_award(cClient @client, int tag) {
     cItem @item = G_GetItem(tag);
     cString name = item.getName().tolower();
-    client.addAward(S_COLOR_ITEM_AWARD + "You've got a" + (is_vowel(item.getShortName()) ? "n" : "") + " " + name + "!");
+    client.addAward(S_COLOR_ITEM_AWARD + "You've got a"
+            + (is_vowel(item.getShortName()) ? "n" : "") + " " + name + "!");
 }
 
 void award_weapon(cClient @client, int weapon, int ammo) {

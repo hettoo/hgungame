@@ -67,11 +67,14 @@ class Commands {
         cString manifest = gametype.getManifest();
 
         response += "\n";
-        response += "Gametype " + gametype.getName() + " : " + gametype.getTitle() + "\n";
+        response += "Gametype " + gametype.getName() + " : "
+            + gametype.getTitle() + "\n";
         response += "----------------\n";
         response += "Version: " + gametype.getVersion() + "\n";
         response += "Author: " + gametype.getAuthor() + "\n";
-        response += "Mod: " + fs_game.getString() + (manifest.length() > 0 ? " (manifest: " + manifest + ")" : "") + "\n";
+        response += "Mod: " + fs_game.getString()
+            + (manifest.length() > 0 ? " (manifest: " + manifest + ")" : "")
+            + "\n";
         response += "----------------\n";
 
         G_PrintMsg(client.getEnt(), response);

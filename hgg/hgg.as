@@ -40,7 +40,8 @@ class HGGGlobal {
     }
 
     cEntity @select_spawn_point(cEntity @self) {
-        return GENERIC_SelectBestRandomSpawnPoint(self, "info_player_deathmatch");
+        return GENERIC_SelectBestRandomSpawnPoint(self,
+                "info_player_deathmatch");
     }
 
     bool command(cClient @client, cString &cmd, cString &args, int argc) {
@@ -86,7 +87,8 @@ class HGGGlobal {
     }
 
     bool match_state_finished(int new_match_state) {
-        if (match.getState() <= MATCH_STATE_WARMUP && new_match_state > MATCH_STATE_WARMUP
+        if (match.getState() <= MATCH_STATE_WARMUP
+                && new_match_state > MATCH_STATE_WARMUP
                 && new_match_state < MATCH_STATE_POSTMATCH)
             match.startAutorecord();
 
@@ -148,8 +150,10 @@ class HGGGlobal {
         config.init();
         gt.check_default_config();
 
-        G_ConfigString(CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 52 %i 52 %i 52 %l 48 %p 18");
-        G_ConfigString(CS_SCB_PLAYERTAB_TITLES, "Name Clan Frags Row Time Ping R");
+        G_ConfigString(CS_SCB_PLAYERTAB_LAYOUT,
+                "%n 112 %s 52 %i 52 %i 52 %i 52 %l 48 %p 18");
+        G_ConfigString(CS_SCB_PLAYERTAB_TITLES,
+                "Name Clan Frags Row Time Ping R");
 
         G_RegisterCommand("drop");
         G_RegisterCommand("gametype");
@@ -159,16 +163,19 @@ class HGGGlobal {
 
     void scoreboard_add_team_entry(cString &scoreboard, int id, int max_len) {
         cTeam @team = @G_GetTeam(id);
-        string_add_maxed(scoreboard, "&t " + id + " " + team.stats.score + " " + team.ping + " ", max_len);
+        string_add_maxed(scoreboard, "&t " + id + " " + team.stats.score + " "
+                + team.ping + " ", max_len);
     }
 
-    void scoreboard_add_team_player_entries(cString &scoreboard, int id, int max_len) {
+    void scoreboard_add_team_player_entries(cString &scoreboard, int id,
+            int max_len) {
         cTeam @team = @G_GetTeam(id);
         for (int i = 0; @team.ent(i) != null; i++)
             scoreboard_add_player_entry(scoreboard, team.ent(i), max_len);
     }
 
-    void scoreboard_add_player_entry(cString &scoreboard, cEntity @ent, int max_len) {
+    void scoreboard_add_player_entry(cString &scoreboard, cEntity @ent,
+            int max_len) {
         int readyIcon = 0;
         if (ent.client.isReady())
             readyIcon = icons.yes;
@@ -179,7 +186,8 @@ class HGGGlobal {
     }
 
     void think_rules() {
-        if (match.scoreLimitHit() || match.timeLimitHit() || match.suddenDeathFinished())
+        if (match.scoreLimitHit() || match.timeLimitHit()
+                || match.suddenDeathFinished())
             match.launchState(match.getState() + 1);
 
         if (match.getState() >= MATCH_STATE_POSTMATCH)
@@ -189,7 +197,8 @@ class HGGGlobal {
 
         for (int i = 0; i < maxClients; i++) {
             cEntity @ent = @G_GetClient(i).getEnt();
-            if (ent.client.state() >= CS_SPAWNED && ent.team != TEAM_SPECTATOR) {
+            if (ent.client.state() >= CS_SPAWNED
+                    && ent.team != TEAM_SPECTATOR) {
                 GENERIC_ChargeGunblade(ent.client);
             }
         }
@@ -237,12 +246,16 @@ class HGGGlobal {
 
     void announce_row(cClient @target, cClient @attacker) {
         int row = rows[target.playerNum()];
-        target.addAward(S_COLOR_ACHIEVEMENT + "You made a row of " + S_COLOR_ROW + row + S_COLOR_ACHIEVEMENT + "!");
-        cString msg = target.getName() + S_COLOR_ACHIEVEMENT + " made a row of " + S_COLOR_ROW + row + S_COLOR_ACHIEVEMENT + "!";
+        target.addAward(S_COLOR_ACHIEVEMENT + "You made a row of " + S_COLOR_ROW
+                + row + S_COLOR_ACHIEVEMENT + "!");
+        cString msg = target.getName() + S_COLOR_ACHIEVEMENT + " made a row of "
+            + S_COLOR_ROW + row + S_COLOR_ACHIEVEMENT + "!";
         if (@target == @attacker)
-            msg += " He killed " + S_COLOR_BAD + "himself" + S_COLOR_ACHIEVEMENT + "!";
+            msg += " He killed " + S_COLOR_BAD + "himself"
+                + S_COLOR_ACHIEVEMENT + "!";
         else if (@attacker != null)
-            msg += " He was killed by " + S_COLOR_RESET + attacker.getName() + S_COLOR_ACHIEVEMENT + "!";
+            msg += " He was killed by " + S_COLOR_RESET + attacker.getName()
+                + S_COLOR_ACHIEVEMENT + "!";
         notify(msg);
     }
 
@@ -276,7 +289,8 @@ class HGGGlobal {
         if (match.getState() > MATCH_STATE_PLAYTIME || @target == null)
             return;
 
-        target.printMessage("** You have been killed by " + attacker.getName() + "\n");
+        target.printMessage("** You have been killed by " + attacker.getName()
+                + "\n");
         check_row(target, attacker);
 
         if (@attacker == null || @attacker == @target)

@@ -21,52 +21,69 @@ bool GT_Command(cClient @client, cString &cmd, cString &args, int argc) {
     return hgg.command(client, cmd, args, argc);
 }
 
-// When this function is called the weights of items have been reset to their default values,
-// this means, the weights *are set*, and what this function does is scaling them depending
-// on the current bot status.
-// Player, and non-item entities don't have any weight set. So they will be ignored by the bot
-// unless a weight is assigned here.
+/*
+ * When this function is called the weights of items have been reset to their
+ * default values, this means, the weights *are set*, and what this function
+ * does is scaling them depending on the current bot status. Player, and
+ * non-item entities don't have any weight set. So they will be ignored by the
+ * bot unless a weight is assigned here.
+ */
 bool GT_UpdateBotStatus(cEntity @self) {
     return hgg.update_bot_status(self);
 }
 
-// select a spawning point for a player
+/*
+ * Select a spawning point for a player.
+ */
 cEntity @GT_SelectSpawnPoint(cEntity @self) {
     return hgg.select_spawn_point(self);
 }
 
+/*
+ * Create the scoreboard contents.
+ */
 cString @GT_ScoreboardMessage(int maxlen) {
     return hgg.scoreboard_message(maxlen);
 }
 
-// Some game actions trigger score events. These are events not related to killing
-// oponents, like capturing a flag
-// Warning: client can be null
+/*
+ * Some game actions trigger score events. These are events not related to
+ * killing opponents, like capturing a flag.
+ * Warning: client can be null.
+ */
 void GT_scoreEvent(cClient @client, cString &score_event, cString &args) {
     hgg.score_event(client, score_event, args);
 }
 
-// a player is being respawned. This can happen from several ways, as dying, changing team,
-// being moved to ghost state, be placed in respawn queue, being spawned from spawn queue, etc
+/* A player is being respawned. This can happen from several ways, as dying,
+ * changing team, being moved to ghost state, be placed in respawn queue, being
+ * spawned from spawn queue, etc.
+ */
 void GT_playerRespawn(cEntity @ent, int old_team, int new_team) {
     hgg.player_respawn(ent, old_team, new_team);
 }
 
-// Thinking function. Called each frame
+/*
+ * Thinking function. Called each frame.
+ */
 void GT_ThinkRules() {
     hgg.think_rules();
 }
 
-// The game has detected the end of the match state, but it
-// doesn't advance it before calling this function.
-// This function must give permission to move into the next
-// state by returning true.
+/*
+ * The game has detected the end of the match state, but it
+ * doesn't advance it before calling this function.
+ * This function must give permission to move into the next
+ * state by returning true.
+ */
 bool GT_MatchStateFinished(int new_match_state) {
     return hgg.match_state_finished(new_match_state);
 }
 
-// the match state has just moved into a new state. Here is the
-// place to set up the new state rules
+/*
+ * The match state has just moved into a new state. Here is the
+ * place to set up the new state rules.
+ */
 void GT_MatchStateStarted() {
     hgg.match_state_started();
     switch (match.getState()) {
@@ -88,21 +105,27 @@ void GT_MatchStateStarted() {
     }
 }
 
-// the gametype is shutting down cause of a match restart or map change
+/*
+ * The gametype is shutting down cause of a match restart or map change.
+ */
 void GT_Shutdown() {
     hgg.shutdown();
 }
 
-// The map entities have just been spawned. The level is initialized for
-// playing, but nothing has yet started.
+/*
+ * The map entities have just been spawned. The level is initialized for
+ * playing, but nothing has yet started.
+ */
 void GT_SpawnGametype() {
     hgg.spawn_gametype();
 }
 
-// Important: This function is called before any entity is spawned, and
-// spawning entities from it is forbidden. If you want to make any entity
-// spawning at initialization do it in GT_SpawnGametype, which is called
-// right after the map entities spawning.
+/*
+ * Important: This function is called before any entity is spawned, and
+ * spawning entities from it is forbidden. If you want to make any entity
+ * spawning at initialization do it in GT_SpawnGametype, which is called
+ * right after the map entities spawning.
+ */
 void GT_InitGametype() {
     hgg.init_gametype();
 }

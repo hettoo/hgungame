@@ -44,30 +44,31 @@ class Gametype {
 
         cString map_list = recommend_default_map_list();
 
-        cString config = "// '" + gametype.getTitle() + "' gametype configuration file\n"
-            + "// This config will be executed each time the gametype is started\n"
+        cString config = "// '" + gametype.getTitle()
+            + "' gametype configuration file\n"
             + "\n"
             + "// map rotation\n"
-            + "set g_maplist \"" + map_list + "\" // list of maps in automatic rotation\n"
-            + "set g_maprotation \"1\"   // 0 = same map, 1 = in order, 2 = random\n"
+            + "set g_maplist \"" + map_list + "\"\n"
+            + "set g_maprotation 1 // 0 = same map, 1 = in order, 2 = random\n"
             + "\n"
             + "// game settings\n"
-            + "set g_scorelimit \"0\"\n"
-            + "set g_timelimit \"15\"\n"
-            + "set g_warmup_timelimit \"1\"\n"
-            + "set g_match_extendedtime \"0\"\n"
-            + "set g_allow_falldamage \"0\"\n"
-            + "set g_allow_selfdamage \"0\"\n"
-            + "set g_allow_stun \"1\"\n"
-            + "set g_teams_maxplayers \"0\"\n"
-            + "set g_countdown_time \"5\"\n"
-            + "set g_maxtimeouts \"3\" // -1 = unlimited\n"
-            + "set g_challengers_queue \"0\"\n"
+            + "set g_scorelimit 0\n"
+            + "set g_timelimit 15\n"
+            + "set g_warmup_timelimit 1\n"
+            + "set g_match_extendedtime 0\n"
+            + "set g_allow_falldamage 0\n"
+            + "set g_allow_selfdamage 0\n"
+            + "set g_allow_stun 1\n"
+            + "set g_teams_maxplayers 0\n"
+            + "set g_countdown_time 5\n"
+            + "set g_maxtimeouts 3 // -1 = unlimited\n"
+            + "set g_challengers_queue 0\n"
             + "\n"
             + "echo \"" + gametype.getName() + ".cfg executed\"\n";
 
         G_WriteFile(file, config);
-        G_Print("Created default config file for '" + gametype.getName() + "'\n");
+        G_Print("Created default config file for '" + gametype.getName()
+                + "'\n");
         G_CmdExecute("exec " + file + " silent");
     }
 }
