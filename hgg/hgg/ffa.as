@@ -28,8 +28,6 @@ class HGG : HGGGlobal {
         gametype.canShowMinimap = false;
         gametype.teamOnlyMinimap = false;
 
-        set_spawn_system(SPAWNSYSTEM_INSTANT);
-
         HGGGlobal::set_gametype_settings();
     }
 
