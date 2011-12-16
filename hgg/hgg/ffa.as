@@ -34,7 +34,7 @@ class HGG : HGGGlobal {
     }
 
     void init_gametype() {
-        this.gt = GT_FFA;
+        gt = GT_FFA;
 
         HGGGlobal::init_gametype();
     }
@@ -51,8 +51,8 @@ class HGG : HGGGlobal {
 
     cString @scoreboard_message(int max_len) {
         cString scoreboard= "";
-        this.scoreboard_add_team_entry(scoreboard, TEAM_PLAYERS, max_len);
-        this.scoreboard_add_team_player_entries(scoreboard, TEAM_PLAYERS, max_len);
+        scoreboard_add_team_entry(scoreboard, TEAM_PLAYERS, max_len);
+        scoreboard_add_team_player_entries(scoreboard, TEAM_PLAYERS, max_len);
         return scoreboard;
     }
 }
