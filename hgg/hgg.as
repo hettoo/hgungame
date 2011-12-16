@@ -148,8 +148,8 @@ class HGGGlobal {
         config.init();
         gt.check_default_config();
 
-        G_ConfigString(CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 52 %i 52 %l 48 %p 18");
-        G_ConfigString(CS_SCB_PLAYERTAB_TITLES, "Name Clan Frags Row Ping R");
+        G_ConfigString(CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 52 %i 52 %i 52 %l 48 %p 18");
+        G_ConfigString(CS_SCB_PLAYERTAB_TITLES, "Name Clan Frags Row Time Ping R");
 
         G_RegisterCommand("drop");
         G_RegisterCommand("gametype");
@@ -173,8 +173,8 @@ class HGGGlobal {
         if (ent.client.isReady())
             readyIcon = icons.yes;
         cString entry = "&p " + ent.playerNum() + " " + ent.client.getClanName()
-            + " " + ent.client.stats.score + " " + "0" + " " + ent.client.ping + " "
-            + readyIcon + " ";
+            + " " + ent.client.stats.score + " " + "0" + " " + "0" + " "
+            + ent.client.ping + " " + readyIcon + " ";
         string_add_maxed(scoreboard, entry, max_len);
     }
 
