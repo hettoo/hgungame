@@ -26,6 +26,7 @@ const int HEAVY_AMMO = 7;
 const cString S_COLOR_ITEM_AWARD = S_COLOR_GREEN;
 const cString S_COLOR_ACHIEVEMENT = S_COLOR_YELLOW;
 const cString S_COLOR_ROW = S_COLOR_RED;
+const cString S_COLOR_BAD = S_COLOR_RED;
 const cString S_COLOR_RESET = S_COLOR_WHITE;
 
 const cString CVAR_BASE = "g_hgg_";
@@ -39,16 +40,6 @@ enum hgg_gametype_e {
     GT_FFA,
     GT_CA
 };
-
-cString gt_name(int gt) {
-    switch (gt) {
-        case GT_FFA:
-            return "FFA";
-        case GT_CA:
-            return "CA";
-    }
-    return "???";
-}
 
 void string_add_maxed(cString &string, cString &addition, int max) {
     if (string.len() + addition.len() <= max)

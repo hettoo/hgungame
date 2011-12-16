@@ -32,7 +32,8 @@ class HGG : HGGGlobal {
     }
 
     void init_gametype() {
-        gt = GT_FFA;
+        gt.name = "FFA";
+        gt.type = GT_FFA;
         HGGGlobal::init_gametype();
     }
 

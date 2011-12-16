@@ -20,9 +20,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 class HGGGlobal {
     Config config;
     Weapons weapons;
+    Gametype gt;
     Icons icons;
     Commands commands;
-    int gt;
 
     int max_playernum;
     int[] rows;
@@ -109,54 +109,8 @@ class HGGGlobal {
         }
     }
 
-    cString @recommend_default_map_list() {
-        switch (gt) {
-            case GT_FFA:
-                return "wca1 wca2 wca3";
-            case GT_CA:
-                return "wca1 wca2 wca3";
-        }
-
-        return "wca3";
-    }
-
-    void check_default_config() {
-        cString config_file = "configs/server/gametypes/" + gametype.getName() + ".cfg";
-
-        if (G_FileExists(config_file))
-            return;
-
-        cString map_list = recommend_default_map_list();
-
-        cString config = "// '" + gametype.getTitle() + "' gametype configuration file\n"
-            + "// This config will be executed each time the gametype is started\n"
-            + "\n"
-            + "// map rotation\n"
-            + "set g_maplist \"" + map_list + "\" // list of maps in automatic rotation\n"
-            + "set g_maprotation \"1\"   // 0 = same map, 1 = in order, 2 = random\n"
-            + "\n"
-            + "// game settings\n"
-            + "set g_scorelimit \"0\"\n"
-            + "set g_timelimit \"15\"\n"
-            + "set g_warmup_timelimit \"1\"\n"
-            + "set g_match_extendedtime \"0\"\n"
-            + "set g_allow_falldamage \"0\"\n"
-            + "set g_allow_selfdamage \"0\"\n"
-            + "set g_allow_stun \"1\"\n"
-            + "set g_teams_maxplayers \"0\"\n"
-            + "set g_countdown_time \"5\"\n"
-            + "set g_maxtimeouts \"3\" // -1 = unlimited\n"
-            + "set g_challengers_queue \"0\"\n"
-            + "\n"
-            + "echo \"" + gametype.getName() + ".cfg executed\"\n";
-
-        G_WriteFile(config_file, config);
-        G_Print("Created default config file for '" + gametype.getName() + "'\n");
-        G_CmdExecute("exec " + config_file + " silent");
-    }
-
     void set_gametype_settings() {
-        gametype.setTitle("hGunGame " + gt_name(gt));
+        gametype.setTitle("hGunGame " + gt.name);
         gametype.setVersion("0.0-dev");
         gametype.setAuthor("^0<].^7h^2e^9tt^2o^7o^0.[>");
 
@@ -287,6 +241,8 @@ class HGGGlobal {
         cString msg = target.getName() + S_COLOR_ACHIEVEMENT + " made a row of " + S_COLOR_ROW + row + S_COLOR_ACHIEVEMENT + "!";
         if (@attacker != null)
             msg += " He was killed by " + S_COLOR_RESET + attacker.getName() + S_COLOR_ACHIEVEMENT + "!";
+        else if (@target == @attacker)
+            msg += " He killed " + S_COLOR_BAD + "himself" + S_COLOR_ACHIEVEMENT + "!";
         notify(msg);
     }
 
