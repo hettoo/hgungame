@@ -20,13 +20,35 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 class Player {
     cClient @client;
     int row;
+    int minutes_played;
 
-    Player() {
+    int title;
+    int level;
+    int exp;
+    int max_row;
+    int total_kills;
+    int total_deaths;
+    int total_minutes_played;
+
+    void stats_from_db() {
+        title = 0;
+        level = 0;
+        exp = 0;
+        max_row = 0;
+        total_kills = 0;
+        total_deaths = 0;
+        total_minutes_played = 0;
+    }
+
+    void stats_to_db() {
     }
 
     void init(cClient @new_client) {
         @client = @new_client;
         row = 0;
+        minutes_played = 0;
+
+        stats_from_db();
     }
 
     void welcome(cString &msg) {
