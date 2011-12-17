@@ -26,20 +26,22 @@ class Scoreboard {
 
     }
 
-    void add_team_entry(cString &scoreboard, int id, int max_len) {
+    void add_team(cString &scoreboard, int id, int max_len,
+            Icons @icons) {
         cTeam @team = @G_GetTeam(id);
         string_add_maxed(scoreboard, "&t " + id + " " + team.stats.score + " "
                 + team.ping + " ", max_len);
+        add_team_players(scoreboard, id, max_len, icons);
     }
 
-    void add_team_player_entries(cString &scoreboard, int id, int max_len,
+    void add_team_players(cString &scoreboard, int id, int max_len,
             Icons @icons) {
         cTeam @team = @G_GetTeam(id);
         for (int i = 0; @team.ent(i) != null; i++)
-            add_player_entry(scoreboard, team.ent(i), max_len, icons);
+            add_player(scoreboard, team.ent(i), max_len, icons);
     }
 
-    void add_player_entry(cString &scoreboard, cEntity @ent, int max_len,
+    void add_player(cString &scoreboard, cEntity @ent, int max_len,
             Icons @icons) {
         int readyIcon = 0;
         if (ent.client.isReady())
