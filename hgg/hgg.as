@@ -19,19 +19,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 class HGGGlobal {
     Config config;
-    Weapons weapons;
     Gametype gt;
+    Players players;
     Scoreboard scoreboard;
     Icons icons;
     Commands commands;
-
-    int max_playernum;
-    int[] rows;
-
-    HGGGlobal() {
-        max_playernum = 0;
-        rows.resize(maxClients);
-    }
 
     void spawn_gametype() {
     }
@@ -56,30 +48,13 @@ class HGGGlobal {
         GENERIC_SetUpWarmup();
     }
     
-    void welcome(cClient @client) {
-        client.addAward(config.motd());
-    }
-
-    void welcome_all() {
-        for (int i = 0; i <= max_playernum; i++) {
-            cEntity @ent = G_GetEntity(i);
-            if (@ent != null && @ent.client != null)
-                welcome(ent.client);
-        }
-    }
-
     void countdown_started() {
-        welcome_all();
+        players.welcome_all(config.motd());
         GENERIC_SetUpCountdown();
     }
 
-    void reset_rows() {
-        for (int i = 0; i <= max_playernum; i++)
-            rows[i] = 0;
-    }
-
     void playtime_started() {
-        reset_rows();
+        players.reset_rows();
         GENERIC_SetUpMatch();
     }
 
@@ -107,7 +82,7 @@ class HGGGlobal {
             cClient @target = G_GetEntity(args.getToken(0).toInt()).client;
             cClient @inflictor = G_GetEntity(args.getToken(1).toInt()).client;
 
-            player_killed(target, client, inflictor);
+            players.killed(target, client, inflictor);
         } else if (score_event == "award") {
         }
     }
@@ -170,27 +145,11 @@ class HGGGlobal {
         charge_gunblades();
     }
 
-    void init_client(cClient @client){
-        int playernum = client.playerNum();
-        if(playernum > max_playernum)
-            max_playernum = playernum;
-    }
-
     void new_player(cClient @client) {
-        init_client(client);
+        players.init(client);
     }
 
     void new_spectator(cClient @client) {
-    }
-
-    void give_spawn_weapons(cClient @client) {
-        weapons.give_default(client);
-    }
-
-    void respawn(cClient @client) {
-        give_spawn_weapons(client);
-        weapons.select_best(client);
-        client.getEnt().respawnEffect();
     }
 
     void player_respawn(cEntity @ent, int old_team, int new_team) {
@@ -200,70 +159,8 @@ class HGGGlobal {
             new_spectator(ent.client);
 
         if (new_team != TEAM_SPECTATOR)
-            respawn(ent.client);
+            players.respawn(ent.client);
     }
 
-    void check_decrease_ammo(cClient @client, int weapon) {
-        if (weapon < WEAP_TOTAL && weapons.ammo(weapon) > 0) {
-            if (!decrease_ammo(client, weapon) && client.weapon == weapon)
-                weapons.select_best(client);
-        }
-    }
-
-    void announce_row(cClient @target, cClient @attacker) {
-        int row = rows[target.playerNum()];
-        target.addAward(S_COLOR_ACHIEVEMENT + "You made a row of " + S_COLOR_ROW
-                + row + S_COLOR_ACHIEVEMENT + "!");
-        cString msg = target.getName() + S_COLOR_ACHIEVEMENT + " made a row of "
-            + S_COLOR_ROW + row + S_COLOR_ACHIEVEMENT + "!";
-        if (@target == @attacker)
-            msg += " He killed " + S_COLOR_BAD + "himself"
-                + S_COLOR_ACHIEVEMENT + "!";
-        else if (@attacker != null)
-            msg += " He was killed by " + S_COLOR_RESET + attacker.getName()
-                + S_COLOR_ACHIEVEMENT + "!";
-        notify(msg);
-    }
-
-    void check_row(cClient @target, cClient @attacker) {
-        if (rows[target.playerNum()] >= SPECIAL_ROW)
-            announce_row(target, attacker);
-        rows[target.playerNum()] = 0;
-    }
-
-    void show_row(cClient @client) {
-        client.addAward(S_COLOR_ROW + rows[client.playerNum()] + "!");
-    }
-
-    void award(cClient @client, int row) {
-        client.stats.addScore(1);
-        int weapon = weapons.award(row);
-        if (weapon == WEAP_NONE)
-            return;
-
-        if (weapon < WEAP_TOTAL)
-            award_weapon(client, weapon, weapons.ammo(weapon));
-        else
-            show_row(client);
-    }
-
-    void award(cClient @client) {
-        award(client, rows[client.playerNum()]);
-    }
-
-    void player_killed(cClient @target, cClient @attacker, cClient @inflictor) {
-        if (match.getState() > MATCH_STATE_PLAYTIME || @target == null)
-            return;
-
-        say(target, "** You have been killed by " + attacker.getName());
-        check_row(target, attacker);
-
-        if (@attacker == null || @attacker == @target)
-            return;
-
-        rows[attacker.playerNum()]++;
-        award(attacker);
-        check_decrease_ammo(attacker, attacker.weapon); // TODO: mod
-    }
 }
 
