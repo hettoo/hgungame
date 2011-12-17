@@ -17,26 +17,27 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-class Player {
-    cClient @client;
-    int row;
-    int minutes_played;
-    DBItem @dbitem;
+class DB {
+    DBItem[] items;
+    int size;
 
-    void init(cClient @new_client, DB @db) {
-        @client = @new_client;
-        row = 0;
-        minutes_played = 0;
-
-        @dbitem = db.find(raw(client.getName()));
+    DB() {
+        items.resize(MAX_DB_ITEMS);
+        size = 0;
     }
 
-    void welcome(cString &msg) {
-        client.addAward(msg);
+    void read() {
     }
 
-    void show_row() {
-        client.addAward(S_COLOR_ROW + row + "!");
+    DBItem @find(cString &id) {
+        for (int i = 0; i <= size; i++) {
+            if (items[i].id == id)
+                return items[i];
+        }
+        return null;
+    }
+
+    void write() {
     }
 
 }

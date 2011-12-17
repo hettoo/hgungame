@@ -18,12 +18,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 class Players {
-    int max;
     Player[] players;
+    int max;
+    DB db;
     Weapons weapons;
 
     Players() {
-        max = 0;
+        max = -1;
         players.resize(maxClients);
     }
 
@@ -33,7 +34,7 @@ class Players {
 
     void init(cClient @client){
         int playernum = client.playerNum();
-        get(playernum).init(client);
+        get(playernum).init(client, db);
         if(playernum > max)
             max = playernum;
     }

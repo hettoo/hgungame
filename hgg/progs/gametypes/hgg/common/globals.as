@@ -17,6 +17,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+const int DB_VERSION = 0;
+
 const int SPECIAL_ROW = 5;
 const int INFINITE_AMMO = 99;
 const int HEAVY_AMMO = 7;
@@ -26,6 +28,8 @@ const cString S_COLOR_ACHIEVEMENT = S_COLOR_YELLOW;
 const cString S_COLOR_ROW = S_COLOR_ORANGE;
 const cString S_COLOR_BAD = S_COLOR_RED;
 const cString S_COLOR_RESET = S_COLOR_WHITE;
+
+const int MAX_DB_ITEMS = 2048;
 
 const cString CVAR_BASE = "g_hgg_";
 
@@ -63,6 +67,10 @@ bool is_vowel(cString character) {
     character = character.substr(0,1).tolower();
     return character == "a" || character == "e" || character == "o"
         || character == "i" || character == "u";
+}
+
+cString @raw(cString &str) {
+    return str.removeColorTokens().tolower();
 }
 
 void give_weapon(cClient @client, int weapon, int ammo) {
