@@ -27,10 +27,11 @@ class DB {
     }
 
     void read() {
+        size = 0;
     }
 
     DBItem @find(cString &id) {
-        for (int i = 0; i <= size; i++) {
+        for (int i = 0; i < size; i++) {
             if (items[i].id == id)
                 return items[i];
         }
