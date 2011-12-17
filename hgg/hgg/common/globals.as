@@ -17,8 +17,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-HGG hgg;
-
 const int SPECIAL_ROW = 5;
 const int INFINITE_AMMO = 99;
 const int HEAVY_AMMO = 7;
