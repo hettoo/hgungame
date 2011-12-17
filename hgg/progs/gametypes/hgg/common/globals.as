@@ -33,6 +33,8 @@ const int MAX_DB_ITEMS = 2048;
 
 const cString CVAR_BASE = "g_hgg_";
 
+const cString CONFIGS_DIR = "configs/server/gametypes/";
+
 enum hgg_cvars_e {
     CV_MOTD,
     CV_TOTAL
@@ -120,6 +122,7 @@ bool decrease_ammo(cClient @client, int weapon) {
         if (ammo > 0)
             return true;
     }
+
     return false;
 }
 

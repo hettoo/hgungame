@@ -20,14 +20,24 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 class DB {
     DBItem[] items;
     int size;
+    bool has_root;
 
     DB() {
         items.resize(MAX_DB_ITEMS);
         size = 0;
+        has_root = false;
     }
 
     void read() {
-        size = 0;
+        size = -1;
+        cString file = G_LoadFile(CONFIGS_DIR + gametype.getName() + "/data/db_" + DB_VERSION);
+
+        int index;
+        int new_index = 0;
+        do {
+            index = new_index;
+            new_index = items[++size].read(file, index);
+        } while (new_index > index);
     }
 
     DBItem @find(cString &id) {
@@ -39,6 +49,10 @@ class DB {
     }
 
     void write() {
+        cString file = "// " + gametype.getName() + " user database\n";
+        for (int i = 0; i < size; i++)
+            items[i].write(file);
+        G_WriteFile(CONFIGS_DIR + gametype.getName() + "/data/db_" + DB_VERSION, file);
     }
 
 }

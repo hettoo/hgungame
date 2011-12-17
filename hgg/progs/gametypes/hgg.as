@@ -75,6 +75,7 @@ class HGGGlobal {
     }
 
     void shutdown() {
+        players.db.write();
     }
 
     void score_event(cClient @client, cString &score_event, cString &args) {
@@ -122,8 +123,10 @@ class HGGGlobal {
     }
 
     void init_gametype() {
-        set_gametype_settings();
+        players.init();
         config.init();
+        set_gametype_settings();
+        gt.init();
         gt.check_default_config();
 
         G_RegisterCommand("drop");
@@ -146,7 +149,7 @@ class HGGGlobal {
     }
 
     void new_player(cClient @client) {
-        players.init(client);
+        players.init_client(client);
     }
 
     void new_spectator(cClient @client) {

@@ -24,15 +24,19 @@ class Players {
     Weapons weapons;
 
     Players() {
-        max = -1;
         players.resize(maxClients);
+        max = -1;
+    }
+
+    void init() {
+        db.read();
     }
 
     Player @get(int playernum) {
         return players[playernum];
     }
 
-    void init(cClient @client){
+    void init_client(cClient @client){
         int playernum = client.playerNum();
         get(playernum).init(client, db);
         if(playernum > max)

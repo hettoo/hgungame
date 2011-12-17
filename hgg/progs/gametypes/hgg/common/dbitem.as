@@ -43,4 +43,36 @@ class DBItem {
         total_deaths = 0;
         total_minutes_played = 0;
     }
+
+    int read(cString &file, int index) {
+        if (file.getToken(index) == "")
+            return index;
+
+        id = file.getToken(index++);
+        ip = file.getToken(index++);
+        password = file.getToken(index++);
+
+        title = file.getToken(index++).toInt();
+        level = file.getToken(index++).toInt();
+        max_row = file.getToken(index++).toInt();
+        total_kills = file.getToken(index++).toInt();
+        total_deaths = file.getToken(index++).toInt();
+        total_minutes_played = file.getToken(index++).toInt();
+
+        return index;
+    }
+
+    void write(cString &file) {
+        file += "\"" + id + "\" ";
+        file += "\"" + ip + "\" ";
+        file += "\"" + password + "\" ";
+
+        file += "\"" + title + "\" ";
+        file += "\"" + level + "\" ";
+        file += "\"" + max_row + "\" ";
+        file += "\"" + total_kills + "\" ";
+        file += "\"" + total_deaths + "\" ";
+        file += "\"" + total_minutes_played + "\"\n";
+    }
+
 }

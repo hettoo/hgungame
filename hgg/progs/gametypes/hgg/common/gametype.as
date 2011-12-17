@@ -22,9 +22,9 @@ class Gametype {
     cString name;
     cString file;
 
-    Gametype() {
+    void init() {
         name = "???";
-        file = "configs/server/gametypes/" + gametype.getName() + ".cfg";
+        file = CONFIGS_DIR + gametype.getName() + ".cfg";
     }
 
     cString @recommend_default_map_list() {
