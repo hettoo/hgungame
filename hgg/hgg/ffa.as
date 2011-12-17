@@ -48,10 +48,10 @@ class HGG : HGGGlobal {
     }
 
     cString @scoreboard_message(int max_len) {
-        cString scoreboard= "";
-        scoreboard_add_team_entry(scoreboard, TEAM_PLAYERS, max_len);
-        scoreboard_add_team_player_entries(scoreboard, TEAM_PLAYERS, max_len);
-        return scoreboard;
+        cString board= "";
+        scoreboard.add_team_entry(board, TEAM_PLAYERS, max_len);
+        scoreboard.add_team_player_entries(board, TEAM_PLAYERS, max_len, icons);
+        return board;
     }
 }
 

@@ -21,6 +21,7 @@ class HGGGlobal {
     Config config;
     Weapons weapons;
     Gametype gt;
+    Scoreboard scoreboard;
     Icons icons;
     Commands commands;
 
@@ -150,39 +151,10 @@ class HGGGlobal {
         config.init();
         gt.check_default_config();
 
-        G_ConfigString(CS_SCB_PLAYERTAB_LAYOUT,
-                "%n 112 %s 52 %i 52 %i 52 %i 52 %l 48 %p 18");
-        G_ConfigString(CS_SCB_PLAYERTAB_TITLES,
-                "Name Clan Frags Row Time Ping R");
-
         G_RegisterCommand("drop");
         G_RegisterCommand("gametype");
 
         G_Print("Gametype '" + gametype.getTitle() + "' initialized\n");
-    }
-
-    void scoreboard_add_team_entry(cString &scoreboard, int id, int max_len) {
-        cTeam @team = @G_GetTeam(id);
-        string_add_maxed(scoreboard, "&t " + id + " " + team.stats.score + " "
-                + team.ping + " ", max_len);
-    }
-
-    void scoreboard_add_team_player_entries(cString &scoreboard, int id,
-            int max_len) {
-        cTeam @team = @G_GetTeam(id);
-        for (int i = 0; @team.ent(i) != null; i++)
-            scoreboard_add_player_entry(scoreboard, team.ent(i), max_len);
-    }
-
-    void scoreboard_add_player_entry(cString &scoreboard, cEntity @ent,
-            int max_len) {
-        int readyIcon = 0;
-        if (ent.client.isReady())
-            readyIcon = icons.yes;
-        cString entry = "&p " + ent.playerNum() + " " + ent.client.getClanName()
-            + " " + ent.client.stats.score + " " + "0" + " " + "0" + " "
-            + ent.client.ping + " " + readyIcon + " ";
-        string_add_maxed(scoreboard, entry, max_len);
     }
 
     void think_rules() {
