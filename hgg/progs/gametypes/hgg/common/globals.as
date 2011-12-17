@@ -28,6 +28,8 @@ const cString S_COLOR_ACHIEVEMENT = S_COLOR_YELLOW;
 const cString S_COLOR_ROW = S_COLOR_ORANGE;
 const cString S_COLOR_BAD = S_COLOR_RED;
 const cString S_COLOR_RESET = S_COLOR_WHITE;
+const cString S_COLOR_PERSISTENT = S_COLOR_RESET;
+const cString S_COLOR_NOT_PERSISTENT = S_COLOR_GREY;
 
 const int MAX_DB_ITEMS = 2048;
 
