@@ -74,16 +74,20 @@ class Players {
         get(target.playerNum()).row = 0;
     }
 
-    void award(cClient @client, int row) {
+    void award(cClient @client, int row, bool show) {
         client.stats.addScore(1);
         int weapon = weapons.award(row);
         if (weapon == WEAP_NONE)
             return;
 
         if (weapon < WEAP_TOTAL)
-            award_weapon(client, weapon, weapons.ammo(weapon));
+            award_weapon(client, weapon, weapons.ammo(weapon), show);
         else
             get(client.playerNum()).show_row();
+    }
+
+    void award(cClient @client, int row) {
+        award(client, row, true);
     }
 
     void award(cClient @client) {
@@ -114,6 +118,8 @@ class Players {
 
     void give_spawn_weapons(cClient @client) {
         weapons.give_default(client);
+        for (int i = 1; i <= get(client.playerNum()).row; i++)
+            award(client, i, false);
     }
 
     void respawn(cClient @client) {

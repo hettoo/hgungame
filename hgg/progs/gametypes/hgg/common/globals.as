@@ -105,9 +105,14 @@ void show_item_award(cClient @client, int tag) {
                 : "") + " " + name + "!");
 }
 
-void award_weapon(cClient @client, int weapon, int ammo) {
+void award_weapon(cClient @client, int weapon, int ammo, bool show) {
     give_weapon(client, weapon, ammo);
-    show_item_award(client, weapon);
+    if (show)
+        show_item_award(client, weapon);
+}
+
+void award_weapon(cClient @client, int weapon, int ammo) {
+    award_weapon(client, weapon, ammo, true);
 }
 
 bool decrease_ammo(cClient @client, int weapon) {
