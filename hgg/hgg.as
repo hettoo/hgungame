@@ -154,7 +154,7 @@ class HGGGlobal {
         G_RegisterCommand("drop");
         G_RegisterCommand("gametype");
 
-        G_Print("Gametype '" + gametype.getTitle() + "' initialized\n");
+        debug("Gametype '" + gametype.getTitle() + "' initialized");
     }
 
     void think_rules() {
@@ -167,13 +167,7 @@ class HGGGlobal {
 
         GENERIC_Think();
 
-        for (int i = 0; i < maxClients; i++) {
-            cEntity @ent = @G_GetClient(i).getEnt();
-            if (ent.client.state() >= CS_SPAWNED
-                    && ent.team != TEAM_SPECTATOR) {
-                GENERIC_ChargeGunblade(ent.client);
-            }
-        }
+        charge_gunblades();
     }
 
     void init_client(cClient @client){
@@ -261,8 +255,7 @@ class HGGGlobal {
         if (match.getState() > MATCH_STATE_PLAYTIME || @target == null)
             return;
 
-        target.printMessage("** You have been killed by " + attacker.getName()
-                + "\n");
+        say(target, "** You have been killed by " + attacker.getName());
         check_row(target, attacker);
 
         if (@attacker == null || @attacker == @target)

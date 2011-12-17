@@ -51,6 +51,14 @@ void set_spawn_system(int spawn_system) {
     }
 }
 
+void charge_gunblades() {
+    for (int i = 0; i < maxClients; i++) {
+        cEntity @ent = @G_GetClient(i).getEnt();
+        if (ent.client.state() >= CS_SPAWNED && ent.team != TEAM_SPECTATOR)
+            GENERIC_ChargeGunblade(ent.client);
+    }
+}
+
 bool is_vowel(cString character) {
     character = character.substr(0,1).tolower();
     return character == "a" || character == "e" || character == "o"
@@ -76,11 +84,15 @@ void give_weapon(cClient @client, int weapon, int ammo) {
     }
 }
 
+void show_award(cClient @client, cString &msg) {
+    client.addAward(S_COLOR_ITEM_AWARD + msg);
+}
+
 void show_item_award(cClient @client, int tag) {
     cItem @item = G_GetItem(tag);
     cString name = item.getName().tolower();
-    client.addAward(S_COLOR_ITEM_AWARD + "You've got a"
-            + (is_vowel(item.getShortName()) ? "n" : "") + " " + name + "!");
+    show_award(client, "You've got a" + (is_vowel(item.getShortName()) ? "n"
+                : "") + " " + name + "!");
 }
 
 void award_weapon(cClient @client, int weapon, int ammo) {
@@ -105,4 +117,12 @@ bool decrease_ammo(cClient @client, int weapon) {
 
 void notify(cString &msg) {
     G_PrintMsg(null, msg + "\n");
+}
+
+void say(cClient @client, cString &msg) {
+    client.printMessage(msg + "\n");
+}
+
+void debug(cString &msg) {
+    G_Print(msg + "\n");
 }
