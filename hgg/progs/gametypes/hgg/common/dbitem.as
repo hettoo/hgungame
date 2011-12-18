@@ -69,7 +69,7 @@ class DBItem {
 
         file += "\"" + title + "\" ";
         file += "\"" + level + "\" ";
-        file += "\"" + max_row + "\" ";
+        file += "\"" + row + "\" ";
         file += "\"" + total_kills + "\" ";
         file += "\"" + total_deaths + "\" ";
         file += "\"" + total_minutes_played + "\"\n";
