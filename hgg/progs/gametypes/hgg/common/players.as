@@ -23,9 +23,13 @@ class Players {
     DB db;
     Weapons weapons;
 
+    uint last_time;
+
     Players() {
         players.resize(maxClients);
         max = -1;
+
+        last_time = 0;
     }
 
     void init() {
@@ -48,9 +52,12 @@ class Players {
             get(i).welcome(msg);
     }
 
-    void reset_rows() {
-        for (int i = 0; i <= max; i++)
-            check_row(get(i).client, null);
+    void reset() {
+        for (int i = 0; i <= max; i++) {
+            Player @player = get(i);
+            check_row(player.client, null);
+            player.minutes_played = 0;
+        }
     }
 
     void announce_row(cClient @target, cClient @attacker) {
@@ -69,9 +76,10 @@ class Players {
     }
 
     void check_row(cClient @target, cClient @attacker) {
-        if (get(target.playerNum()).row >= SPECIAL_ROW)
+        Player @player = get(target.playerNum());
+        if (player.row >= SPECIAL_ROW)
             announce_row(target, attacker);
-        get(target.playerNum()).row = 0;
+        player.row = 0;
     }
 
     void award(cClient @client, int row, bool show) {
@@ -126,6 +134,19 @@ class Players {
         give_spawn_weapons(client);
         weapons.select_best(client);
         client.getEnt().respawnEffect();
+    }
+
+    void increase_minutes() {
+        for (int i = 0; i <= max; i++) {
+            Player @player = get(i);
+            if (@player.client != null && player.client.team != TEAM_SPECTATOR)
+                player.minutes_played++;
+        }
+    }
+
+    void check_minute() {
+        if (levelTime % 60000 == 0 && levelTime != last_time)
+            increase_minutes();
     }
 
 }

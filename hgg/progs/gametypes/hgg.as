@@ -54,7 +54,7 @@ class HGGGlobal {
     }
 
     void playtime_started() {
-        players.reset_rows();
+        players.reset();
         GENERIC_SetUpMatch();
     }
 
@@ -146,6 +146,8 @@ class HGGGlobal {
         GENERIC_Think();
 
         charge_gunblades();
+
+        players.check_minute();
     }
 
     void new_player(cClient @client) {
