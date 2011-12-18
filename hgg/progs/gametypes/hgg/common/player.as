@@ -33,7 +33,7 @@ class Player {
         registered = true;
         if (@dbitem == null) {
             registered = false;
-            dbitem = DBItem();
+            @dbitem = DBItem();
         }
     }
 
