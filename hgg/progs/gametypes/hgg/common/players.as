@@ -49,8 +49,11 @@ class Players {
     }
 
     void reset_rows() {
-        for (int i = 0; i <= max; i++)
-            get(i).row = 0;
+        for (int i = 0; i <= max; i++) {
+            Player @player = get(i);
+            check_row(player.client, null);
+            player.row = 0;
+        }
     }
 
     void announce_row(cClient @target, cClient @attacker) {
