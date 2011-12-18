@@ -50,8 +50,9 @@ class Scoreboard {
         if (ent.client.isReady())
             readyIcon = icons.yes;
         cString entry = "&p " + ent.playerNum() + " " + ent.client.getClanName()
-            + " " + ent.client.stats.score + " " + registered_color + "0" + " "
-            + "0" + " " + ent.client.ping + " " + readyIcon + " ";
+            + " " + ent.client.stats.score + " " + registered_color
+            + player.dbitem.row + " " + player.minutes_played + " "
+            + ent.client.ping + " " + readyIcon + " ";
         string_add_maxed(scoreboard, entry, max_len);
     }
 }

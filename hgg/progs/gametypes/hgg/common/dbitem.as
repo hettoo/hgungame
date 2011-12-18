@@ -25,7 +25,7 @@ class DBItem {
     int title;
     int level;
     int exp;
-    int max_row;
+    int row;
     int total_kills;
     int total_deaths;
     int total_minutes_played;
@@ -38,7 +38,7 @@ class DBItem {
         title = 0;
         level = 0;
         exp = 0;
-        max_row = 0;
+        row = 0;
         total_kills = 0;
         total_deaths = 0;
         total_minutes_played = 0;
@@ -54,7 +54,7 @@ class DBItem {
 
         title = file.getToken(index++).toInt();
         level = file.getToken(index++).toInt();
-        max_row = file.getToken(index++).toInt();
+        row = file.getToken(index++).toInt();
         total_kills = file.getToken(index++).toInt();
         total_deaths = file.getToken(index++).toInt();
         total_minutes_played = file.getToken(index++).toInt();

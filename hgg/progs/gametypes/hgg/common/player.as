@@ -30,7 +30,11 @@ class Player {
         minutes_played = 0;
 
         @dbitem = db.find(raw(client.getName()));
-        registered = @dbitem != null;
+        registered = true;
+        if (@dbitem == null) {
+            registered = false;
+            dbitem = DBItem();
+        }
     }
 
     void welcome(cString &msg) {
