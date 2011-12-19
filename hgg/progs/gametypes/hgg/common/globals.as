@@ -74,7 +74,7 @@ void charge_gunblades() {
 }
 
 bool is_vowel(cString character) {
-    character = character.substr(0,1).tolower();
+    character = character.substr(0, 1).tolower();
     return character == "a" || character == "e" || character == "o"
         || character == "i" || character == "u";
 }
