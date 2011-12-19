@@ -85,7 +85,9 @@ cString @raw(cString &str) {
 }
 
 cString get_ip(cClient @client) {
-    return ""; // TODO
+    cString ip = client.getUserInfoKey("ip");
+    ip = ip.substr(0, ip.locate(":", 0));
+    return ip;
 }
 
 void give_weapon(cClient @client, int weapon, int ammo) {
