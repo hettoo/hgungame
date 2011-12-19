@@ -41,4 +41,17 @@ class Player {
         client.addAward(S_COLOR_ROW + row + "!");
     }
 
+    void killer() {
+        row++;
+        dbitem.add_kill();
+    }
+
+    void killed() {
+        dbitem.add_death();
+    }
+
+    void add_minute() {
+        minutes_played++;
+        dbitem.add_minute;
+    }
 }

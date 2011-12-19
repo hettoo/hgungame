@@ -28,9 +28,9 @@ class DBItem {
     int level;
     int exp;
     int row;
-    int total_kills;
-    int total_deaths;
-    int total_minutes_played;
+    int kills;
+    int deaths;
+    int minutes_played;
 
     DBItem() {
         state = DBI_UNKNOWN;
@@ -43,9 +43,9 @@ class DBItem {
         level = 0;
         exp = 0;
         row = 0;
-        total_kills = 0;
-        total_deaths = 0;
-        total_minutes_played = 0;
+        kills = 0;
+        deaths = 0;
+        minutes_played = 0;
     }
 
     int read(cString &file, int index) {
@@ -59,9 +59,9 @@ class DBItem {
         title = file.getToken(index++).toInt();
         level = file.getToken(index++).toInt();
         row = file.getToken(index++).toInt();
-        total_kills = file.getToken(index++).toInt();
-        total_deaths = file.getToken(index++).toInt();
-        total_minutes_played = file.getToken(index++).toInt();
+        kills = file.getToken(index++).toInt();
+        deaths = file.getToken(index++).toInt();
+        minutes_played = file.getToken(index++).toInt();
 
         return index;
     }
@@ -74,9 +74,28 @@ class DBItem {
         file += "\"" + title + "\" ";
         file += "\"" + level + "\" ";
         file += "\"" + row + "\" ";
-        file += "\"" + total_kills + "\" ";
-        file += "\"" + total_deaths + "\" ";
-        file += "\"" + total_minutes_played + "\"\n";
+        file += "\"" + kills + "\" ";
+        file += "\"" + deaths + "\" ";
+        file += "\"" + minutes_played + "\"\n";
+    }
+
+    bool right_state() {
+        return match.getState() == MATCH_STATE_PLAYTIME;
+    }
+
+    void add_kill() {
+        if (right_state())
+            kills++;
+    }
+
+    void add_death() {
+        if (right_state())
+            deaths++;
+    }
+
+    void add_minute() {
+        if (right_state())
+            minutes_played++;
     }
 
 }

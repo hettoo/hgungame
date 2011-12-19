@@ -107,12 +107,13 @@ class Players {
             return;
 
         say(target, "** You have been killed by " + attacker.getName());
+        get(target.playerNum()).killed();
         check_row(target, attacker);
 
         if (@attacker == null || @attacker == @target)
             return;
 
-        players[attacker.playerNum()].row++;
+        get(attacker.playerNum()).killer();
         award(attacker);
         check_decrease_ammo(attacker, attacker.weapon); // TODO: mod
     }
@@ -140,7 +141,7 @@ class Players {
         for (int i = 0; i <= max; i++) {
             Player @player = get(i);
             if (@player.client != null && player.client.team != TEAM_SPECTATOR)
-                player.minutes_played++;
+                player.add_minute();
         }
     }
 
