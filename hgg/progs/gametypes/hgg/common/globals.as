@@ -36,6 +36,7 @@ const int MAX_DB_ITEMS = 2048;
 const cString CVAR_BASE = "g_hgg_";
 
 const cString CONFIGS_DIR = "configs/server/gametypes/";
+const cString DB_FILE = "data/db_";
 
 enum hgg_cvars_e {
     CV_MOTD,

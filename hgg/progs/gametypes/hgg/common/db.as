@@ -30,7 +30,8 @@ class DB {
 
     void read() {
         size = -1;
-        cString file = G_LoadFile(CONFIGS_DIR + gametype.getName() + "/data/db_" + DB_VERSION);
+        cString file = G_LoadFile(CONFIGS_DIR + gametype.getName() + DB_FILE
+                + DB_VERSION);
 
         int index;
         int new_index = 0;
@@ -57,7 +58,8 @@ class DB {
         cString file = "// " + gametype.getName() + " user database\n";
         for (int i = 0; i < size; i++)
             items[i].write(file);
-        G_WriteFile(CONFIGS_DIR + gametype.getName() + "/data/db_" + DB_VERSION, file);
+        G_WriteFile(CONFIGS_DIR + gametype.getName() + DB_FILE + DB_VERSION,
+                file);
     }
 
 }
