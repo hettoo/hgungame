@@ -20,9 +20,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 class Scoreboard {
     Scoreboard() {
         G_ConfigString(CS_SCB_PLAYERTAB_LAYOUT,
-                "%n 112 %s 52 %i 52 %s 52 %i 52 %l 48 %p 18");
+                "%n 112 %s 26 %s 52 %i 52 %s 39 %i 39 %l 48 %p 18");
         G_ConfigString(CS_SCB_PLAYERTAB_TITLES,
-                "Name Clan Frags Row Time Ping R");
+                "Name Lv Clan Frags Row Time Ping R");
 
     }
 
@@ -49,8 +49,9 @@ class Scoreboard {
             ? S_COLOR_PERSISTENT : S_COLOR_NOT_PERSISTENT;
         if (ent.client.isReady())
             readyIcon = icons.yes;
-        cString entry = "&p " + ent.playerNum() + " " + ent.client.getClanName()
-            + " " + ent.client.stats.score + " " + registered_color
+        cString entry = "&p " + ent.playerNum() + " " + registered_color
+            + player.dbitem.level + " " + ent.client.getClanName() + " "
+            + ent.client.stats.score + " " + registered_color
             + player.dbitem.row + " " + player.minutes_played + " "
             + ent.client.ping + " " + readyIcon + " ";
         string_add_maxed(scoreboard, entry, max_len);
