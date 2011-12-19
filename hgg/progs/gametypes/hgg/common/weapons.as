@@ -66,9 +66,11 @@ class Weapons {
         give_weapon(client, standard, 0);
     }
 
+    bool heavy_weapon(int weapon) {
+        return weapon == WEAP_MACHINEGUN || weapon == WEAP_RIOTGUN;
+    }
+
     int ammo(int weapon) {
-        if (weapon == WEAP_MACHINEGUN || weapon == WEAP_RIOTGUN)
-            return HEAVY_AMMO;
-        return 0;
+        return heavy_weapon(weapon) ? HEAVY_AMMO : 0;
     }
 }
