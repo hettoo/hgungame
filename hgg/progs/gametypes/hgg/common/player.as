@@ -30,7 +30,7 @@ class Player {
 
         @dbitem = db.find(raw(client.getName()), get_ip(client));
         if (@dbitem == null)
-            dbitem = DBItem();
+            @dbitem = @DBItem();
     }
 
     void welcome(cString &msg) {
@@ -52,6 +52,6 @@ class Player {
 
     void add_minute() {
         minutes_played++;
-        dbitem.add_minute;
+        dbitem.add_minute();
     }
 }
