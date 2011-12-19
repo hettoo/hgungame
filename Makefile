@@ -16,7 +16,7 @@ $(GT_PK3): $(shell find hgg/)
 local:
 	rm -f ~/.warsow-0.6/basewsw/hgg-*.pk3
 	rm -f ~/.warsow-0.6/basewsw/configs/server/gametypes/hgg_*.cfg
-	cp *.pk3 ~/.warsow-0.6/basewsw/
+	cp $(GT_PK3) ~/.warsow-0.6/basewsw/
 
 dev: all local
 	wsw-server
