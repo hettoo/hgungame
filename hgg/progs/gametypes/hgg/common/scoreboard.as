@@ -19,8 +19,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 class Scoreboard {
     Scoreboard() {
+        // Assuming 13 px per char, 18 px for images and less than 100 minutes
+        // playtime.
+
         G_ConfigString(CS_SCB_PLAYERTAB_LAYOUT,
-                "%n 112 %s 26 %s 52 %i 52 %s 39 %i 39 %l 48 %p 18");
+                "%n 114 %s 26 %s 52 %i 39 %s 39 %i 26 %l 52 %p 18");
         G_ConfigString(CS_SCB_PLAYERTAB_TITLES,
                 "Name Lv Clan Frags Row Time Ping R");
 
