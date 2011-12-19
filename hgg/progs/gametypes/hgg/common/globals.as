@@ -47,6 +47,12 @@ enum hgg_gametype_e {
     GT_CA
 };
 
+enum hgg_dbitem_states_e {
+    DBI_UNKNOWN,
+    DBI_WRONG_IP,
+    DBI_IDENTIFIED
+};
+
 void string_add_maxed(cString &string, cString &addition, int max) {
     if (string.len() + addition.len() <= max)
         string += addition;
@@ -75,6 +81,10 @@ bool is_vowel(cString character) {
 
 cString @raw(cString &str) {
     return str.removeColorTokens().tolower();
+}
+
+cString get_ip(cClient @client) {
+    return ""; // TODO
 }
 
 void give_weapon(cClient @client, int weapon, int ammo) {

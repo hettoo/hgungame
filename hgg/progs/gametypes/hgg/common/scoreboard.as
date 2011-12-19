@@ -45,8 +45,8 @@ class Scoreboard {
             Icons @icons, Players @players) {
         int readyIcon = 0;
         Player @player = players.get(ent.client.playerNum());
-        cString registered_color = player.registered ? S_COLOR_PERSISTENT
-            : S_COLOR_NOT_PERSISTENT;
+        cString registered_color = player.dbitem.state == DBI_IDENTIFIED
+            ? S_COLOR_PERSISTENT : S_COLOR_NOT_PERSISTENT;
         if (ent.client.isReady())
             readyIcon = icons.yes;
         cString entry = "&p " + ent.playerNum() + " " + ent.client.getClanName()

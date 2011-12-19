@@ -40,10 +40,15 @@ class DB {
         } while (new_index > index);
     }
 
-    DBItem @find(cString &id) {
+    DBItem @find(cString &id, cString &ip) {
         for (int i = 0; i < size; i++) {
-            if (items[i].id == id)
+            if (items[i].id == id) {
+                if (items[i].ip == ip)
+                    items[i].state = DBI_IDENTIFIED;
+                else
+                    items[i].state = DBI_WRONG_IP;
                 return items[i];
+            }
         }
         return null;
     }

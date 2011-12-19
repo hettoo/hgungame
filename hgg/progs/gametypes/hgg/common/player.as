@@ -21,7 +21,6 @@ class Player {
     cClient @client;
     int row;
     int minutes_played;
-    bool registered;
     DBItem @dbitem;
 
     void init(cClient @new_client, DB @db) {
@@ -29,12 +28,9 @@ class Player {
         row = 0;
         minutes_played = 0;
 
-        @dbitem = db.find(raw(client.getName()));
-        registered = true;
-        if (@dbitem == null) {
-            registered = false;
+        @dbitem = db.find(raw(client.getName()), get_ip(client));
+        if (@dbitem == null)
             dbitem = DBItem();
-        }
     }
 
     void welcome(cString &msg) {

@@ -18,6 +18,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 class DBItem {
+    int state;
+
     cString id;
     cString ip;
     cString password;
@@ -31,6 +33,8 @@ class DBItem {
     int total_minutes_played;
 
     DBItem() {
+        state = DBI_UNKNOWN;
+
         id = "";
         ip = "";
         password = "";
