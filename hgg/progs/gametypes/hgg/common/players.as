@@ -146,8 +146,11 @@ class Players {
     }
 
     void check_minute() {
-        if (levelTime % 60000 == 0 && levelTime != last_time)
+        uint time = levelTime / 60000;
+        if (time != last_time) {
             increase_minutes();
+            last_time = time;
+        }
     }
 
 }
