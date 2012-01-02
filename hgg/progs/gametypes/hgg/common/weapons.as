@@ -44,6 +44,8 @@ class Weapons {
                 return WEAP_MACHINEGUN;
             case 7:
                 return WEAP_RIOTGUN;
+            case 8:
+                return gametype.isInstagib() ? WEAP_GUNBLADE : WEAP_TOTAL;
         }
 
         return WEAP_TOTAL;
@@ -54,6 +56,7 @@ class Weapons {
             client.selectWeapon(WEAP_INSTAGUN);
         else
             client.selectWeapon(WEAP_GUNBLADE);
+
         int weapon;
         for (int i = 1; (weapon = award(i)) != WEAP_TOTAL; i++)
         {
@@ -63,8 +66,10 @@ class Weapons {
     }
 
     void give_default(cClient @client) {
-        give_weapon(client, WEAP_INSTAGUN, 0);
-        give_weapon(client, WEAP_GUNBLADE, 0);
+        if (gametype.isInstagib())
+            give_weapon(client, WEAP_INSTAGUN, 0);
+        else
+            give_weapon(client, WEAP_GUNBLADE, 0);
     }
 
     bool heavy_weapon(int weapon) {

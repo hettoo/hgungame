@@ -34,7 +34,8 @@ class Player {
     }
 
     void welcome(cString &msg) {
-        client.addAward(msg);
+        if (@client != null)
+            client.addAward(msg);
     }
 
     void show_row() {
