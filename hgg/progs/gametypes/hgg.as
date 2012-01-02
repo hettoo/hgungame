@@ -78,13 +78,15 @@ class HGGGlobal {
         players.db.write();
     }
 
+    void killed(cClient @attacker, cClient @target, cClient @inflictor) {
+        players.killed(target, attacker, inflictor);
+    }
+
     void score_event(cClient @client, cString &score_event, cString &args) {
         if (score_event == "kill") {
             cClient @target = G_GetEntity(args.getToken(0).toInt()).client;
             cClient @inflictor = G_GetEntity(args.getToken(1).toInt()).client;
-
-            players.killed(target, client, inflictor);
-        } else if (score_event == "award") {
+            killed(client, target, inflictor);
         }
     }
 
