@@ -34,7 +34,7 @@ class HGG : HGGGlobal {
     }
 
     void init_gametype() {
-        gt.name = "FFA";
+        gt.name = "Free For All";
         gt.type = GT_FFA;
         HGGGlobal::init_gametype();
     }
