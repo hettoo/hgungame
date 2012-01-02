@@ -21,6 +21,8 @@ class HGG : HGGGlobal {
     void set_gametype_settings() {
         HGGGlobal::set_gametype_settings();
 
+        set_spawn_system(SPAWNSYSTEM_INSTANT);
+
         gametype.isTeamBased = false;
         gametype.hasChallengersQueue = false;
         gametype.maxPlayersPerTeam = 0;

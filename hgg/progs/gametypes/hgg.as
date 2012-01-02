@@ -118,8 +118,6 @@ class HGGGlobal {
 
         if (gametype.isInstagib())
             gametype.spawnpointRadius *= 2;
-
-        set_spawn_system(SPAWNSYSTEM_INSTANT);
     }
 
     void init_gametype() {
