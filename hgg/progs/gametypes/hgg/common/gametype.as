@@ -61,6 +61,8 @@ class Gametype {
             + "set g_allow_stun 1\n"
             + "set g_teams_maxplayers 0\n"
             + "set g_countdown_time 5\n"
+            + "set g_instajump 1\n"
+            + "set g_instashield 0\n"
             + "set g_maxtimeouts 3 // -1 = unlimited\n"
             + "set g_challengers_queue 0\n"
             + "\n"
