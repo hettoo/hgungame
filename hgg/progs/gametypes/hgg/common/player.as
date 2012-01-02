@@ -54,4 +54,8 @@ class Player {
         minutes_played++;
         dbitem.add_minute();
     }
+
+    void update_row() {
+        dbitem.update_row(row);
+    }
 }

@@ -98,4 +98,8 @@ class DBItem {
             minutes_played++;
     }
 
+    void update_row(int new_row) {
+        if (new_row > row)
+            row = new_row;
+    }
 }
