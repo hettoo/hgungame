@@ -17,6 +17,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+class Command {
+    cString name;
+    cString description;
+    cString short_description;
+}
+
 class Commands {
     Commands() {
     }
@@ -25,35 +31,14 @@ class Commands {
     }
 
     bool handle(cClient @client, cString &cmd, cString &args, int argc) {
-        if (cmd == "drop")
-            return cmd_drop(client, args, argc);
-        else if (cmd == "cvarinfo")
+        if (cmd == "cvarinfo")
             return cmd_cvarinfo(client, args, argc);
         else if (cmd == "gametype")
             return cmd_gametype(client, args, argc);
+        else if (cmd == "commands")
+            return cmd_commands(client, args, argc);
 
         return false;
-    }
-
-    bool cmd_drop(cClient @client, cString &args, int argc) {
-        cString token;
-        for (int i = 0; i < argc; i++) {
-            token = args.getToken(i);
-            if (token.len() == 0)
-                break;
-
-            if (token == "fullweapon") {
-                GENERIC_DropCurrentWeapon(client, true);
-                GENERIC_DropCurrentAmmoStrong(client);
-            } else if (token == "weapon") {
-                GENERIC_DropCurrentWeapon(client, true);
-            } else if (token == "strong") {
-                GENERIC_DropCurrentAmmoStrong(client);
-            } else {
-                GENERIC_CommandDropItem(client, token);
-            }
-        }
-        return true;
     }
 
     bool cmd_cvarinfo(cClient @client, cString &args, int argc) {
@@ -78,6 +63,11 @@ class Commands {
         response += "----------------\n";
 
         G_PrintMsg(client.getEnt(), response);
+        return true;
+    }
+
+    bool cmd_commands(cClient @client, cString &args, int argc) {
+        cString response = "";
         return true;
     }
 }
