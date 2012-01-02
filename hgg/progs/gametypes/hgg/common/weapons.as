@@ -18,10 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 class Weapons {
-    int standard;
-
     Weapons() {
-        standard = WEAP_INSTAGUN;
     }
 
     /*
@@ -53,7 +50,10 @@ class Weapons {
     }
 
     void select_best(cClient @client) {
-        client.selectWeapon(standard);
+        if (gametype.isInstagib())
+            client.selectWeapon(WEAP_INSTAGUN);
+        else
+            client.selectWeapon(WEAP_GUNBLADE);
         int weapon;
         for (int i = 1; (weapon = award(i)) != WEAP_TOTAL; i++)
         {
@@ -63,7 +63,8 @@ class Weapons {
     }
 
     void give_default(cClient @client) {
-        give_weapon(client, standard, 0);
+        give_weapon(client, WEAP_INSTAGUN, 0);
+        give_weapon(client, WEAP_GUNBLADE, 0);
     }
 
     bool heavy_weapon(int weapon) {
