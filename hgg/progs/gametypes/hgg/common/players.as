@@ -76,6 +76,9 @@ class Players {
     }
 
     void check_row(cClient @target, cClient @attacker) {
+        if (@target == null)
+            return;
+
         Player @player = get(target.playerNum());
         player.update_row();
         if (player.row >= SPECIAL_ROW)
