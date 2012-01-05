@@ -34,6 +34,7 @@ class Player {
         if (@dbitem == null) {
             @dbitem = @DBItem();
             state = DBI_UNKNOWN;
+            dbitem.init(client);
         }
         else {
             if (get_ip(client) == dbitem.ip)
@@ -41,7 +42,12 @@ class Player {
             else
                 state = DBI_WRONG_IP;
         }
-        dbitem.init(client);
+    }
+
+    void force_spec(cString &msg) {
+        client.team = TEAM_SPECTATOR;
+        client.respawn(true);
+        client.addAward(S_COLOR_BAD + msg);
     }
 
     void set_registered(cString &password) {

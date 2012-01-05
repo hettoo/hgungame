@@ -154,15 +154,18 @@ class HGGGlobal {
 
     void new_player(cClient @client) {
         players.init_client(client);
+        Player @player = players.get(client.playerNum());
+        if (player.state == DBI_WRONG_IP)
+            player.force_spec("Wrong IP");
     }
 
     void new_spectator(cClient @client) {
     }
 
     void player_respawn(cEntity @ent, int old_team, int new_team) {
-        if (old_team == TEAM_SPECTATOR)
+        if (old_team == TEAM_SPECTATOR && new_team != TEAM_SPECTATOR)
             new_player(ent.client);
-        else if (new_team == TEAM_SPECTATOR)
+        else if (old_team != TEAM_SPECTATOR && new_team == TEAM_SPECTATOR)
             new_spectator(ent.client);
 
         if (new_team != TEAM_SPECTATOR)

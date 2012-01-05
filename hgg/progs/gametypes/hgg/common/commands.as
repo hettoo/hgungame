@@ -62,8 +62,11 @@ class Commands {
     }
 
     bool cmd_gt(cClient @client, cString &args, int argc, Players @players) {
-        if (args.getToken(0) == "register")
+        cString command = args.getToken(0);
+        if (command == "register")
             cmd_gt_register(client, args, argc, players);
+        else if (command == "identify")
+            cmd_gt_identify(client, args, argc, players);
         else
             cmd_gt_help(client, args, argc, players);
 
@@ -81,10 +84,22 @@ class Commands {
         }
     }
 
+    void cmd_gt_identify(cClient @client, cString &args, int argc,
+            Players @players) {
+        Player @player = players.get(client.playerNum());
+        if (player.state == DBI_WRONG_IP
+                && args.getToken(1) == player.dbitem.password) {
+            player.state = DBI_IDENTIFIED;
+            player.dbitem.ip = get_ip(client);
+            client.addAward(S_COLOR_ADMINISTRATIVE + "IP changed successfully");
+        }
+    }
+
     void cmd_gt_help(cClient @client, cString &args, int argc,
             Players @players) {
         cString response = "Available /gt commands:\n"
-            + "register <password> <password> -- register yourself\n";
+            + "register <password> <password> -- register yourself\n"
+            + "identify <password> -- identify yourself after an ip change\n";
         G_PrintMsg(client.getEnt(), response);
     }
 }
