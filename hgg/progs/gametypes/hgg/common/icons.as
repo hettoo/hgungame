@@ -19,8 +19,44 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 class Icons {
     int yes;
+    int no;
+
+    int instagun;
+    int electro;
+    int grenade;
+    int rocket;
+    int plasma;
+    int laser;
+    int machinegun;
+    int riot;
+    int gunblade;
+    int max;
+
+    int guest;
+    int member;
+    int vip;
+    int admin;
+    int root;
 
     Icons() {
         yes = G_ImageIndex("gfx/hud/icons/vsay/yes");
+        no = G_ImageIndex("gfx/hud/icons/vsay/no");
+
+        instagun = G_ImageIndex("gfx/hud/icons/weapon/instagun");
+        electro = G_ImageIndex("gfx/hud/icons/weapon/electro");
+        grenade = G_ImageIndex("gfx/hud/icons/weapon/grenade");
+        rocket = G_ImageIndex("gfx/hud/icons/weapon/rocket");
+        plasma = G_ImageIndex("gfx/hud/icons/weapon/plasma");
+        laser = G_ImageIndex("gfx/hud/icons/weapon/laser");
+        machinegun = G_ImageIndex("gfx/hud/icons/weapon/machinegun");
+        riot = G_ImageIndex("gfx/hud/icons/weapon/riot");
+        gunblade = G_ImageIndex("gfx/hud/icons/weapon/gunblade");
+        max = G_ImageIndex("gfx/hud/icons/powerup/quad");
+
+        guest = G_ImageIndex("gfx/hud/icons/health/5");
+        member = G_ImageIndex("gfx/hud/icons/health/25");
+        vip = G_ImageIndex("gfx/hud/icons/health/50");
+        admin = G_ImageIndex("gfx/hud/icons/health/100");
+        root = G_ImageIndex("gfx/hud/icons/health/100ultra");
     }
 }
