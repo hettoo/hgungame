@@ -59,4 +59,32 @@ class Icons {
         admin = G_ImageIndex("gfx/hud/icons/health/100");
         root = G_ImageIndex("gfx/hud/icons/health/100ultra");
     }
+
+    int weapon(int weapon) {
+        switch (weapon) {
+            case WEAP_NONE:
+                return gametype.isInstagib() ? instagun : gunblade;
+            case WEAP_INSTAGUN:
+                return instagun;
+            case WEAP_ELECTROBOLT:
+                return electro;
+            case WEAP_GRENADELAUNCHER:
+                return grenade;
+            case WEAP_ROCKETLAUNCHER:
+                return rocket;
+            case WEAP_PLASMAGUN:
+                return plasma;
+            case WEAP_LASERGUN:
+                return laser;
+            case WEAP_MACHINEGUN:
+                return machinegun;
+            case WEAP_RIOTGUN:
+                return riot;
+            case WEAP_GUNBLADE:
+                return gunblade;
+            case WEAP_TOTAL:
+                return max;
+        }
+        return no;
+    }
 }

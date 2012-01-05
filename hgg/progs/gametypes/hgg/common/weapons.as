@@ -52,10 +52,8 @@ class Weapons {
     }
 
     void select_best(cClient @client) {
-        if (gametype.isInstagib())
-            client.selectWeapon(WEAP_INSTAGUN);
-        else
-            client.selectWeapon(WEAP_GUNBLADE);
+        client.selectWeapon(gametype.isInstagib()
+                ? WEAP_INSTAGUN : WEAP_GUNBLADE);
 
         int weapon;
         for (int i = 1; (weapon = award(i)) != WEAP_TOTAL; i++)

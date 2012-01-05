@@ -20,9 +20,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 class Scoreboard {
     int state;
 
-    // Assuming a maximum of 13 px per char, 18 px for images and less than
-    // 100 minutes playtime.
-
     void warmup_layout() {
         G_ConfigString(CS_SCB_PLAYERTAB_LAYOUT, SB_BASE_LAYOUT + " %p 18");
         G_ConfigString(CS_SCB_PLAYERTAB_TITLES, SB_BASE_TITLE + " R");
@@ -78,10 +75,10 @@ class Scoreboard {
             + ent.client.stats.score + " " + registered_color
             + player.dbitem.row + " " + ent.client.ping + " "
             + player.minutes_played + " ";
-        if (state == SB_WARMUP && ent.client.isReady())
-            entry += icons.yes + " ";
+        if (state == SB_WARMUP)
+            entry += (ent.client.isReady() ? icons.yes : icons.no) + " ";
         else if (state == SB_MATCH)
-            entry += "0 ";
+            entry += icons.weapon(players.weapons.award(player.row)) + " ";
         string_add_maxed(scoreboard, entry, max_len);
     }
 }

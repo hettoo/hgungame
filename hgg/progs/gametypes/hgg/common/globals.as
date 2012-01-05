@@ -32,7 +32,7 @@ const cString S_COLOR_PERSISTENT = S_COLOR_RESET;
 const cString S_COLOR_TEMPORARY = S_COLOR_GREY;
 const cString S_COLOR_ADMINISTRATIVE = S_COLOR_CYAN;
 
-const cString SB_BASE_LAYOUT = "%s 26 %n 114 %s 52 %i 39 %s 39 %l 52 %i 26";
+const cString SB_BASE_LAYOUT = "%s 26 %n 112 %s 52 %i 39 %s 39 %l 52 %i 26";
 const cString SB_BASE_TITLE = "Lv Name Clan Scr Row Ping Tm";
 
 const int MAX_DB_ITEMS = 2048;
