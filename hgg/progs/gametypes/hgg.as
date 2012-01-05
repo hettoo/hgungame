@@ -38,13 +38,14 @@ class HGGGlobal {
     }
 
     bool command(cClient @client, cString &cmd, cString &args, int argc) {
-        return commands.handle(client, cmd, args, argc);
+        return commands.handle(client, cmd, args, argc, players);
     }
 
     void match_state_started() {
     }
 
     void warmup_started() {
+        scoreboard.set_layout(SB_WARMUP);
         GENERIC_SetUpWarmup();
     }
     
@@ -55,10 +56,12 @@ class HGGGlobal {
 
     void playtime_started() {
         players.reset();
+        scoreboard.set_layout(SB_MATCH);
         GENERIC_SetUpMatch();
     }
 
     void postmatch_started() {
+        scoreboard.set_layout(SB_POST);
         GENERIC_SetUpEndMatch();
     }
 
@@ -93,7 +96,7 @@ class HGGGlobal {
     void set_gametype_settings() {
         gametype.setTitle("hGunGame " + gt.name);
         gametype.setVersion("0.0-dev");
-        gametype.setAuthor("^0<].^7h^2e^9tt^2o^7o^0.[>");
+        gametype.setAuthor("^0<].^7h^2e^9tt^2o^7o^0.[>^7");
 
         gametype.isRace = false;
 
@@ -129,8 +132,7 @@ class HGGGlobal {
         gt.init();
         gt.check_default_config();
 
-        G_RegisterCommand("drop");
-        G_RegisterCommand("gametype");
+        commands.init();
 
         debug("Gametype '" + gametype.getTitle() + "' initialized");
     }

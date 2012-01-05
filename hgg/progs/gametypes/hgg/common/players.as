@@ -33,6 +33,7 @@ class Players {
     }
 
     void init() {
+        db.init();
         db.read();
     }
 
@@ -43,7 +44,7 @@ class Players {
     void init_client(cClient @client){
         int playernum = client.playerNum();
         get(playernum).init(client, db);
-        if(playernum > max)
+        if (playernum > max)
             max = playernum;
     }
 

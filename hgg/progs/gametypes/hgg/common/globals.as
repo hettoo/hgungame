@@ -29,14 +29,19 @@ const cString S_COLOR_ROW = S_COLOR_ORANGE;
 const cString S_COLOR_BAD = S_COLOR_RED;
 const cString S_COLOR_RESET = S_COLOR_WHITE;
 const cString S_COLOR_PERSISTENT = S_COLOR_RESET;
-const cString S_COLOR_NOT_PERSISTENT = S_COLOR_GREY;
+const cString S_COLOR_TEMPORARY = S_COLOR_GREY;
+const cString S_COLOR_ADMINISTRATIVE = S_COLOR_CYAN;
+
+const cString SB_BASE_LAYOUT = "%s 26 %n 114 %s 52 %i 39 %s 39 %l 52 %i 26";
+const cString SB_BASE_TITLE = "Lv Name Clan Scr Row Ping Tm";
 
 const int MAX_DB_ITEMS = 2048;
 
 const cString CVAR_BASE = "g_hgg_";
 
 const cString CONFIGS_DIR = "configs/server/gametypes/";
-const cString DB_FILE = "data/db_";
+const cString DATA_DIR = "gtdata/";
+const cString DB_FILE = "db_";
 
 enum hgg_cvars_e {
     CV_MOTD,
@@ -52,6 +57,12 @@ enum hgg_dbitem_states_e {
     DBI_UNKNOWN,
     DBI_WRONG_IP,
     DBI_IDENTIFIED
+};
+
+enum hgg_scoreboard_states_e {
+    SB_WARMUP,
+    SB_MATCH,
+    SB_POST
 };
 
 void string_add_maxed(cString &string, cString &addition, int max) {

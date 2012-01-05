@@ -17,57 +17,74 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-class Command {
-    cString name;
-    cString description;
-    cString short_description;
-}
-
 class Commands {
-    Commands() {
+    void init() {
+        G_RegisterCommand("gametype");
+        G_RegisterCommand("gt");
     }
 
-    ~Commands() {
-    }
-
-    bool handle(cClient @client, cString &cmd, cString &args, int argc) {
+    bool handle(cClient @client, cString &cmd, cString &args, int argc,
+            Players @players) {
         if (cmd == "cvarinfo")
-            return cmd_cvarinfo(client, args, argc);
+            return cmd_cvarinfo(client, args, argc, players);
         else if (cmd == "gametype")
-            return cmd_gametype(client, args, argc);
-        else if (cmd == "commands")
-            return cmd_commands(client, args, argc);
+            return cmd_gametype(client, args, argc, players);
+        else if (cmd == "gt")
+            return cmd_gt(client, args, argc, players);
 
         return false;
     }
 
-    bool cmd_cvarinfo(cClient @client, cString &args, int argc) {
+    bool cmd_cvarinfo(cClient @client, cString &args, int argc,
+            Players @players) {
         GENERIC_CheatVarResponse(client, "cvarinfo", args, argc);
         return true;
     }
 
-    bool cmd_gametype(cClient @client, cString &args, int argc) {
-        cString response = "";
+    bool cmd_gametype(cClient @client, cString &args, int argc,
+            Players @players) {
         cVar fs_game("fs_game", "", 0);
         cString manifest = gametype.getManifest();
 
-        response += "\n";
-        response += "Gametype " + gametype.getName() + " : "
-            + gametype.getTitle() + "\n";
-        response += "----------------\n";
-        response += "Version: " + gametype.getVersion() + "\n";
-        response += "Author: " + gametype.getAuthor() + "\n";
-        response += "Mod: " + fs_game.getString()
+        cString response = "Gametype " + gametype.getName() + " : "
+            + gametype.getTitle() + "\n"
+            + "----------------\n"
+            + "Version: " + gametype.getVersion() + "\n"
+            + "Author: " + gametype.getAuthor() + "\n"
+            + "Mod: " + fs_game.getString()
             + (manifest.length() > 0 ? " (manifest: " + manifest + ")" : "")
-            + "\n";
-        response += "----------------\n";
+            + "\n"
+            + "----------------\n"
+            + "Use /gt to see the gametype commands\n";
 
         G_PrintMsg(client.getEnt(), response);
         return true;
     }
 
-    bool cmd_commands(cClient @client, cString &args, int argc) {
-        cString response = "";
+    bool cmd_gt(cClient @client, cString &args, int argc, Players @players) {
+        if (args.getToken(0) == "register")
+            cmd_gt_register(client, args, argc, players);
+        else
+            cmd_gt_help(client, args, argc, players);
+
         return true;
+    }
+
+    void cmd_gt_register(cClient @client, cString &args, int argc,
+            Players @players) {
+        Player @player = players.get(client.playerNum());
+        cString password = args.getToken(1);
+        if (player.state == DBI_UNKNOWN && password != ""
+                && password == args.getToken(2)) {
+            player.set_registered(password);
+            players.db.add(player.dbitem);
+        }
+    }
+
+    void cmd_gt_help(cClient @client, cString &args, int argc,
+            Players @players) {
+        cString response = "Available /gt commands:\n"
+            + "register <password> <password> -- register yourself\n";
+        G_PrintMsg(client.getEnt(), response);
     }
 }

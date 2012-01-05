@@ -21,6 +21,7 @@ class DB {
     DBItem[] items;
     int size;
     bool has_root;
+    cString file_name;
 
     DB() {
         items.resize(MAX_DB_ITEMS);
@@ -28,10 +29,13 @@ class DB {
         has_root = false;
     }
 
+    void init() {
+        file_name = DATA_DIR + gametype.getName() + "/" + DB_FILE + DB_VERSION;
+    }
+
     void read() {
         size = -1;
-        cString file = G_LoadFile(CONFIGS_DIR + gametype.getName() + DB_FILE
-                + DB_VERSION);
+        cString file = G_LoadFile(file_name);
 
         int index;
         int new_index = 0;
@@ -41,25 +45,24 @@ class DB {
         } while (new_index > index);
     }
 
-    DBItem @find(cString &id, cString &ip) {
+    void add(DBItem @dbitem) {
+        items[size] = dbitem;
+        @dbitem = items[size++];
+    }
+
+    DBItem @find(cString &id) {
         for (int i = 0; i < size; i++) {
-            if (items[i].id == id) {
-                if (items[i].ip == ip)
-                    items[i].state = DBI_IDENTIFIED;
-                else
-                    items[i].state = DBI_WRONG_IP;
+            if (items[i].id == id)
                 return items[i];
-            }
         }
         return null;
     }
 
     void write() {
-        cString file = "// " + gametype.getName() + " user database\n";
+        cString file = "// " + gametype.getName() + " user database version "
+            + DB_VERSION + "\n";
         for (int i = 0; i < size; i++)
             items[i].write(file);
-        G_WriteFile(CONFIGS_DIR + gametype.getName() + DB_FILE + DB_VERSION,
-                file);
+        G_WriteFile(file_name, file);
     }
-
 }

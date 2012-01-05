@@ -18,15 +18,39 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 class Scoreboard {
-    Scoreboard() {
-        // Assuming a maximum of 13 px per char, 18 px for images and less than
-        // 100 minutes playtime.
+    int state;
 
-        G_ConfigString(CS_SCB_PLAYERTAB_LAYOUT,
-                "%s 26 %n 114 %s 52 %i 39 %s 39 %l 52 %i 26 %p 18");
-        G_ConfigString(CS_SCB_PLAYERTAB_TITLES,
-                "Lv Name Clan Scr Row Ping Tm R");
+    // Assuming a maximum of 13 px per char, 18 px for images and less than
+    // 100 minutes playtime.
 
+    void warmup_layout() {
+        G_ConfigString(CS_SCB_PLAYERTAB_LAYOUT, SB_BASE_LAYOUT + " %p 18");
+        G_ConfigString(CS_SCB_PLAYERTAB_TITLES, SB_BASE_TITLE + " R");
+    }
+
+    void match_layout() {
+        G_ConfigString(CS_SCB_PLAYERTAB_LAYOUT, SB_BASE_LAYOUT + " %p 18");
+        G_ConfigString(CS_SCB_PLAYERTAB_TITLES, SB_BASE_TITLE + " W");
+    }
+
+    void post_layout() {
+        G_ConfigString(CS_SCB_PLAYERTAB_LAYOUT, SB_BASE_LAYOUT);
+        G_ConfigString(CS_SCB_PLAYERTAB_TITLES, SB_BASE_TITLE);
+    }
+
+    void set_layout(int new_state) {
+        state = new_state;
+        switch (state) {
+            case SB_WARMUP:
+                warmup_layout();
+                break;
+            case SB_MATCH:
+                match_layout();
+                break;
+            case SB_POST:
+                post_layout();
+                break;
+        }
     }
 
     void add_team(cString &scoreboard, int id, int max_len,
@@ -46,17 +70,18 @@ class Scoreboard {
 
     void add_player(cString &scoreboard, cEntity @ent, int max_len,
             Icons @icons, Players @players) {
-        int readyIcon = 0;
         Player @player = players.get(ent.client.playerNum());
-        cString registered_color = player.dbitem.state == DBI_IDENTIFIED
-            ? S_COLOR_PERSISTENT : S_COLOR_NOT_PERSISTENT;
-        if (ent.client.isReady())
-            readyIcon = icons.yes;
+        cString registered_color = player.state == DBI_IDENTIFIED
+            ? S_COLOR_PERSISTENT : S_COLOR_TEMPORARY;
         cString entry = "&p " + registered_color + player.dbitem.level + " "
             + ent.playerNum() + " " + ent.client.getClanName() + " "
             + ent.client.stats.score + " " + registered_color
             + player.dbitem.row + " " + ent.client.ping + " "
-            + player.minutes_played + " " + readyIcon + " ";
+            + player.minutes_played + " ";
+        if (state == SB_WARMUP && ent.client.isReady())
+            entry += icons.yes + " ";
+        else if (state == SB_MATCH)
+            entry += "0 ";
         string_add_maxed(scoreboard, entry, max_len);
     }
 }

@@ -18,13 +18,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 class DBItem {
-    int state;
-
     cString id;
     cString ip;
     cString password;
 
-    int title;
+    int rank;
     int level;
     int exp;
     int row;
@@ -33,19 +31,26 @@ class DBItem {
     int minutes_played;
 
     DBItem() {
-        state = DBI_UNKNOWN;
-
         id = "";
         ip = "";
         password = "";
 
-        title = 0;
+        rank = 0;
         level = 0;
         exp = 0;
         row = 0;
         kills = 0;
         deaths = 0;
         minutes_played = 0;
+    }
+
+    void init(cClient @client) {
+        id = raw(client.getName());
+        ip = get_ip(client);
+    }
+
+    void set_password(cString &new_password) {
+        password = new_password;
     }
 
     int read(cString &file, int index) {
@@ -56,7 +61,7 @@ class DBItem {
         ip = file.getToken(index++);
         password = file.getToken(index++);
 
-        title = file.getToken(index++).toInt();
+        rank = file.getToken(index++).toInt();
         level = file.getToken(index++).toInt();
         row = file.getToken(index++).toInt();
         kills = file.getToken(index++).toInt();
@@ -71,7 +76,7 @@ class DBItem {
         file += "\"" + ip + "\" ";
         file += "\"" + password + "\" ";
 
-        file += "\"" + title + "\" ";
+        file += "\"" + rank + "\" ";
         file += "\"" + level + "\" ";
         file += "\"" + row + "\" ";
         file += "\"" + kills + "\" ";

@@ -21,6 +21,8 @@ class Player {
     cClient @client;
     int row;
     int minutes_played;
+
+    int state;
     DBItem @dbitem;
 
     void init(cClient @new_client, DB @db) {
@@ -28,13 +30,28 @@ class Player {
         row = 0;
         minutes_played = 0;
 
-        @dbitem = db.find(raw(client.getName()), get_ip(client));
-        if (@dbitem == null)
+        @dbitem = db.find(raw(client.getName()));
+        if (@dbitem == null) {
             @dbitem = @DBItem();
+            state = DBI_UNKNOWN;
+        }
+        else {
+            if (get_ip(client) == dbitem.ip)
+                state = DBI_IDENTIFIED;
+            else
+                state = DBI_WRONG_IP;
+        }
+        dbitem.init(client);
+    }
+
+    void set_registered(cString &password) {
+        state = DBI_IDENTIFIED;
+        dbitem.set_password(password);
+        client.addAward(S_COLOR_ADMINISTRATIVE + "You are now registered");
     }
 
     void welcome(cString &msg) {
-        if (@client != null)
+        if (client.team != TEAM_SPECTATOR)
             client.addAward(msg);
     }
 
