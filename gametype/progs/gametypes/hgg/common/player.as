@@ -124,4 +124,31 @@ class Player {
                         + dbitem.level + " user!");
         }
     }
+
+    void update_hud_self() {
+        if (client.team == TEAM_SPECTATOR)
+            return;
+
+        int config_index = CS_GENERAL + client.playerNum() + 2;
+        client.setHUDStat(STAT_MESSAGE_ALPHA, config_index);
+        G_ConfigString(config_index, "- " + client.stats.score + " -");
+    }
+
+    void update_hud_other(int best_score, int second_score) {
+        if (@client == null || client.team == TEAM_SPECTATOR)
+            return;
+
+        int config_index = CS_GENERAL;
+        if (client.stats.score == best_score)
+            config_index++;
+        client.setHUDStat(STAT_MESSAGE_BETA, config_index);
+        if (best_score == UNKNOWN
+                || (score == best_score && second_score == UNKNOWN)
+                || count_players() == 0)
+            G_ConfigString(config_index,"- ? -");
+        else
+            G_ConfigString(config_index, "- "
+                    + (score == best_score ? second_score : best_score) + " -");
+    }
+
 }

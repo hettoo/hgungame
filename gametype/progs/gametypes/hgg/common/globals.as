@@ -28,6 +28,8 @@ const cString S_COLOR_ADMINISTRATIVE = S_COLOR_CYAN;
 
 const cString DATA_DIR = "gtdata/";
 
+const int UNKNOWN = -1;
+
 enum hgg_gametype_e {
     GT_FFA,
     GT_CA
@@ -143,6 +145,15 @@ int exp_needed(int level) {
 
 bool for_real() {
     return match.getState() == MATCH_STATE_PLAYTIME;
+}
+
+int count_players() {
+    int n = 0;
+    for (int i = 0; i < GS_MAX_TEAMS; i++) {
+        if (i != TEAM_SPECTATOR)
+            n += G_GetTeam(i).numPlayers;
+    }
+    return n;
 }
 
 void notify(cString &msg) {

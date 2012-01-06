@@ -25,11 +25,17 @@ class Players {
     DB db;
     Weapons weapons;
 
+    int best_score;
+    int second_score;
+
     uint last_time;
 
     Players() {
         players.resize(maxClients);
         max = -1;
+
+        best_score = -1;
+        second_score = -1;
 
         last_time = 0;
     }
@@ -94,6 +100,14 @@ class Players {
         Player @player = get(client.playerNum());
         player.add_score(1);
         player.add_exp(row);
+
+        player.update_hud_self();
+        update_best(client.playerNum());
+        if (player.score == best_score)
+            update_hud();
+        else if (player.score == second_score)
+            update_hud_bests();
+
         int award = weapons.award(row);
         if (award == WEAP_NONE)
             return;
@@ -153,6 +167,9 @@ class Players {
     }
 
     void respawn(cClient @client) {
+        Player @player = get(client.playerNum());
+        player.update_hud_self();
+        player.update_hud_other(best_score, second_score);
         give_spawn_weapons(client);
         weapons.select_best(client);
         client.getEnt().respawnEffect();
@@ -174,4 +191,58 @@ class Players {
         }
     }
 
+    void update_best(int i) {
+        Player @player = get(i);
+        cClient @client = player.client;
+        if (@client != null && client.team != TEAM_SPECTATOR) {
+            if (player.score > best_score || best_score == UNKNOWN)
+                best_score = player.score;
+            else if (player.score > second_score || second_score == UNKNOWN)
+                second_score = player.score;
+        }
+    }
+
+    void update_best() {
+        best_score = UNKNOWN;
+        second_score = UNKNOWN;
+        for (int i = 0; i <= max; i++)
+            update_best(i);
+    }
+
+    void update_hud(){
+        for (int i = 0; i <= max; i++) {
+            Player @player = get(i);
+            player.update_hud_other(best_score, second_score);
+        }
+    }
+
+    void update_hud_bests(){
+        for (int i = 0; i <= max; i++) {
+            Player @player = get(i);
+            if (player.score == best_score)
+                player.update_hud_other(best_score, second_score);
+        }
+    }
+
+    void new_player(cClient @client) {
+        Player @player = get(client.playerNum());
+        if (player.state == DBI_WRONG_IP) {
+            player.force_spec("Wrong IP");
+        } else {
+            player.sync_score();
+            if (count_players() <= 2 || player.score > second_score) {
+                update_best();
+                update_hud();
+            }
+        }
+    }
+
+    void new_spectator(cClient @client) {
+        Player @player = get(client.playerNum());
+        check_row(client, null);
+        if (player.score == best_score || player.score == second_score) {
+            update_best();
+            update_hud();
+        }
+    }
 }
