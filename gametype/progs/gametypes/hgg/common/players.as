@@ -226,9 +226,7 @@ class Players {
 
     void new_player(cClient @client) {
         Player @player = get(client.playerNum());
-        if (player.state == DBI_WRONG_IP) {
-            player.force_spec("Wrong IP");
-        } else {
+        if (player.ip_check()) {
             player.sync_score();
             if (count_players() <= 2 || player.score > second_score) {
                 update_best();
@@ -244,5 +242,11 @@ class Players {
             update_best();
             update_hud();
         }
+    }
+
+    void namechange(cClient @client) {
+        Player @player = get(client.playerNum());
+        player.init(null, db);
+        player.ip_check();
     }
 }

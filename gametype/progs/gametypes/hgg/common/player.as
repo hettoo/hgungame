@@ -34,19 +34,27 @@ class Player {
     DBItem @dbitem;
 
     void init(cClient @new_client, DB @db) {
-        @client = @new_client;
-        row = 0;
-        minutes_played = 0;
+        if (@new_client != null) {
+            @client = @new_client;
+            row = 0;
+            minutes_played = 0;
+            score = 0;
+        }
+        else if (@client == null) {
+            return;
+        }
 
-        score = 0;
-
+        DBItem @backup = @dbitem;
         @dbitem = db.find(raw(client.getName()));
         if (@dbitem == null) {
-            @dbitem = @DBItem();
-            state = DBI_UNKNOWN;
-            dbitem.init(client);
-        }
-        else {
+            if (!(@new_client == null && state == DBI_UNKNOWN)) {
+                state = DBI_UNKNOWN;
+                @dbitem = @DBItem();
+                dbitem.init(client);
+            } else {
+                @dbitem = @backup;
+            }
+        } else {
             if (get_ip(client) == dbitem.ip)
                 state = DBI_IDENTIFIED;
             else
@@ -62,6 +70,14 @@ class Player {
         client.team = TEAM_SPECTATOR;
         client.respawn(true);
         client.addAward(S_COLOR_BAD + msg);
+    }
+
+    bool ip_check() {
+        if (state == DBI_WRONG_IP) {
+            force_spec("Wrong IP");
+            return false;
+        }
+        return true;
     }
 
     void set_registered(cString &password) {
