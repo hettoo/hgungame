@@ -161,6 +161,10 @@ int exp_needed(int level) {
     return level * level + 5;
 }
 
+bool for_real() {
+    return match.getState() == MATCH_STATE_PLAYTIME;
+}
+
 void notify(cString &msg) {
     G_PrintMsg(null, msg + "\n");
 }

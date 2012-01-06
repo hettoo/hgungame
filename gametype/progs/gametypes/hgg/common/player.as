@@ -106,6 +106,9 @@ class Player {
     }
 
     void add_exp(int exp) {
+        if (!for_real())
+            return;
+
         dbitem.exp += exp;
         while (dbitem.exp >= exp_needed(dbitem.level + 1))
         {

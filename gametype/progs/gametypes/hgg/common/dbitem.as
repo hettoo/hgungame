@@ -86,22 +86,18 @@ class DBItem {
         file += "\"" + minutes_played + "\"\n";
     }
 
-    bool right_state() {
-        return match.getState() == MATCH_STATE_PLAYTIME;
-    }
-
     void add_kill() {
-        if (right_state())
+        if (for_real())
             kills++;
     }
 
     void add_death() {
-        if (right_state())
+        if (for_real())
             deaths++;
     }
 
     void add_minute() {
-        if (right_state())
+        if (for_real())
             minutes_played++;
     }
 
