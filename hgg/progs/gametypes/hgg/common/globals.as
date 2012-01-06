@@ -157,6 +157,10 @@ bool decrease_ammo(cClient @client, int weapon) {
     return false;
 }
 
+int exp_needed(int level) {
+    return level * level + 5;
+}
+
 void notify(cString &msg) {
     G_PrintMsg(null, msg + "\n");
 }

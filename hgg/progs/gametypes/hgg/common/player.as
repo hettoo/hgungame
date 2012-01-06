@@ -104,4 +104,15 @@ class Player {
     void update_row() {
         dbitem.update_row(row);
     }
+
+    void add_exp(int exp) {
+        dbitem.exp += exp;
+        while (dbitem.exp >= exp_needed(dbitem.level + 1))
+        {
+            dbitem.exp -= exp_needed(++dbitem.level);
+            if (state == DBI_IDENTIFIED)
+                client.addAward(S_COLOR_ADMINISTRATIVE + "You are now a level "
+                        + dbitem.level + " user!");
+        }
+    }
 }

@@ -89,7 +89,9 @@ class Players {
     }
 
     void award(cClient @client, int row, bool show) {
-        get(client.playerNum()).add_score(1);
+        Player @player = get(client.playerNum());
+        player.add_score(1);
+        player.add_exp(row);
         int weapon = weapons.award(row);
         if (weapon == WEAP_NONE)
             return;

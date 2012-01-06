@@ -63,6 +63,7 @@ class DBItem {
 
         rank = file.getToken(index++).toInt();
         level = file.getToken(index++).toInt();
+        exp = file.getToken(index++).toInt();
         row = file.getToken(index++).toInt();
         kills = file.getToken(index++).toInt();
         deaths = file.getToken(index++).toInt();
@@ -78,6 +79,7 @@ class DBItem {
 
         file += "\"" + rank + "\" ";
         file += "\"" + level + "\" ";
+        file += "\"" + exp + "\" ";
         file += "\"" + row + "\" ";
         file += "\"" + kills + "\" ";
         file += "\"" + deaths + "\" ";
