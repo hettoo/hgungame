@@ -108,7 +108,8 @@ class Player {
     }
 
     void update_row() {
-        dbitem.update_row(row);
+        if (for_real())
+            dbitem.update_row(row);
     }
 
     void add_exp(int exp) {
