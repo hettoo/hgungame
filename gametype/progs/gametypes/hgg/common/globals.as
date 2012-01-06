@@ -17,12 +17,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-const int DB_VERSION = 0;
-
-const int SPECIAL_ROW = 5;
-const int INFINITE_AMMO = 99;
-const int HEAVY_AMMO = 7;
-
 const cString S_COLOR_ITEM_AWARD = S_COLOR_GREEN;
 const cString S_COLOR_ACHIEVEMENT = S_COLOR_YELLOW;
 const cString S_COLOR_ROW = S_COLOR_ORANGE;
@@ -32,37 +26,11 @@ const cString S_COLOR_PERSISTENT = S_COLOR_RESET;
 const cString S_COLOR_TEMPORARY = S_COLOR_GREY;
 const cString S_COLOR_ADMINISTRATIVE = S_COLOR_CYAN;
 
-const cString SB_BASE_LAYOUT = "%s 26 %n 112 %s 52 %i 39 %s 39 %l 52 %i 26";
-const cString SB_BASE_TITLE = "Lv Name Clan Scr Row Ping Tm";
-
-const int MAX_DB_ITEMS = 2048;
-
-const cString CVAR_BASE = "g_hgg_";
-
-const cString CONFIGS_DIR = "configs/server/gametypes/";
 const cString DATA_DIR = "gtdata/";
-const cString DB_FILE = "db_";
-
-enum hgg_cvars_e {
-    CV_MOTD,
-    CV_TOTAL
-};
 
 enum hgg_gametype_e {
     GT_FFA,
     GT_CA
-};
-
-enum hgg_dbitem_states_e {
-    DBI_UNKNOWN,
-    DBI_WRONG_IP,
-    DBI_IDENTIFIED
-};
-
-enum hgg_scoreboard_states_e {
-    SB_WARMUP,
-    SB_MATCH,
-    SB_POST
 };
 
 void string_add_maxed(cString &string, cString &addition, int max) {

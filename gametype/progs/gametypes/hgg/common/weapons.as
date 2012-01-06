@@ -17,10 +17,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-class Weapons {
-    Weapons() {
-    }
+const int INFINITE_AMMO = 99;
+const int HEAVY_AMMO = 7;
 
+class Weapons {
     /*
      * Returns the weapon to be rewarded after exactly the given amount of
      * frags. Returns WEAP_NONE if no weapons should be rewarded yet, or
@@ -72,11 +72,11 @@ class Weapons {
             give_weapon(client, WEAP_GUNBLADE, 0);
     }
 
-    bool heavy_weapon(int weapon) {
+    bool heavy(int weapon) {
         return weapon == WEAP_MACHINEGUN || weapon == WEAP_RIOTGUN;
     }
 
     int ammo(int weapon) {
-        return heavy_weapon(weapon) ? HEAVY_AMMO : 0;
+        return heavy(weapon) ? HEAVY_AMMO : 0;
     }
 }

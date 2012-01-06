@@ -17,6 +17,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+const int DB_VERSION = 0;
+const cString DB_FILE = "db_";
+
+const int MAX_DB_ITEMS = 2048;
+
 class DB {
     DBItem@[] items;
     int size;

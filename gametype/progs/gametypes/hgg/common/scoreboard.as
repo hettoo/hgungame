@@ -17,6 +17,15 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+const cString SB_BASE_LAYOUT = "%s 26 %n 112 %s 52 %i 39 %s 39 %l 52 %i 26";
+const cString SB_BASE_TITLE = "Lv Name Clan Scr Row Ping Tm";
+
+enum hgg_scoreboard_states_e {
+    SB_WARMUP,
+    SB_MATCH,
+    SB_POST
+};
+
 class Scoreboard {
     int state;
 
