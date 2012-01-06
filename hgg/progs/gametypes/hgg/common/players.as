@@ -58,6 +58,7 @@ class Players {
             Player @player = get(i);
             check_row(player.client, null);
             player.minutes_played = 0;
+            player.set_score(0);
         }
     }
 
@@ -88,7 +89,7 @@ class Players {
     }
 
     void award(cClient @client, int row, bool show) {
-        client.stats.addScore(1);
+        get(client.playerNum()).add_score(1);
         int weapon = weapons.award(row);
         if (weapon == WEAP_NONE)
             return;

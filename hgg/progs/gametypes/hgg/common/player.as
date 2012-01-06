@@ -22,6 +22,8 @@ class Player {
     int row;
     int minutes_played;
 
+    int score;
+
     int state;
     DBItem @dbitem;
 
@@ -29,6 +31,8 @@ class Player {
         @client = @new_client;
         row = 0;
         minutes_played = 0;
+
+        score = 0;
 
         @dbitem = db.find(raw(client.getName()));
         if (@dbitem == null) {
@@ -42,6 +46,10 @@ class Player {
             else
                 state = DBI_WRONG_IP;
         }
+    }
+
+    void reset_row() {
+        row = 0;
     }
 
     void force_spec(cString &msg) {
@@ -59,6 +67,20 @@ class Player {
     void welcome(cString &msg) {
         if (client.team != TEAM_SPECTATOR)
             client.addAward(msg);
+    }
+
+    void sync_score() {
+        client.stats.setScore(score);
+    }
+
+    void add_score(int n) {
+        score += n;
+        sync_score();
+    }
+
+    void set_score(int n) {
+        score = n;
+        sync_score();
     }
 
     void show_row() {

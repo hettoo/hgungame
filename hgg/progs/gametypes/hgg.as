@@ -152,25 +152,32 @@ class HGGGlobal {
         players.check_minute();
     }
 
-    void new_player(cClient @client) {
+    void new_client(cClient @client) {
         players.init_client(client);
+    }
+
+    void new_player(cClient @client) {
         Player @player = players.get(client.playerNum());
         if (player.state == DBI_WRONG_IP)
             player.force_spec("Wrong IP");
+        else
+            player.sync_score();
     }
 
     void new_spectator(cClient @client) {
+        players.get(client.playerNum()).reset_row();
     }
 
     void player_respawn(cEntity @ent, int old_team, int new_team) {
-        if (old_team == TEAM_SPECTATOR && new_team != TEAM_SPECTATOR)
-            new_player(ent.client);
-        else if (old_team != TEAM_SPECTATOR && new_team == TEAM_SPECTATOR)
-            new_spectator(ent.client);
+        if (ent.client.connecting)
+            new_client(ent.client);
+            if (old_team == TEAM_SPECTATOR && new_team != TEAM_SPECTATOR)
+                new_player(ent.client);
+            else if (old_team != TEAM_SPECTATOR && new_team == TEAM_SPECTATOR)
+                new_spectator(ent.client);
 
         if (new_team != TEAM_SPECTATOR)
             players.respawn(ent.client);
     }
-
 }
 
