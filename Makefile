@@ -7,11 +7,11 @@ MOD = promod
 
 all: $(GT_PK3)
 
-$(GT_PK3): $(shell find hgg/)
+$(GT_PK3): $(shell find gametype/)
 	rm -rf temp
 	mkdir temp
 	rm -f *.pk3
-	cp -r hgg/* temp/
+	cp -r gametype/* temp/
 	cd temp; zip ../$(GT_PK3) -r -xi *
 	rm -r temp
 
