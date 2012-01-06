@@ -71,7 +71,7 @@ class Player {
     }
 
     void welcome(cString &msg) {
-        if (client.team != TEAM_SPECTATOR)
+        if (@client != null && client.team != TEAM_SPECTATOR)
             client.addAward(msg);
     }
 
