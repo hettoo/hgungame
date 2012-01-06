@@ -156,6 +156,47 @@ int count_players() {
     return n;
 }
 
+cString @fixed_field(cString &text, int size) {
+    cString field;
+    cString replacement = "..";
+    int real_size = 0;
+    int no_color_size = 0;
+    bool stopped = false;
+    cString backup_field = "";
+    int backup_size = 0;
+    while (real_size < text.len()) {
+        if (no_color_size == size) {
+            field = backup_field + S_COLOR_RESET + replacement;
+            break;
+        } else {
+            cString next = text.substr(real_size, 1);
+            field += next;
+
+            if (next == "^")
+                no_color_size--;
+            else
+                no_color_size++;
+
+            real_size++;
+            while (backup_field.removeColorTokens().len()
+                    < no_color_size - replacement.removeColorTokens().len()) {
+                backup_field += field.substr(backup_size, 1);
+                backup_size++;
+            }
+        }
+    }
+    while (no_color_size < size) {
+        field += " ";
+        no_color_size++;
+    }
+    field += " ";
+    return field;
+}
+
+cString @fixed_field(int n, int size) {
+    return fixed_field(n + "", size);
+}
+
 void notify(cString &msg) {
     G_PrintMsg(null, msg + "\n");
 }

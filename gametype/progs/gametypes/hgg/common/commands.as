@@ -67,6 +67,8 @@ class Commands {
             cmd_gt_register(client, args, argc, players);
         else if (command == "identify")
             cmd_gt_identify(client, args, argc, players);
+        else if (command == "listplayers")
+            cmd_gt_listplayers(client, args, argc, players);
         else
             cmd_gt_help(client, args, argc, players);
 
@@ -95,11 +97,38 @@ class Commands {
         }
     }
 
+    void cmd_gt_listplayers(cClient @client, cString &args, int argc,
+            Players @players) {
+        cString list = "";
+        list += fixed_field("id", 3);
+        list += fixed_field("name", 20);
+        list += fixed_field("clan", 7);
+        list += fixed_field("rank", 4);
+        list += fixed_field("level", 5);
+        list += "\n";
+        bool first = true;
+        for (int i = 0; i <= players.max; i++){
+            Player @player = players.get(i);
+            if (@player.client != null) {
+                if (!first)
+                    list += "\n";
+                list += fixed_field(i, 3);
+                list += fixed_field(player.client.getName(), 20);
+                list += fixed_field(player.client.getClanName(), 7);
+                list += fixed_field(player.dbitem.rank, 4);
+                list += fixed_field(player.dbitem.level, 5);
+                first = false;
+            }
+        }
+        G_PrintMsg(client.getEnt(), list);
+    }
+
     void cmd_gt_help(cClient @client, cString &args, int argc,
             Players @players) {
         cString response = "Available /gt commands:\n"
             + "register <password> <password> -- register yourself\n"
-            + "identify <password> -- identify yourself after an ip change\n";
+            + "identify <password> -- identify yourself after an ip change\n"
+            + "listplayers -- list all players with their ids\n";
         G_PrintMsg(client.getEnt(), response);
     }
 }
