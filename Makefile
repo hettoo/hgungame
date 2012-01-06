@@ -1,4 +1,5 @@
 # You may have to edit these
+MOD = promod
 WSW_DIR = ~/.warsow-0.6
 SERVER_CMD = wsw-server
 
@@ -25,6 +26,7 @@ $(GT_PK3): $(shell find $(GT_DIR)/)
 local:
 	rm -f $(WSW_DIR)/$(BASE_MOD)/hgg-*.pk3
 	rm -f $(WSW_DIR)/$(BASE_MOD)/$(CONFIG_DIR)/hgg_*.cfg
+	rm -f $(WSW_DIR)/$(MOD)/$(CONFIG_DIR)/hgg_*.cfg
 	cp $(GT_PK3) $(WSW_DIR)/$(BASE_MOD)/
 
 dev: all local
