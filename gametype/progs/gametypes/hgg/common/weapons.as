@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 const int INFINITE_AMMO = 99;
-const int HEAVY_AMMO = 7;
+const int HEAVY_AMMO = 6;
 
 class Weapons {
     /*
@@ -74,6 +74,11 @@ class Weapons {
 
     bool heavy(int weapon) {
         return weapon == WEAP_MACHINEGUN || weapon == WEAP_RIOTGUN;
+    }
+
+    bool weak(int weapon) {
+        return weapon == WEAP_INSTAGUN || weapon == WEAP_ELECTROBOLT
+            || weapon == WEAP_GUNBLADE;
     }
 
     int ammo(int weapon) {

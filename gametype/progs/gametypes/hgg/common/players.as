@@ -90,26 +90,35 @@ class Players {
         player.row = 0;
     }
 
-    void award(cClient @client, int row, bool show) {
+    void award(cClient @client, int row, bool show, int weapon) {
         Player @player = get(client.playerNum());
         player.add_score(1);
         player.add_exp(row);
-        int weapon = weapons.award(row);
-        if (weapon == WEAP_NONE)
+        int award = weapons.award(row);
+        if (award == WEAP_NONE)
             return;
 
-        if (weapon < WEAP_TOTAL)
-            award_weapon(client, weapon, weapons.ammo(weapon), show);
+        if (award < WEAP_TOTAL)
+            award_weapon(client, award, weapons.ammo(award), show);
         else
             get(client.playerNum()).show_row();
+
+        if (weapons.weak(weapon)) {
+            int award;
+            for (int i = 0; i <= player.row
+                    && (award = weapons.award(i)) != WEAP_TOTAL; i++) {
+                if (weapons.heavy(award))
+                    increase_ammo(client, award);
+            }
+        }
     }
 
-    void award(cClient @client, int row) {
-        award(client, row, true);
+    void award(cClient @client, int row, int weapon) {
+        award(client, row, true, weapon);
     }
 
-    void award(cClient @client) {
-        award(client, get(client.playerNum()).row);
+    void award(cClient @client, int weapon) {
+        award(client, get(client.playerNum()).row, weapon);
     }
 
     void killed(cClient @target, cClient @attacker, cClient @inflictor) {
@@ -124,8 +133,9 @@ class Players {
             return;
 
         get(attacker.playerNum()).killer();
-        award(attacker);
-        check_decrease_ammo(attacker, attacker.weapon); // TODO: mod
+        int weapon = attacker.weapon; // FIXME: mod
+        award(attacker, weapon);
+        check_decrease_ammo(attacker, weapon);
     }
 
     void check_decrease_ammo(cClient @client, int weapon) {
@@ -138,7 +148,8 @@ class Players {
     void give_spawn_weapons(cClient @client) {
         weapons.give_default(client);
         for (int i = 1; i <= get(client.playerNum()).row; i++)
-            award(client, i, false);
+            award(client, i, false, WEAP_NONE);
+        // FIXME: should we store those weapons? :-(
     }
 
     void respawn(cClient @client) {

@@ -125,6 +125,18 @@ bool decrease_ammo(cClient @client, int weapon) {
     return false;
 }
 
+bool increase_ammo(cClient @client, int weapon) {
+    if(weapon == WEAP_NONE)
+        return false;
+
+    cItem @item = G_GetItem(weapon);
+    cItem @ammo_item = G_GetItem(item.ammoTag);
+    int ammo = client.inventoryCount(ammo_item.tag) + 1;
+    client.inventorySetCount(ammo_item.tag, ammo);
+
+    return true;
+}
+
 int exp_needed(int level) {
     return level * level + 5;
 }
