@@ -55,7 +55,6 @@ class HGGGlobal {
     }
 
     void playtime_started() {
-        players.reset();
         scoreboard.set_layout(SB_MATCH);
         GENERIC_SetUpMatch();
     }
@@ -73,6 +72,9 @@ class HGGGlobal {
 
         if (match.getState() == MATCH_STATE_POSTMATCH)
             match.stopAutorecord();
+
+        if (new_match_state == MATCH_STATE_PLAYTIME)
+            players.reset();
 
         return true;
     }
@@ -165,7 +167,7 @@ class HGGGlobal {
     }
 
     void new_spectator(cClient @client) {
-        players.get(client.playerNum()).reset_row();
+        players.check_row(client, null);
     }
 
     void player_respawn(cEntity @ent, int old_team, int new_team) {
