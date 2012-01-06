@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 class DB {
-    DBItem[] items;
+    DBItem@[] items;
     int size;
     bool has_root;
     cString file_name;
@@ -41,13 +41,13 @@ class DB {
         int new_index = 0;
         do {
             index = new_index;
-            new_index = items[++size].read(file, index);
+            @items[++size] = DBItem();
+            new_index = items[size].read(file, index);
         } while (new_index > index);
     }
 
     void add(DBItem @dbitem) {
-        items[size] = dbitem;
-        @dbitem = items[size++];
+        @items[size++] = @dbitem;
     }
 
     DBItem @find(cString &id) {
