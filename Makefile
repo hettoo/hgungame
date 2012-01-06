@@ -1,26 +1,34 @@
+# You may have to edit these
+MOD = promod
+WSW_DIR = ~/.warsow-0.6
+SERVER_CMD = wsw-server
+
 VERSION = 0.0-dev
+
+GT_DIR = gametype
+TMP_DIR = tmp
+BASE_MOD = basewsw
+CONFIG_DIR = configs/server/gametypes
 
 VERSION_WORD = $(subst .,_,$(VERSION))
 GT_PK3 = hgg-$(VERSION_WORD).pk3
 
-MOD = promod
-
 all: $(GT_PK3)
 
-$(GT_PK3): $(shell find gametype/)
-	rm -rf temp
-	mkdir temp
+$(GT_PK3): $(shell find $(GT_DIR)/)
+	rm -rf $(TMP_DIR)
+	mkdir $(TMP_DIR)
 	rm -f *.pk3
-	cp -r gametype/* temp/
-	cd temp; zip ../$(GT_PK3) -r -xi *
-	rm -r temp
+	cp -r $(GT_DIR)/* $(TMP_DIR)/
+	cd $(TMP_DIR); zip ../$(GT_PK3) -r -xi *
+	rm -r $(TMP_DIR)
 
 local:
-	rm -f ~/.warsow-0.6/basewsw/hgg-*.pk3
-	rm -f ~/.warsow-0.6/$(MOD)/configs/server/gametypes/hgg_*.cfg
-	cp $(GT_PK3) ~/.warsow-0.6/basewsw/
+	rm -f $(WSW_DIR)/$(BASE_MOD)/hgg-*.pk3
+	rm -f $(WSW_DIR)/$(MOD)/$(CONFIG_DIR)/hgg_*.cfg
+	cp $(GT_PK3) $(WSW_DIR)/$(BASE_MOD)/
 
 dev: all local
-	wsw-server
+	$(SERVER_CMD)
 
 .PHONY: all local dev
