@@ -8,7 +8,7 @@ generic/spawnpoints.as;
 
 legacy/quake1.as;
 
-hgg/ca.as;
+hgg/trw.as;
 
 hgg.as;
 hgg/common/callbacks.as;

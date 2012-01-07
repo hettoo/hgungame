@@ -34,7 +34,7 @@ class HGG : HGGGlobal {
     }
 
     void init_gametype() {
-        gt.name = "Clan Arena";
+        gt.name = "Team Row War";
         gt.type = GT_FFA;
         HGGGlobal::init_gametype();
     }
