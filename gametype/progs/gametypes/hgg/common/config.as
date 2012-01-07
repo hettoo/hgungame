@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 const cString CVAR_BASE = "g_hgg_";
 
-enum hgg_cvars_e {
+enum CVars {
     CV_MOTD,
     CV_TOTAL
 };

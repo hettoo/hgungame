@@ -30,7 +30,7 @@ const cString DATA_DIR = "gtdata/";
 
 const int UNKNOWN = -1;
 
-enum hgg_gametype_e {
+enum Gametypes {
     GT_FFA,
     GT_CA
 };
