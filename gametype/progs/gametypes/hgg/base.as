@@ -159,9 +159,6 @@ class HGGBase {
     }
 
     void player_respawn(cEntity @ent, int old_team, int new_team) {
-        if (ent.client.connecting)
-            players.init_client(ent.client);
-
         if (old_team == TEAM_SPECTATOR && new_team != TEAM_SPECTATOR)
             players.new_player(ent.client);
         else if (old_team != TEAM_SPECTATOR && new_team == TEAM_SPECTATOR)
