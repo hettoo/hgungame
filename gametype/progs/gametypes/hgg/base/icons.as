@@ -87,4 +87,20 @@ class Icons {
         }
         return no;
     }
+
+    int rank(int rank) {
+        switch (rank) {
+            case RANK_GUEST:
+                return guest;
+            case RANK_MEMBER:
+                return member;
+            case RANK_VIP:
+                return vip;
+            case RANK_ADMIN:
+                return admin;
+            case RANK_ROOT:
+                return root;
+        }
+        return no;
+    }
 }

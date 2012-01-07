@@ -17,8 +17,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-const cString SB_BASE_LAYOUT = "%s 26 %n 112 %s 52 %i 39 %s 39 %l 52 %i 26";
-const cString SB_BASE_TITLE = "Lv Name Clan Scr Row Ping Tm";
+const cString SB_BASE_LAYOUT = "%p 18 %s 26 %n 112 %s 52 %i 39 %s 39 %l 52 %i 26";
+const cString SB_BASE_TITLE = "R Lv Name Clan Scr Row Ping Tm";
 
 enum ScoreboardStates {
     SB_WARMUP,
@@ -79,11 +79,11 @@ class Scoreboard {
         Player @player = players.get(ent.client.playerNum());
         cString registered_color = player.state == DBI_IDENTIFIED
             ? S_COLOR_PERSISTENT : S_COLOR_TEMPORARY;
-        cString entry = "&p " + registered_color + player.dbitem.level + " "
-            + ent.playerNum() + " " + ent.client.getClanName() + " "
-            + ent.client.stats.score + " " + registered_color
-            + player.dbitem.row + " " + ent.client.ping + " "
-            + player.minutes_played + " ";
+        cString entry = "&p " + icons.rank(player.dbitem.rank) + " "
+            + registered_color + player.dbitem.level + " " + ent.playerNum()
+            + " " + ent.client.getClanName() + " " + ent.client.stats.score
+            + " " + registered_color + player.dbitem.row + " " + ent.client.ping
+            + " " + player.minutes_played + " ";
         if (state == SB_WARMUP)
             entry += (ent.client.isReady() ? icons.yes : icons.no) + " ";
         else if (state == SB_MATCH)

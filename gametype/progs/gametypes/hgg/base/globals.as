@@ -30,6 +30,14 @@ const cString DATA_DIR = "gtdata/";
 
 const int UNKNOWN = -1;
 
+enum Ranks {
+    RANK_GUEST,
+    RANK_MEMBER,
+    RANK_VIP,
+    RANK_ADMIN,
+    RANK_ROOT
+};
+
 void string_add_maxed(cString &string, cString &addition, int max) {
     if (string.len() + addition.len() <= max)
         string += addition;
