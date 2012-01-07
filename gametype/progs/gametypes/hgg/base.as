@@ -94,8 +94,7 @@ class HGGBase {
             cClient @target = G_GetEntity(args.getToken(0).toInt()).client;
             cClient @inflictor = G_GetEntity(args.getToken(1).toInt()).client;
             killed(client, target, inflictor);
-        } else if (score_event == "userinfochanged" && raw(client.getName())
-                != raw(args.getToken(0).removeColorTokens())) {
+        } else if (score_event == "userinfochanged") {
             players.namechange(client);
         }
     }

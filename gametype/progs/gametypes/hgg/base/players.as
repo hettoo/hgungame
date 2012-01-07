@@ -49,7 +49,7 @@ class Players {
         return players[playernum];
     }
 
-    void init_client(cClient @client){
+    void init_client(cClient @client) {
         int playernum = client.playerNum();
         get(playernum).init(client, db);
         if (playernum > max)
@@ -246,7 +246,7 @@ class Players {
 
     void namechange(cClient @client) {
         Player @player = get(client.playerNum());
-        player.init(null, db);
+        player.init(client, db);
         player.ip_check();
     }
 }

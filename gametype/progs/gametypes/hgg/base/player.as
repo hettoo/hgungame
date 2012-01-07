@@ -24,6 +24,7 @@ enum DBItemStates {
 };
 
 class Player {
+    bool inited;
     cClient @client;
     int row;
     int minutes_played;
@@ -33,21 +34,28 @@ class Player {
     int state;
     DBItem @dbitem;
 
+    Player () {
+        inited = false;
+    }
+
     void init(cClient @new_client, DB @db) {
-        if (@new_client != null) {
+        bool update = @client == @new_client;
+        if (!update) {
+            if (@new_client == null || inited)
+                return;
+            else
+                inited = true;
+
             @client = @new_client;
             row = 0;
             minutes_played = 0;
             score = 0;
         }
-        else if (@client == null) {
-            return;
-        }
 
         DBItem @backup = @dbitem;
         @dbitem = db.find(raw(client.getName()));
         if (@dbitem == null) {
-            if (!(@new_client == null && state == DBI_UNKNOWN)) {
+            if (!update || state != DBI_UNKNOWN) {
                 state = DBI_UNKNOWN;
                 @dbitem = @DBItem();
                 dbitem.init(client);
