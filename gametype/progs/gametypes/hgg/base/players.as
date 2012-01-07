@@ -246,7 +246,7 @@ class Players {
 
     void namechange(cClient @client) {
         Player @player = get(client.playerNum());
-        player.init(client, db);
+        init_client(client);
         player.ip_check();
     }
 }
