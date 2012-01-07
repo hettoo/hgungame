@@ -35,7 +35,7 @@ class HGG : HGGBase {
 
     void init_gametype() {
         gt.name = "Team Row War";
-        gt.type = GT_FFA;
+        gt.type = GT_DM;
         HGGBase::init_gametype();
     }
 

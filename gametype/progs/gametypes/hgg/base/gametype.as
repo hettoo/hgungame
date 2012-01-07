@@ -19,6 +19,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 const cString CONFIGS_DIR = "configs/server/gametypes/";
 
+enum Gametypes {
+    GT_FFA,
+    GT_CA,
+    GT_DM
+};
+
 class Gametype {
     int type;
     cString name;
@@ -35,6 +41,8 @@ class Gametype {
                 return "wca1 wca2 wca3";
             case GT_CA:
                 return "wca1 wca2 wca3";
+            case GT_DM:
+                return "wdm1 wdm2 wdm3 wdm4 wdm5 wdm6 wdm7 wdm8 wdm9 wdm10 wdm11 wdm12 wdm13 wdm14 wdm15 wdm16 wdm17";
         }
 
         return "wca3";

@@ -30,11 +30,6 @@ const cString DATA_DIR = "gtdata/";
 
 const int UNKNOWN = -1;
 
-enum Gametypes {
-    GT_FFA,
-    GT_CA
-};
-
 void string_add_maxed(cString &string, cString &addition, int max) {
     if (string.len() + addition.len() <= max)
         string += addition;
