@@ -17,9 +17,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-class HGG : HGGGlobal {
+class HGG : HGGBase {
     void set_gametype_settings() {
-        HGGGlobal::set_gametype_settings();
+        HGGBase::set_gametype_settings();
 
         set_spawn_system(SPAWNSYSTEM_INSTANT);
 
@@ -36,16 +36,16 @@ class HGG : HGGGlobal {
     void init_gametype() {
         gt.name = "Free For All";
         gt.type = GT_FFA;
-        HGGGlobal::init_gametype();
+        HGGBase::init_gametype();
     }
 
     void warmup_started() {
-        HGGGlobal::warmup_started();
+        HGGBase::warmup_started();
         CreateSpawnIndicators("info_player_deathmatch", TEAM_PLAYERS);
     }
 
     void countdown_started() {
-        HGGGlobal::countdown_started();
+        HGGBase::countdown_started();
         DeleteSpawnIndicators();
     }
 
