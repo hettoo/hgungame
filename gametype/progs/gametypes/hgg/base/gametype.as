@@ -38,7 +38,7 @@ class Gametype {
     cString @recommend_default_map_list() {
         switch (type) {
             case GT_FFA:
-                return "wca1 wca2 wca3";
+                return "bipbeta2";
             case GT_CA:
                 return "wca1 wca2 wca3";
             case GT_DM:
