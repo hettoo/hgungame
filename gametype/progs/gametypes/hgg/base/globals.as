@@ -25,10 +25,16 @@ const cString S_COLOR_RESET = S_COLOR_WHITE;
 const cString S_COLOR_PERSISTENT = S_COLOR_RESET;
 const cString S_COLOR_TEMPORARY = S_COLOR_GREY;
 const cString S_COLOR_ADMINISTRATIVE = S_COLOR_CYAN;
+const cString S_COLOR_HIGHLIGHT = S_COLOR_YELLOW;
+const cString S_COLOR_DESCRIPTION = S_COLOR_GREY;
+const cString S_COLOR_PM = S_COLOR_GREEN;
+
+const cString INDENT = "    ";
 
 const cString DATA_DIR = "gtdata/";
 
 const int UNKNOWN = -1;
+const int INFINITY = -1;
 
 enum Ranks {
     RANK_GUEST,
@@ -37,6 +43,22 @@ enum Ranks {
     RANK_ADMIN,
     RANK_ROOT
 };
+
+cString @rank_name(int rank) {
+    switch (rank) {
+        case RANK_GUEST:
+            return "Guest";
+        case RANK_MEMBER:
+            return "Member";
+        case RANK_VIP:
+            return "VIP";
+        case RANK_ADMIN:
+            return "Admin";
+        case RANK_ROOT:
+            return "ROOT";
+    }
+    return "?";
+}
 
 void string_add_maxed(cString &string, cString &addition, int max) {
     if (string.len() + addition.len() <= max)
@@ -204,8 +226,12 @@ void notify(cString &msg) {
     G_PrintMsg(null, msg + "\n");
 }
 
+void print(cClient @client, cString &msg) {
+    client.printMessage(msg);
+}
+
 void say(cClient @client, cString &msg) {
-    client.printMessage(msg + "\n");
+    print(client, msg + "\n");
 }
 
 void debug(cString &msg) {

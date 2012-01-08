@@ -17,10 +17,47 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+const cString COMMAND_BASE = "gt";
+
+const int MAX_COMMANDS = 64;
+
 class Commands {
+    Command@[] commands;
+    int size;
+
+    int sound_pm;
+
+    Commands() {
+        commands.resize(MAX_COMMANDS);
+        size = 0;
+        sound_pm = G_SoundIndex("sounds/misc/timer_bip_bip");
+    }
+
     void init() {
         G_RegisterCommand("gametype");
-        G_RegisterCommand("gt");
+        G_RegisterCommand(COMMAND_BASE);
+
+        add("listplayers", "", "list all players with their ids", RANK_GUEST);
+        add("pm", "<id> <message>...", "send a message to a player",
+                RANK_GUEST);
+        add("register", "<password> <password>", "register yourself",
+                RANK_GUEST);
+        add("identify", "<password>", "identify yourself after an ip change",
+                RANK_GUEST);
+    }
+
+    void add(cString &name, cString &usage, cString &description,
+            int min_rank) {
+        @commands[size++] = Command(name, usage, description, min_rank);
+    }
+
+    Command @find(cString &name) {
+        for (int i = 0; i < size; i++) {
+            if (commands[i].name == name)
+                return commands[i];
+        }
+
+        return null;
     }
 
     bool handle(cClient @client, cString &cmd, cString &args, int argc,
@@ -29,7 +66,7 @@ class Commands {
             return cmd_cvarinfo(client, args, argc, players);
         else if (cmd == "gametype")
             return cmd_gametype(client, args, argc, players);
-        else if (cmd == "gt")
+        else if (cmd == COMMAND_BASE)
             return cmd_gt(client, args, argc, players);
 
         return false;
@@ -55,29 +92,44 @@ class Commands {
             + (manifest.length() > 0 ? " (manifest: " + manifest + ")" : "")
             + "\n"
             + "----------------\n"
-            + "Use /gt to see the gametype commands\n";
+            + "Use /" + COMMAND_BASE + " to see the gametype commands\n";
 
         G_PrintMsg(client.getEnt(), response);
         return true;
     }
 
+    cString @cmd_with_usage(Command @command) {
+        return command.name + " " + command.usage;
+    }
+
     bool cmd_gt(cClient @client, cString &args, int argc, Players @players) {
-        cString command = args.getToken(0);
-        if (command == "register")
-            cmd_gt_register(client, args, argc, players);
-        else if (command == "identify")
-            cmd_gt_identify(client, args, argc, players);
-        else if (command == "listplayers")
-            cmd_gt_listplayers(client, args, argc, players);
-        else
-            cmd_gt_help(client, args, argc, players);
+        Command @command = find(args.getToken(0));
+        Player @player = players.get(client.playerNum());
+        if (@command == null) {
+            cmd_gt_help(player, args, argc, players);
+        } else {
+            if (command.valid_usage(argc - 1)) {
+                if (command.name == "listplayers")
+                    cmd_gt_listplayers(player, args, argc, players);
+                else if (command.name == "pm")
+                    cmd_gt_pm(player, args, argc, players);
+                else if (command.name == "register")
+                    cmd_gt_register(player, args, argc, players);
+                else if (command.name == "identify")
+                    cmd_gt_identify(player, args, argc, players);
+                else
+                    cmd_gt_unimplemented(player, args, argc, players);
+            } else {
+                say(player.client, S_COLOR_HIGHLIGHT + "Usage" + S_COLOR_RESET
+                        + ": " + cmd_with_usage(command));
+            }
+        }
 
         return true;
     }
 
-    void cmd_gt_register(cClient @client, cString &args, int argc,
+    void cmd_gt_register(Player @player, cString &args, int argc,
             Players @players) {
-        Player @player = players.get(client.playerNum());
         cString password = args.getToken(1);
         if (player.state == DBI_UNKNOWN && password != ""
                 && password == args.getToken(2)) {
@@ -86,18 +138,18 @@ class Commands {
         }
     }
 
-    void cmd_gt_identify(cClient @client, cString &args, int argc,
+    void cmd_gt_identify(Player @player, cString &args, int argc,
             Players @players) {
-        Player @player = players.get(client.playerNum());
         if (player.state == DBI_WRONG_IP
                 && args.getToken(1) == player.dbitem.password) {
             player.state = DBI_IDENTIFIED;
-            player.dbitem.ip = get_ip(client);
-            client.addAward(S_COLOR_ADMINISTRATIVE + "IP changed successfully");
+            player.dbitem.ip = get_ip(player.client);
+            player.client.addAward(S_COLOR_ADMINISTRATIVE +
+                    "IP changed successfully");
         }
     }
 
-    void cmd_gt_listplayers(cClient @client, cString &args, int argc,
+    void cmd_gt_listplayers(Player @player, cString &args, int argc,
             Players @players) {
         cString list = "";
         list += fixed_field("id", 3);
@@ -120,15 +172,56 @@ class Commands {
                 first = false;
             }
         }
-        G_PrintMsg(client.getEnt(), list);
+        print(player.client, list);
     }
 
-    void cmd_gt_help(cClient @client, cString &args, int argc,
+    void pm_message(cClient @from, cClient @to, cString &message,
+            bool is_self_notification) {
+        say(to, from.getName() + S_COLOR_PM + " " + (is_self_notification
+                    ? "<<" : ">>" ) + " " + S_COLOR_RESET + message);
+    }
+
+    void send_pm(cClient @from, cClient @to, cString &message) {
+        G_Sound(to.getEnt(), CHAN_VOICE, sound_pm, 0.0f);
+        pm_message(to, from, message, true);
+        pm_message(from, to, message, false);
+    }
+
+    void cmd_gt_pm(Player @player, cString &args, int argc, Players @players) {
+        int n = args.getToken(1).toInt();
+        Player @other = players.get(n);
+        if (@other.client == null)
+            return;
+        cString message = "";
+        int pos = args.locate("" + n, 0) + 1;
+        message = args.substr(pos,args.len());
+        send_pm(player.client, other.client, message);
+    }
+
+    void cmd_gt_help(Player @player, cString &args, int argc,
             Players @players) {
-        cString response = "Available /gt commands:\n"
-            + "register <password> <password> -- register yourself\n"
-            + "identify <password> -- identify yourself after an ip change\n"
-            + "listplayers -- list all players with their ids\n";
-        G_PrintMsg(client.getEnt(), response);
+        cString response = "Available /" + COMMAND_BASE
+            + " commands, sorted by rank:\n";
+        for (int rank = 0; rank <= player.dbitem.rank; rank++) {
+            bool first = true;
+            for (int i = 0; i < size; i++) {
+                if (commands[i].min_rank == rank) {
+                    if (first) {
+                        response += "\n" + S_COLOR_HIGHLIGHT + rank_name(rank)
+                            + ":\n" + S_COLOR_RESET;
+                        first = false;
+                    }
+                    response += cmd_with_usage(commands[i]) + "\n" + INDENT
+                        + S_COLOR_DESCRIPTION + commands[i].description + "\n";
+                }
+            }
+        }
+        print(player.client, response);
+    }
+
+    void cmd_gt_unimplemented(Player @player, cString &args, int argc,
+            Players @players) {
+        say(player.client, "Somehow this command was not implemented.\n"
+                + "Please report this bug to a developer.");
     }
 }

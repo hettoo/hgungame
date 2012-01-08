@@ -22,3 +22,4 @@ hgg/base/config.as;
 hgg/base/weapons.as;
 hgg/base/icons.as;
 hgg/base/commands.as;
+hgg/base/command.as;
