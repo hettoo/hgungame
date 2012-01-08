@@ -222,6 +222,10 @@ cString @fixed_field(int n, int size) {
     return fixed_field(n + "", size);
 }
 
+cString @highlight(cString &s) {
+    return S_COLOR_HIGHLIGHT + s + S_COLOR_RESET;
+}
+
 void notify(cString &msg) {
     G_PrintMsg(null, msg + "\n");
 }

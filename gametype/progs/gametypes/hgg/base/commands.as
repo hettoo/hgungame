@@ -110,9 +110,9 @@ class Commands {
         } else {
             if (player.dbitem.rank < command.min_rank) {
                 say_bad(player.client, "You need to be at least rank "
-                        + command.min_rank + "("
-                        + rank_name(command.min_rank).tolower()
-                        + ") to use this command.");
+                        + command.min_rank + " ("
+                        + highlight(rank_name(command.min_rank).tolower())
+                        + S_COLOR_BAD + ") to use this command.");
             } else if (command.valid_usage(argc - 1)) {
                 if (command.name == "listplayers")
                     cmd_gt_listplayers(player, args, argc, players);
@@ -125,8 +125,8 @@ class Commands {
                 else
                     cmd_gt_unimplemented(player, args, argc, players);
             } else {
-                say(player.client, S_COLOR_HIGHLIGHT + "Usage" + S_COLOR_RESET
-                        + ": " + cmd_with_usage(command));
+                say(player.client, highlight("Usage") + ": "
+                        + cmd_with_usage(command));
             }
         }
 
@@ -221,8 +221,7 @@ class Commands {
             for (int i = 0; i < size; i++) {
                 if (commands[i].min_rank == rank) {
                     if (first) {
-                        response += "\n" + S_COLOR_HIGHLIGHT + rank_name(rank)
-                            + ":\n" + S_COLOR_RESET;
+                        response += "\n" + highlight(rank_name(rank) + ":\n");
                         first = false;
                     }
                     response += cmd_with_usage(commands[i]) + "\n" + INDENT
