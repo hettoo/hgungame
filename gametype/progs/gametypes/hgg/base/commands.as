@@ -108,7 +108,12 @@ class Commands {
         if (@command == null) {
             cmd_gt_help(player, args, argc, players);
         } else {
-            if (command.valid_usage(argc - 1)) {
+            if (player.dbitem.rank < command.min_rank) {
+                say_bad(player.client, "You need to be at least rank "
+                        + command.min_rank + "("
+                        + rank_name(command.min_rank).tolower()
+                        + ") to use this command.");
+            } else if (command.valid_usage(argc - 1)) {
                 if (command.name == "listplayers")
                     cmd_gt_listplayers(player, args, argc, players);
                 else if (command.name == "pm")
