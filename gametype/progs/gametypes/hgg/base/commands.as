@@ -197,7 +197,7 @@ class Commands {
     void cmd_gt_pm(Player @player, cString &args, int argc, Players @players) {
         int n = args.getToken(1).toInt();
         Player @other = players.get(n);
-        if (@other.client == null) {
+        if (@other == null || @other.client == null) {
             say_bad(player.client, "Target player does not exist.");
         } else {
             cString message = "";

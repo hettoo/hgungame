@@ -46,14 +46,16 @@ class Players {
     }
 
     Player @get(int playernum) {
+        if (playernum < 0 || playernum > max)
+            return null;
         return players[playernum];
     }
 
     void init_client(cClient @client) {
         int playernum = client.playerNum();
-        get(playernum).init(client, db);
         if (playernum > max)
             max = playernum;
+        get(playernum).init(client, db);
     }
 
     void welcome_all(cString &msg) {
@@ -245,8 +247,8 @@ class Players {
     }
 
     void namechange(cClient @client) {
-        Player @player = get(client.playerNum());
         init_client(client);
+        Player @player = get(client.playerNum());
         player.ip_check();
     }
 }
