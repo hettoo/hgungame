@@ -131,8 +131,13 @@ class Commands {
     void cmd_gt_register(Player @player, cString &args, int argc,
             Players @players) {
         cString password = args.getToken(1);
-        if (player.state == DBI_UNKNOWN && password != ""
-                && password == args.getToken(2)) {
+        if (player.state != DBI_UNKNOWN) {
+            say_bad(player.client, "Your name is already registered.");
+        } else if (password == "") {
+            say_bad(player.client, "Your password should not be empty.");
+        } else if (password != args.getToken(2)) {
+            say_bad(player.client, "Passwords didn't match.");
+        } else {
             player.set_registered(password);
             players.db.add(player.dbitem);
         }
@@ -140,8 +145,11 @@ class Commands {
 
     void cmd_gt_identify(Player @player, cString &args, int argc,
             Players @players) {
-        if (player.state == DBI_WRONG_IP
-                && args.getToken(1) == player.dbitem.password) {
+        if (player.state != DBI_WRONG_IP) {
+            say_bad(player.client, "You did not need to identify.");
+        } else if (args.getToken(1) != player.dbitem.password) {
+            say_bad(player.client, "Wrong password.");
+        } else {
             player.state = DBI_IDENTIFIED;
             player.dbitem.ip = get_ip(player.client);
             administrate(player.client, "IP changed successfully");
@@ -189,12 +197,14 @@ class Commands {
     void cmd_gt_pm(Player @player, cString &args, int argc, Players @players) {
         int n = args.getToken(1).toInt();
         Player @other = players.get(n);
-        if (@other.client == null)
-            return;
-        cString message = "";
-        int pos = args.locate("" + n, 0) + 1;
-        message = args.substr(pos,args.len());
-        send_pm(player.client, other.client, message);
+        if (@other.client == null) {
+            say_bad(player.client, "Target player does not exist.");
+        } else {
+            cString message = "";
+            int pos = args.locate("" + n, 0) + 1;
+            message = args.substr(pos,args.len());
+            send_pm(player.client, other.client, message);
+        }
     }
 
     void cmd_gt_help(Player @player, cString &args, int argc,

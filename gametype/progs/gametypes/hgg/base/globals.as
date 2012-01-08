@@ -234,6 +234,10 @@ void say(cClient @client, cString &msg) {
     print(client, msg + "\n");
 }
 
+void say_bad(cClient @client, cString &msg) {
+    say(client, S_COLOR_BAD + msg);
+}
+
 void administrate(cClient @client, cString &msg) {
     client.addAward(S_COLOR_ADMINISTRATIVE + msg);
 }
