@@ -159,7 +159,7 @@ class Commands {
         list += fixed_field("level", 5);
         list += "\n";
         bool first = true;
-        for (int i = 0; i <= players.max; i++){
+        for (int i = 0; i <= players.max; i++) {
             Player @player = players.get(i);
             if (@player.client != null) {
                 if (!first)
