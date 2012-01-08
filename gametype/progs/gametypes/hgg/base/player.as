@@ -91,7 +91,7 @@ class Player {
     void set_registered(cString &password) {
         state = DBI_IDENTIFIED;
         dbitem.set_password(password);
-        client.addAward(S_COLOR_ADMINISTRATIVE + "You are now registered");
+        administrate(client, "You are now registered!");
     }
 
     void welcome(cString &msg) {
@@ -145,8 +145,8 @@ class Player {
         {
             dbitem.exp -= exp_needed(++dbitem.level);
             if (state == DBI_IDENTIFIED)
-                client.addAward(S_COLOR_ADMINISTRATIVE + "You are now a level "
-                        + dbitem.level + " user!");
+                administrate(client, "You are now a level " + dbitem.level
+                        + " user!");
         }
     }
 

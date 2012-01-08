@@ -144,8 +144,7 @@ class Commands {
                 && args.getToken(1) == player.dbitem.password) {
             player.state = DBI_IDENTIFIED;
             player.dbitem.ip = get_ip(player.client);
-            player.client.addAward(S_COLOR_ADMINISTRATIVE +
-                    "IP changed successfully");
+            administrate(player.client, "IP changed successfully");
         }
     }
 
