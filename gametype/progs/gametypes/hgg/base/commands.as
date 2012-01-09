@@ -109,9 +109,8 @@ class Commands {
             cmd_gt_help(player, args, argc, players);
         } else {
             if (player.dbitem.rank < command.min_rank) {
-                say_bad(player.client, "You need to be at least rank "
-                        + command.min_rank + " ("
-                        + highlight(
+                player.say_bad("You need to be at least rank "
+                        + command.min_rank + " (" + highlight(
                             players.ranks.name(command.min_rank).tolower())
                         + S_COLOR_BAD + ") to use this command.");
             } else if (command.valid_usage(argc - 1)) {
@@ -126,7 +125,7 @@ class Commands {
                 else
                     cmd_gt_unimplemented(player, args, argc, players);
             } else {
-                say(player.client, highlight("Usage") + ": "
+                player.say(highlight("Usage") + ": "
                         + cmd_with_usage(command));
             }
         }
@@ -138,27 +137,28 @@ class Commands {
             Players @players) {
         cString password = args.getToken(1);
         if (player.state != DBI_UNKNOWN) {
-            say_bad(player.client, "Your name is already registered.");
+            player.say_bad("Your name is already registered.");
         } else if (password == "") {
-            say_bad(player.client, "Your password should not be empty.");
+            player.say_bad("Your password should not be empty.");
         } else if (password != args.getToken(2)) {
-            say_bad(player.client, "Passwords didn't match.");
+            player.say_bad("Passwords didn't match.");
         } else {
             player.set_registered(password);
             players.db.add(player.dbitem);
+            player.administrate("You are now registered!");
         }
     }
 
     void cmd_gt_identify(Player @player, cString &args, int argc,
             Players @players) {
         if (player.state != DBI_WRONG_IP) {
-            say_bad(player.client, "You did not need to identify.");
+            player.say_bad("You did not need to identify.");
         } else if (args.getToken(1) != player.dbitem.password) {
-            say_bad(player.client, "Wrong password.");
+            player.say_bad("Wrong password.");
         } else {
             player.state = DBI_IDENTIFIED;
             player.dbitem.ip = get_ip(player.client);
-            administrate(player.client, "IP changed successfully");
+            player.administrate("IP changed successfully");
         }
     }
 
@@ -185,16 +185,16 @@ class Commands {
                 first = false;
             }
         }
-        print(player.client, list);
+        player.print(list);
     }
 
-    void pm_message(cClient @from, cClient @to, cString &message,
+    void pm_message(Player @from, Player @to, cString &message,
             bool is_self_notification) {
-        say(to, from.getName() + S_COLOR_PM + " " + (is_self_notification
+        to.say(from.client.getName() + S_COLOR_PM + " " + (is_self_notification
                     ? "<<" : ">>" ) + " " + S_COLOR_RESET + message);
     }
 
-    void send_pm(cClient @from, cClient @to, cString &message) {
+    void send_pm(Player @from, Player @to, cString &message) {
         G_Sound(to.getEnt(), CHAN_VOICE, sound_pm, 0.0f);
         pm_message(to, from, message, true);
         pm_message(from, to, message, false);
@@ -204,12 +204,12 @@ class Commands {
         int n = args.getToken(1).toInt();
         Player @other = players.get(n);
         if (@other == null || @other.client == null) {
-            say_bad(player.client, "Target player does not exist.");
+            player.say_bad("Target player does not exist.");
         } else {
             cString message = "";
             int pos = args.locate("" + n, 0) + 1;
             message = args.substr(pos,args.len());
-            send_pm(player.client, other.client, message);
+            send_pm(player, other, message);
         }
     }
 
@@ -231,12 +231,12 @@ class Commands {
                 }
             }
         }
-        print(player.client, response);
+        player.print(response);
     }
 
     void cmd_gt_unimplemented(Player @player, cString &args, int argc,
             Players @players) {
-        say(player.client, "Somehow this command was not implemented.\n"
+        player.say("Somehow this command was not implemented.\n"
                 + "Please report this bug to a developer.");
     }
 }

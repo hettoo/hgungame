@@ -206,22 +206,6 @@ void notify(cString &msg) {
     G_PrintMsg(null, msg + "\n");
 }
 
-void print(cClient @client, cString &msg) {
-    client.printMessage(msg);
-}
-
-void say(cClient @client, cString &msg) {
-    print(client, msg + "\n");
-}
-
-void say_bad(cClient @client, cString &msg) {
-    say(client, S_COLOR_BAD + msg);
-}
-
-void administrate(cClient @client, cString &msg) {
-    client.addAward(S_COLOR_ADMINISTRATIVE + msg);
-}
-
 void debug(cString &msg) {
     G_Print(msg + "\n");
 }

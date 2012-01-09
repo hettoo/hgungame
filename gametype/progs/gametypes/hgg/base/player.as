@@ -91,7 +91,6 @@ class Player {
     void set_registered(cString &password) {
         state = DBI_IDENTIFIED;
         dbitem.set_password(password);
-        administrate(client, "You are now registered!");
     }
 
     void welcome(cString &msg) {
@@ -176,4 +175,19 @@ class Player {
                     + (score == best_score ? second_score : best_score) + " -");
     }
 
+    void print(cString &msg) {
+        client.printMessage(msg);
+    }
+
+    void say(cString &msg) {
+        print(client, msg + "\n");
+    }
+
+    void say_bad(cString &msg) {
+        say(client, S_COLOR_BAD + msg);
+    }
+
+    void administrate(cString &msg) {
+        client.addAward(S_COLOR_ADMINISTRATIVE + msg);
+    }
 }

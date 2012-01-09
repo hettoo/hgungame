@@ -142,8 +142,9 @@ class Players {
         if (match.getState() > MATCH_STATE_PLAYTIME || @target == null)
             return;
 
-        say(target, "** You have been killed by " + attacker.getName());
-        get(target.playerNum()).killed();
+        Player @player = get(target.playerNum());
+        player.say("** You have been killed by " + attacker.getName());
+        player.killed();
         check_row(target, attacker);
 
         if (@attacker == null || @attacker == @target)
@@ -212,14 +213,14 @@ class Players {
             update_best(i);
     }
 
-    void update_hud(){
+    void update_hud() {
         for (int i = 0; i <= max; i++) {
             Player @player = get(i);
             player.update_hud_other(best_score, second_score);
         }
     }
 
-    void update_hud_bests(){
+    void update_hud_bests() {
         for (int i = 0; i <= max; i++) {
             Player @player = get(i);
             if (player.score == best_score)
