@@ -152,9 +152,7 @@ class HGGBase {
             return;
 
         GENERIC_Think();
-
-        charge_gunblades();
-
+        players.charge_gunblades();
         players.check_minute();
     }
 

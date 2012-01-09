@@ -253,4 +253,13 @@ class Players {
         Player @player = get(client.playerNum());
         player.ip_check();
     }
+
+    void charge_gunblades() {
+        for (int i = 0; i <= max; i++) {
+            Player @player = get(i);
+            if (@player.client != null && player.client.state() >= CS_SPAWNED
+                    && player.client.getEnt().team != TEAM_SPECTATOR)
+                GENERIC_ChargeGunblade(player.client);
+        }
+    }
 }
