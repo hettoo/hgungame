@@ -45,6 +45,34 @@ class Weapons {
         icon_max = G_ImageIndex("gfx/hud/icons/powerup/quad");
     }
 
+    int icon(int weapon) {
+        switch (weapon) {
+            case WEAP_NONE:
+                return gametype.isInstagib() ? icon_instagun : icon_gunblade;
+            case WEAP_INSTAGUN:
+                return icon_instagun;
+            case WEAP_ELECTROBOLT:
+                return icon_electro;
+            case WEAP_GRENADELAUNCHER:
+                return icon_grenade;
+            case WEAP_ROCKETLAUNCHER:
+                return icon_rocket;
+            case WEAP_PLASMAGUN:
+                return icon_plasma;
+            case WEAP_LASERGUN:
+                return icon_laser;
+            case WEAP_MACHINEGUN:
+                return icon_machinegun;
+            case WEAP_RIOTGUN:
+                return icon_riot;
+            case WEAP_GUNBLADE:
+                return icon_gunblade;
+            case WEAP_TOTAL:
+                return icon_max;
+        }
+        return 0;
+    }
+
     /*
      * Returns the weapon to be rewarded after exactly the given amount of
      * frags. Returns WEAP_NONE if no weapons should be rewarded yet, or
@@ -107,33 +135,5 @@ class Weapons {
 
     int ammo(int weapon) {
         return heavy(weapon) ? HEAVY_AMMO : 0;
-    }
-
-    int icon(int weapon) {
-        switch (weapon) {
-            case WEAP_NONE:
-                return gametype.isInstagib() ? icon_instagun : icon_gunblade;
-            case WEAP_INSTAGUN:
-                return icon_instagun;
-            case WEAP_ELECTROBOLT:
-                return icon_electro;
-            case WEAP_GRENADELAUNCHER:
-                return icon_grenade;
-            case WEAP_ROCKETLAUNCHER:
-                return icon_rocket;
-            case WEAP_PLASMAGUN:
-                return icon_plasma;
-            case WEAP_LASERGUN:
-                return icon_laser;
-            case WEAP_MACHINEGUN:
-                return icon_machinegun;
-            case WEAP_RIOTGUN:
-                return icon_riot;
-            case WEAP_GUNBLADE:
-                return icon_gunblade;
-            case WEAP_TOTAL:
-                return icon_max;
-        }
-        return 0;
     }
 }
