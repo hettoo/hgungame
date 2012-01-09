@@ -75,8 +75,7 @@ void give_weapon(cClient @client, int weapon, int ammo) {
         client.inventorySetCount(ammo_item.tag,
                 (weapon == WEAP_GUNBLADE ? 4 : INFINITE_AMMO));
         client.inventorySetCount(weak_ammo_item.tag, 0);
-    }
-    else{
+    } else {
         client.inventorySetCount(ammo_item.tag, ammo);
         client.inventorySetCount(weak_ammo_item.tag,
                 (weapon == WEAP_GUNBLADE ? INFINITE_AMMO : 0));
