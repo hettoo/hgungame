@@ -29,6 +29,14 @@ enum ScoreboardStates {
 class Scoreboard {
     int state;
 
+    int icon_yes;
+    int icon_no;
+
+    Scoreboard() {
+        icon_yes = G_ImageIndex("gfx/hud/icons/vsay/yes");
+        icon_no = G_ImageIndex("gfx/hud/icons/vsay/no");
+    }
+
     void warmup_layout() {
         G_ConfigString(CS_SCB_PLAYERTAB_LAYOUT, SB_BASE_LAYOUT + " %p 18");
         G_ConfigString(CS_SCB_PLAYERTAB_TITLES, SB_BASE_TITLE + " R");
@@ -59,35 +67,35 @@ class Scoreboard {
         }
     }
 
-    void add_team(cString &scoreboard, int id, int max_len,
-            Icons @icons, Players @players) {
+    void add_team(cString &scoreboard, int id, int max_len, Players @players) {
         cTeam @team = @G_GetTeam(id);
         string_add_maxed(scoreboard, "&t " + id + " " + team.stats.score + " "
                 + team.ping + " ", max_len);
-        add_team_players(scoreboard, id, max_len, icons, players);
+        add_team_players(scoreboard, id, max_len, players);
     }
 
     void add_team_players(cString &scoreboard, int id, int max_len,
-            Icons @icons, Players @players) {
+            Players @players) {
         cTeam @team = @G_GetTeam(id);
         for (int i = 0; @team.ent(i) != null; i++)
-            add_player(scoreboard, team.ent(i), max_len, icons, players);
+            add_player(scoreboard, team.ent(i), max_len, players);
     }
 
     void add_player(cString &scoreboard, cEntity @ent, int max_len,
-            Icons @icons, Players @players) {
+            Players @players) {
         Player @player = players.get(ent.client.playerNum());
         cString registered_color = player.state == DBI_IDENTIFIED
             ? S_COLOR_PERSISTENT : S_COLOR_TEMPORARY;
-        cString entry = "&p " + icons.rank(player.dbitem.rank) + " "
+        cString entry = "&p " + ranks.icon(player.dbitem.rank) + " "
             + registered_color + player.dbitem.level + " " + ent.playerNum()
             + " " + ent.client.getClanName() + " " + ent.client.stats.score
             + " " + registered_color + player.dbitem.row + " " + ent.client.ping
             + " " + player.minutes_played + " ";
         if (state == SB_WARMUP)
-            entry += (ent.client.isReady() ? icons.yes : icons.no) + " ";
+            entry += (ent.client.isReady() ? icon_yes : icon_no) + " ";
         else if (state == SB_MATCH)
-            entry += icons.weapon(players.weapons.award(player.row)) + " ";
+            entry += players.weapons.icon(players.weapons.award(player.row))
+                + " ";
         string_add_maxed(scoreboard, entry, max_len);
     }
 }

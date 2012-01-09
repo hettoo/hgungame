@@ -23,6 +23,7 @@ class Players {
     Player[] players;
     int max;
     DB db;
+    Ranks ranks;
     Weapons weapons;
 
     int best_score;

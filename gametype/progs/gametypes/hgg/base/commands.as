@@ -111,7 +111,8 @@ class Commands {
             if (player.dbitem.rank < command.min_rank) {
                 say_bad(player.client, "You need to be at least rank "
                         + command.min_rank + " ("
-                        + highlight(rank_name(command.min_rank).tolower())
+                        + highlight(
+                            players.ranks.name(command.min_rank).tolower())
                         + S_COLOR_BAD + ") to use this command.");
             } else if (command.valid_usage(argc - 1)) {
                 if (command.name == "listplayers")
@@ -221,7 +222,8 @@ class Commands {
             for (int i = 0; i < size; i++) {
                 if (commands[i].min_rank == rank) {
                     if (first) {
-                        response += "\n" + highlight(rank_name(rank) + ":\n");
+                        response += "\n" + highlight(players.ranks.name(rank)
+                                + ":\n");
                         first = false;
                     }
                     response += cmd_with_usage(commands[i]) + "\n" + INDENT

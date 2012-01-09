@@ -36,30 +36,6 @@ const cString DATA_DIR = "gtdata/";
 const int UNKNOWN = -1;
 const int INFINITY = -1;
 
-enum Ranks {
-    RANK_GUEST,
-    RANK_MEMBER,
-    RANK_VIP,
-    RANK_ADMIN,
-    RANK_ROOT
-};
-
-cString @rank_name(int rank) {
-    switch (rank) {
-        case RANK_GUEST:
-            return "Guest";
-        case RANK_MEMBER:
-            return "Member";
-        case RANK_VIP:
-            return "VIP";
-        case RANK_ADMIN:
-            return "Admin";
-        case RANK_ROOT:
-            return "ROOT";
-    }
-    return "?";
-}
-
 void string_add_maxed(cString &string, cString &addition, int max) {
     if (string.len() + addition.len() <= max)
         string += addition;

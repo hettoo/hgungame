@@ -8,10 +8,10 @@ generic/spawnpoints.as;
 
 legacy/quake1.as;
 
-hgg/ffa.as;
 hgg/base.as;
 hgg/base/callbacks.as;
 hgg/base/globals.as;
+hgg/base/ranks.as;
 hgg/base/gametype.as;
 hgg/base/players.as;
 hgg/base/player.as;
@@ -20,6 +20,6 @@ hgg/base/dbitem.as;
 hgg/base/scoreboard.as;
 hgg/base/config.as;
 hgg/base/weapons.as;
-hgg/base/icons.as;
 hgg/base/commands.as;
 hgg/base/command.as;
+hgg/ffa.as;
