@@ -139,15 +139,6 @@ bool for_real() {
     return match.getState() == MATCH_STATE_PLAYTIME;
 }
 
-int count_players() {
-    int n = 0;
-    for (int i = 0; i < GS_MAX_TEAMS; i++) {
-        if (i != TEAM_SPECTATOR)
-            n += G_GetTeam(i).numPlayers;
-    }
-    return n;
-}
-
 cString @fixed_field(cString &text, int size) {
     cString field;
     cString replacement = "..";

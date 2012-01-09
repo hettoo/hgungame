@@ -232,7 +232,7 @@ class Players {
         Player @player = get(client.playerNum());
         if (player.ip_check()) {
             player.sync_score();
-            if (count_players() <= 2 || player.score > second_score) {
+            if (count() <= 2 || player.score > second_score) {
                 update_best();
                 update_hud();
             }
@@ -261,5 +261,15 @@ class Players {
                     && player.client.getEnt().team != TEAM_SPECTATOR)
                 GENERIC_ChargeGunblade(player.client);
         }
+    }
+
+    int count() {
+        int n = 0;
+        for (int i = 0; i <= max; i++) {
+            cClient @client = get(i).client;
+            if (client != null && client.team != TEAM_SPECTATOR)
+                n++;
+        }
+        return n;
     }
 }
