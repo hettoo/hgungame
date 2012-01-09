@@ -22,7 +22,6 @@ class HGGBase {
     Gametype gt;
     Players players;
     Scoreboard scoreboard;
-    Icons icons;
     Commands commands;
 
     void spawn_gametype() {

@@ -173,7 +173,7 @@ class Players {
     void respawn(cClient @client) {
         Player @player = get(client.playerNum());
         player.update_hud_self();
-        player.update_hud_other(best_score, second_score);
+        player.update_hud_other(this);
         give_spawn_weapons(client);
         weapons.select_best(client);
         client.getEnt().respawnEffect();
@@ -216,7 +216,7 @@ class Players {
     void update_hud() {
         for (int i = 0; i <= max; i++) {
             Player @player = get(i);
-            player.update_hud_other(best_score, second_score);
+            player.update_hud_other(this);
         }
     }
 
@@ -224,7 +224,7 @@ class Players {
         for (int i = 0; i <= max; i++) {
             Player @player = get(i);
             if (player.score == best_score)
-                player.update_hud_other(best_score, second_score);
+                player.update_hud_other(this);
         }
     }
 
@@ -267,7 +267,7 @@ class Players {
         int n = 0;
         for (int i = 0; i <= max; i++) {
             cClient @client = get(i).client;
-            if (client != null && client.team != TEAM_SPECTATOR)
+            if (@client != null && client.team != TEAM_SPECTATOR)
                 n++;
         }
         return n;

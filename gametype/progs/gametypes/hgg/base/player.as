@@ -144,8 +144,7 @@ class Player {
         {
             dbitem.exp -= exp_needed(++dbitem.level);
             if (state == DBI_IDENTIFIED)
-                administrate(client, "You are now a level " + dbitem.level
-                        + " user!");
+                administrate("You are now a level " + dbitem.level + " user!");
         }
     }
 
@@ -158,21 +157,22 @@ class Player {
         G_ConfigString(config_index, "- " + client.stats.score + " -");
     }
 
-    void update_hud_other(int best_score, int second_score) {
+    void update_hud_other(Players @players) {
         if (@client == null || client.team == TEAM_SPECTATOR)
             return;
 
         int config_index = CS_GENERAL;
-        if (client.stats.score == best_score)
+        if (client.stats.score == players.best_score)
             config_index++;
         client.setHUDStat(STAT_MESSAGE_BETA, config_index);
-        if (best_score == UNKNOWN
-                || (score == best_score && second_score == UNKNOWN)
-                || count_players() == 0)
+        if (players.best_score == UNKNOWN
+                || (score == players.best_score
+                    && players.second_score == UNKNOWN) || players.count() == 0)
             G_ConfigString(config_index,"- ? -");
         else
             G_ConfigString(config_index, "- "
-                    + (score == best_score ? second_score : best_score) + " -");
+                    + (score == players.best_score ? players.second_score
+                        : players.best_score) + " -");
     }
 
     void print(cString &msg) {
@@ -180,11 +180,11 @@ class Player {
     }
 
     void say(cString &msg) {
-        print(client, msg + "\n");
+        print(msg + "\n");
     }
 
     void say_bad(cString &msg) {
-        say(client, S_COLOR_BAD + msg);
+        say(S_COLOR_BAD + msg);
     }
 
     void administrate(cString &msg) {

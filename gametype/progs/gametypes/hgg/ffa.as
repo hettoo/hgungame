@@ -51,7 +51,7 @@ class HGG : HGGBase {
 
     cString @scoreboard_message(int max_len) {
         cString board= "";
-        scoreboard.add_team(board, TEAM_PLAYERS, max_len, icons, players);
+        scoreboard.add_team(board, TEAM_PLAYERS, max_len, players);
         return board;
     }
 }

@@ -32,7 +32,7 @@ class Ranks {
     int icon_admin;
     int icon_root;
 
-    Icons() {
+    Ranks() {
         icon_guest = G_ImageIndex("gfx/hud/icons/health/5");
         icon_member = G_ImageIndex("gfx/hud/icons/health/25");
         icon_vip = G_ImageIndex("gfx/hud/icons/health/50");

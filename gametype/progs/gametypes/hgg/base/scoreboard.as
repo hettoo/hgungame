@@ -86,7 +86,7 @@ class Scoreboard {
         Player @player = players.get(ent.client.playerNum());
         cString registered_color = player.state == DBI_IDENTIFIED
             ? S_COLOR_PERSISTENT : S_COLOR_TEMPORARY;
-        cString entry = "&p " + ranks.icon(player.dbitem.rank) + " "
+        cString entry = "&p " + players.ranks.icon(player.dbitem.rank) + " "
             + registered_color + player.dbitem.level + " " + ent.playerNum()
             + " " + ent.client.getClanName() + " " + ent.client.stats.score
             + " " + registered_color + player.dbitem.row + " " + ent.client.ping
