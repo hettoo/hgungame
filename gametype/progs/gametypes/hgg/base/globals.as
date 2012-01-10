@@ -191,3 +191,7 @@ void notify(cString &msg) {
 void debug(cString &msg) {
     G_Print(msg + "\n");
 }
+
+void exec(cString &cmd){
+    G_CmdExecute(cmd + "\n");
+}

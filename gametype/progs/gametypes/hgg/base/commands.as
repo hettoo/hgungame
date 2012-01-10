@@ -37,13 +37,20 @@ class Commands {
         G_RegisterCommand("gametype");
         G_RegisterCommand(COMMAND_BASE);
 
-        add("listplayers", "", "list all players with their ids", RANK_GUEST);
-        add("pm", "<id> <message>...", "send a message to a player",
+        add("listplayers", "", "List all players with their ids.", RANK_GUEST);
+        add("pm", "<id> <message>...", "Send a message to a player.",
                 RANK_GUEST);
-        add("register", "<password> <password>", "register yourself",
+        add("register", "<password> <password>", "Register yourself.",
                 RANK_GUEST);
-        add("identify", "<password>", "identify yourself after an ip change",
+        add("identify", "<password>", "Identify yourself after an ip change.",
                 RANK_GUEST);
+
+        add("nextmap", "", "Proceed to the next map.", RANK_MEMBER);
+
+        add("map", "<mapname>", "Change the current map.", RANK_VIP);
+
+        add("devmap", "<mapname>", "Change the current map and enable cheats.",
+                RANK_ADMIN);
     }
 
     void add(cString &name, cString &usage, cString &description,
@@ -122,6 +129,12 @@ class Commands {
                     cmd_gt_register(player, args, argc, players);
                 else if (command.name == "identify")
                     cmd_gt_identify(player, args, argc, players);
+                else if (command.name == "nextmap")
+                    cmd_gt_nextmap(player, args, argc, players);
+                else if (command.name == "map")
+                    cmd_gt_map(player, args, argc, players);
+                else if (command.name == "devmap")
+                    cmd_gt_devmap(player, args, argc, players);
                 else
                     cmd_gt_unimplemented(player, args, argc, players);
             } else {
@@ -232,6 +245,21 @@ class Commands {
             }
         }
         player.print(response);
+    }
+
+    void cmd_gt_nextmap(Player @player, cString &args, int argc,
+            Players @players) {
+        exec("match advance");
+    }
+
+    void cmd_gt_map(Player @player, cString &args, int argc,
+            Players @players) {
+        exec("map " + args.getToken(1));
+    }
+
+    void cmd_gt_devmap(Player @player, cString &args, int argc,
+            Players @players) {
+        exec("devmap " + args.getToken(1));
     }
 
     void cmd_gt_unimplemented(Player @player, cString &args, int argc,
