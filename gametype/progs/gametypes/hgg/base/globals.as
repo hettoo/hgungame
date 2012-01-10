@@ -132,7 +132,7 @@ bool increase_ammo(cClient @client, int weapon) {
 }
 
 int exp_needed(int level) {
-    return level * level + 5;
+    return level * level + 40 * level;
 }
 
 bool for_real() {
