@@ -179,6 +179,10 @@ class Player {
         client.printMessage(msg);
     }
 
+    void center(cString &msg) {
+        G_CenterPrintMsg(client.getEnt(), msg.toupper());
+    }
+
     void say(cString &msg) {
         print(msg + "\n");
     }

@@ -17,6 +17,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+const int NW_HEALTH = 25;
+
 const cString S_COLOR_ITEM_AWARD = S_COLOR_GREEN;
 const cString S_COLOR_ACHIEVEMENT = S_COLOR_YELLOW;
 const cString S_COLOR_ROW = S_COLOR_ORANGE;

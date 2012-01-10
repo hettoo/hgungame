@@ -132,3 +132,7 @@ void GT_InitGametype() {
     hgg.init_gametype();
 }
 
+void dummy_die(cEntity @self, cEntity @inflictor, cEntity @attacker)
+{
+    hgg.dummy_killed(self, attacker, inflictor);
+}

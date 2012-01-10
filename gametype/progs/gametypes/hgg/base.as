@@ -23,6 +23,13 @@ class HGGBase {
     Players players;
     Scoreboard scoreboard;
     Commands commands;
+    Dummies dummies;
+
+    uint last_time;
+
+    HGGBase() {
+        last_time = 0;
+    }
 
     void spawn_gametype() {
     }
@@ -154,7 +161,7 @@ class HGGBase {
 
         GENERIC_Think();
         players.charge_gunblades();
-        players.check_minute();
+        check_minute();
     }
 
     void player_respawn(cEntity @ent, int old_team, int new_team) {
@@ -165,6 +172,21 @@ class HGGBase {
 
         if (new_team != TEAM_SPECTATOR)
             players.respawn(ent.client);
+    }
+
+    void check_minute() {
+        uint time = levelTime / 60000;
+        if (time != last_time) {
+            players.increase_minutes();
+            dummies.spawn();
+            last_time = time;
+        }
+    }
+
+    void dummy_killed(cEntity @self, cEntity @attacker, cEntity @inflictor) {
+        players.killed_anyway(null, attacker.client, inflictor.client);
+        self.freeEntity();
+        @self = null;
     }
 }
 

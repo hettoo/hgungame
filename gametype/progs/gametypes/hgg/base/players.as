@@ -35,16 +35,12 @@ class Players {
     int best_score;
     int second_score;
 
-    uint last_time;
-
     Players() {
         players.resize(maxClients);
         max = -1;
 
         best_score = -1;
         second_score = -1;
-
-        last_time = 0;
     }
 
     void init() {
@@ -145,6 +141,19 @@ class Players {
         award(client, get(client.playerNum()).row, weapon);
     }
 
+    void killed_anyway(cClient @target, cClient @attacker, cClient @inflictor) {
+        if (@attacker == null || @attacker == @target)
+            return;
+
+        Player @player = get(attacker.playerNum());
+        if (@target == null)
+            player.center("You fragged a dummy");
+        player.killer();
+        int weapon = attacker.weapon; // FIXME: mod
+        award(attacker, weapon);
+        check_decrease_ammo(attacker, weapon);
+    }
+
     void killed(cClient @target, cClient @attacker, cClient @inflictor) {
         if (match.getState() > MATCH_STATE_PLAYTIME || @target == null)
             return;
@@ -154,13 +163,7 @@ class Players {
         player.killed();
         check_row(target, attacker);
 
-        if (@attacker == null || @attacker == @target)
-            return;
-
-        get(attacker.playerNum()).killer();
-        int weapon = attacker.weapon; // FIXME: mod
-        award(attacker, weapon);
-        check_decrease_ammo(attacker, weapon);
+        killed_anyway(target, attacker, inflictor);
     }
 
     void exp_for_award(cClient @client, cString &award) {
@@ -197,6 +200,8 @@ class Players {
         give_spawn_weapons(client);
         weapons.select_best(client);
         client.getEnt().respawnEffect();
+        if (!gametype.isInstagib())
+            client.getEnt().health = NW_HEALTH;
     }
 
     void increase_minutes() {
@@ -204,14 +209,6 @@ class Players {
             Player @player = get(i);
             if (@player.client != null && player.client.team != TEAM_SPECTATOR)
                 player.add_minute();
-        }
-    }
-
-    void check_minute() {
-        uint time = levelTime / 60000;
-        if (time != last_time) {
-            increase_minutes();
-            last_time = time;
         }
     }
 

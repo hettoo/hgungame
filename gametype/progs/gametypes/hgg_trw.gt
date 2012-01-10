@@ -22,4 +22,6 @@ hgg/base/config.as;
 hgg/base/weapons.as;
 hgg/base/commands.as;
 hgg/base/command.as;
+hgg/base/dummies.as;
+hgg/base/dummy.as;
 hgg/trw.as;
