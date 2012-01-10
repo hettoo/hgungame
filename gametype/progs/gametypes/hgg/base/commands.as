@@ -208,7 +208,7 @@ class Commands {
     }
 
     void send_pm(Player @from, Player @to, cString &message) {
-        G_Sound(to.client.getEnt(), CHAN_VOICE, sound_pm, 0.0f);
+        G_Sound(to.client.getEnt(), CHAN_VOICE, sound_pm, ATTN_UNHEARABLE);
         pm_message(to, from, message, true);
         pm_message(from, to, message, false);
     }

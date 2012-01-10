@@ -33,6 +33,8 @@ const cString S_COLOR_PM = S_COLOR_GREEN;
 
 const cString INDENT = "    ";
 
+const float ATTN_UNHEARABLE = 999f;
+
 const cString DATA_DIR = "gtdata/";
 
 const int UNKNOWN = -1;

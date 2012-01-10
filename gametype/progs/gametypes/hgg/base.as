@@ -17,6 +17,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+const float DUMMY_WEIGHT_MULTIPLIER = 0.4f;
+
 class HGGBase {
     Config config;
     Gametype gt;
@@ -39,7 +41,16 @@ class HGGBase {
     }
 
     bool update_bot_status(cEntity @self) {
-        return GENERIC_UpdateBotStatus(self);
+        GENERIC_UpdateBotStatus(self);
+        cEntity @goal;
+        cBot @bot = self.client.getBot();
+        float offensiveness = GENERIC_OffensiveStatus(self);
+        for (int i = 0; (@goal = bot.getGoalEnt(i)) != null; i++) {
+            if (goal.getClassname() == "dummy")
+                bot.setGoalWeight(i, DUMMY_WEIGHT_MULTIPLIER
+                        * GENERIC_PlayerWeight(self, goal) * offensiveness);
+        }
+        return true;
     }
 
     cEntity @select_spawn_point(cEntity @self) {
@@ -188,7 +199,7 @@ class HGGBase {
     }
 
     void dummy_killed(cEntity @self, cEntity @attacker, cEntity @inflictor) {
-        G_Sound(attacker, CHAN_VOICE, sound_dummy_killed, 0.0f);
+        G_Sound(attacker, CHAN_PAIN, sound_dummy_killed, ATTN_UNHEARABLE);
         players.killed_anyway(null, attacker.client, inflictor.client);
         self.freeEntity();
         @self = null;

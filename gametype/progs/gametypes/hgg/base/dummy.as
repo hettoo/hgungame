@@ -41,6 +41,7 @@ class Dummy {
         ent.type = ET_GENERIC;
         ent.modelindex = G_ModelIndex("models/players/" + DUMMY_MODEL
                 + "/tris.skm");
+        ent.team = TEAM_PLAYERS;
         ent.setSize(mins, maxs);
         ent.setOrigin(pos);
         ent.solid = SOLID_YES;

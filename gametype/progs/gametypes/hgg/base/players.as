@@ -147,7 +147,7 @@ class Players {
 
         Player @player = get(attacker.playerNum());
         if (@target == null)
-            player.center("YOU FRAGGED A DUMMY");
+            player.center("YOU FRAGGED " + highlight("A DUMMY"));
         player.killer();
         int weapon = attacker.weapon; // FIXME: mod
         award(attacker, weapon);
