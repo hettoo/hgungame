@@ -38,11 +38,13 @@ class Gametype {
     cString @recommend_default_map_list() {
         switch (type) {
             case GT_FFA:
-                return "bipbeta2";
+                return "bipbeta2 .curved babyimstiffbeta2a yeahwhatevahb2"
+                    + " babyimwetfinal1 sandboxb5";
             case GT_CA:
                 return "wca1 wca2 wca3";
             case GT_DM:
-                return "wdm1 wdm2 wdm3 wdm4 wdm5 wdm6 wdm7 wdm8 wdm9 wdm10 wdm11 wdm12 wdm13 wdm14 wdm15 wdm16 wdm17";
+                return "wdm1 wdm2 wdm3 wdm4 wdm5 wdm6 wdm7 wdm8 wdm9 wdm10"
+                    + " wdm11 wdm12 wdm13 wdm14 wdm15 wdm16 wdm17";
         }
 
         return "wca3";
