@@ -25,9 +25,13 @@ class HGGBase {
     Commands commands;
     Dummies dummies;
 
+    int sound_dummy_killed;
+
     uint last_time;
 
     HGGBase() {
+        sound_dummy_killed = G_SoundIndex("sounds/misc/kill");
+
         last_time = 0;
     }
 
@@ -184,6 +188,7 @@ class HGGBase {
     }
 
     void dummy_killed(cEntity @self, cEntity @attacker, cEntity @inflictor) {
+        G_Sound(attacker, CHAN_VOICE, sound_dummy_killed, 0.0f);
         players.killed_anyway(null, attacker.client, inflictor.client);
         self.freeEntity();
         @self = null;

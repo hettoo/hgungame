@@ -180,7 +180,7 @@ class Player {
     }
 
     void center(cString &msg) {
-        G_CenterPrintMsg(client.getEnt(), msg.toupper());
+        G_CenterPrintMsg(client.getEnt(), msg);
     }
 
     void say(cString &msg) {

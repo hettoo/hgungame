@@ -22,7 +22,8 @@ const cString CONFIGS_DIR = "configs/server/gametypes/";
 enum Gametypes {
     GT_FFA,
     GT_CA,
-    GT_DM
+    GT_DM,
+    GT_DUEL
 };
 
 class Gametype {
@@ -30,12 +31,21 @@ class Gametype {
     cString name;
     cString file;
 
+    bool has_challengers_queue;
+    bool has_map_list;
+
     void init() {
         name = "???";
         file = CONFIGS_DIR + gametype.getName() + ".cfg";
+
+        has_challengers_queue = false;
+        has_map_list = true;
     }
 
-    cString @recommend_default_map_list() {
+    cString @map_list() {
+        if (!has_map_list)
+            return "";
+
         switch (type) {
             case GT_FFA:
                 return "bipbeta2 .curved babyimstiffbeta2a yeahwhatevahb2"
@@ -54,14 +64,15 @@ class Gametype {
         if (G_FileExists(file))
             return;
 
-        cString map_list = recommend_default_map_list();
+        cString maps = map_list();
 
         cString config = "// '" + gametype.getTitle()
             + "' gametype configuration file\n"
             + "\n"
             + "// map rotation\n"
-            + "set g_maplist \"" + map_list + "\"\n"
-            + "set g_maprotation 1 // 0 = same map, 1 = in order, 2 = random\n"
+            + "set g_maplist \"" + maps + "\"\n"
+            + "set g_maprotation " + (has_map_list ? 1 : 0)
+            + " // 0 = same map, 1 = in order, 2 = random\n"
             + "\n"
             + "// game settings\n"
             + "set g_scorelimit 0\n"
@@ -79,7 +90,8 @@ class Gametype {
             + "set g_allow_selfdamage 0\n"
             + "set g_allow_teamdamage 0\n"
             + "set g_maxtimeouts 3 // -1 = unlimited\n"
-            + "set g_challengers_queue 0\n"
+            + "set g_challengers_queue " + (has_challengers_queue ? 1 : 0)
+            + "\n"
             + "\n"
             + "echo \"" + gametype.getName() + ".cfg executed\"\n";
 
