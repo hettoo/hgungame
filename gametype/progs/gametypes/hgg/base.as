@@ -130,7 +130,7 @@ class HGGBase {
         gametype.countdownEnabled = false;
         gametype.mathAbortDisabled = false;
         gametype.shootingDisabled = false;
-        gametype.infiniteAmmo = false;
+        gametype.infiniteAmmo = true;
         gametype.canForceModels = true;
 
         gametype.spawnpointRadius = 256;
