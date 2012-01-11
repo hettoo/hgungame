@@ -40,6 +40,7 @@ class Commands {
         add("listplayers", "", "List all players with their ids.", RANK_GUEST);
         add("pm", "<id> <message>...", "Send a message to a player.",
                 RANK_GUEST);
+        add("stats", "[id]", "Show the statistics of a player.", RANK_GUEST);
         add("register", "<password> <password>", "Register yourself.",
                 RANK_GUEST);
         add("identify", "<password>", "Identify yourself after an ip change.",
@@ -51,6 +52,8 @@ class Commands {
 
         add("devmap", "<mapname>", "Change the current map and enable cheats.",
                 RANK_ADMIN);
+
+        add("shutdown", "", "Shutdown the server.", RANK_ROOT);
     }
 
     void add(cString &name, cString &usage, cString &description,
@@ -125,6 +128,8 @@ class Commands {
                     cmd_gt_listplayers(player, args, argc, players);
                 else if (command.name == "pm")
                     cmd_gt_pm(player, args, argc, players);
+                else if (command.name == "stats")
+                    cmd_gt_stats(player, args, argc, players);
                 else if (command.name == "register")
                     cmd_gt_register(player, args, argc, players);
                 else if (command.name == "identify")
@@ -135,6 +140,8 @@ class Commands {
                     cmd_gt_map(player, args, argc, players);
                 else if (command.name == "devmap")
                     cmd_gt_devmap(player, args, argc, players);
+                else if (command.name == "shutdown")
+                    cmd_gt_shutdown(player, args, argc, players);
                 else
                     cmd_gt_unimplemented(player, args, argc, players);
             } else {
@@ -226,6 +233,34 @@ class Commands {
         }
     }
 
+    void cmd_gt_stats(Player @player, cString &args, int argc,
+            Players @players) {
+        int n;
+        if (argc > 1)
+            n = args.getToken(1).toInt();
+        else
+            n = player.client.playerNum();
+        Player @other = players.get(n);
+        if (@other == null || @other.client == null) {
+            player.say_bad("Target player does not exist.");
+        } else {
+            int next_exp = exp_needed(other.dbitem.level + 1);
+            player.print("Stats for " + other.client.getName()
+                    + (other.client.getClan() == "" ? ""
+                        : " of " + other.client.getClan()) + "\n"
+                + "Rank: " + other.dbitem.rank + " ("
+                + highlight(players.ranks.name(other.dbitem.rank)) + ")\n"
+                + "Level: " + other.dbitem.level + "\n"
+                + "Exp: " + other.dbitem.exp + " / " + next_exp + " ("
+                + (100 * other.dbitem.exp / next_exp) + "%)\n"
+                + "Top row: " + other.dbitem.row + "\n"
+                + "Kills / deaths: " + other.dbitem.kills + " / "
+                + other.dbitem.deaths + " (" + (r_int(100 * other.dbitem.kills
+                            / other.dbitem.deaths) / 100.0f) + ")\n"
+                + "Minutes played: " + other.dbitem.minutes_played + "\n");
+        }
+    }
+
     void cmd_gt_help(Player @player, cString &args, int argc,
             Players @players) {
         cString response = "Available /" + COMMAND_BASE
@@ -260,6 +295,11 @@ class Commands {
     void cmd_gt_devmap(Player @player, cString &args, int argc,
             Players @players) {
         exec("devmap " + args.getToken(1));
+    }
+
+    void cmd_gt_shutdown(Player @player, cString &args, int argc,
+            Players @players) {
+        exec("quit");
     }
 
     void cmd_gt_unimplemented(Player @player, cString &args, int argc,
