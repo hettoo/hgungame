@@ -242,8 +242,8 @@ class Commands {
         if (@other == null || @other.client == null) {
             player.say_bad("Target player does not exist.");
         } else {
-            player.print("Stats for " + other.client.getName()
-                    + (other.client.getClanName() == "" ? ""
+            player.print(wrap("Stats for " + other.client.getName()
+                    + (raw(other.client.getClanName()) == "" ? ""
                         : " of " + other.client.getClanName()) + "\n"
                 + "Rank: " + other.dbitem.rank + " ("
                 + highlight(players.ranks.name(other.dbitem.rank)) + ")\n"
@@ -252,7 +252,7 @@ class Commands {
                 + other.dbitem.deaths + " (" + (float(other.dbitem.kills)
                             / (other.dbitem.deaths == 0 ? 1
                                 : other.dbitem.deaths)) + ")\n"
-                + "Minutes played: " + other.dbitem.minutes_played + "\n");
+                + "Minutes played: " + other.dbitem.minutes_played + "\n"));
         }
     }
 

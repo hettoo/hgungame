@@ -177,6 +177,10 @@ cString @fixed_field(cString &text, int size) {
     return field;
 }
 
+cString @wrap(cString &s) {
+    return "\n" + s + "\n";
+}
+
 cString @fixed_field(int n, int size) {
     return fixed_field(n + "", size);
 }
