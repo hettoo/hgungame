@@ -60,16 +60,21 @@ class Players {
     }
 
     void welcome_all(cString &msg) {
-        for (int i = 0; i < size; i++)
-            get(i).welcome(msg);
+        for (int i = 0; i < size; i++) {
+            Player @player = get(i);
+            if (@player != null)
+                get(i).welcome(msg);
+        }
     }
 
     void reset() {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
-            check_row(player.client, null);
-            player.minutes_played = 0;
-            player.set_score(0);
+            if (@player != null) {
+                check_row(player.client, null);
+                player.minutes_played = 0;
+                player.set_score(0);
+            }
         }
     }
 
@@ -191,19 +196,22 @@ class Players {
     void increase_minutes() {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
-            if (@player.client != null && player.client.team != TEAM_SPECTATOR)
+            if (@player != null && @player.client != null
+                    && player.client.team != TEAM_SPECTATOR)
                 player.add_minute();
         }
     }
 
     void update_best(int i) {
         Player @player = get(i);
-        cClient @client = player.client;
-        if (@client != null && client.team != TEAM_SPECTATOR) {
-            if (player.score > best_score || best_score == UNKNOWN)
-                best_score = player.score;
-            else if (player.score > second_score || second_score == UNKNOWN)
-                second_score = player.score;
+        if (@player != null) {
+            cClient @client = player.client;
+            if (@client != null && client.team != TEAM_SPECTATOR) {
+                if (player.score > best_score || best_score == UNKNOWN)
+                    best_score = player.score;
+                else if (player.score > second_score || second_score == UNKNOWN)
+                    second_score = player.score;
+            }
         }
     }
 
@@ -217,14 +225,15 @@ class Players {
     void update_hud() {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
-            player.update_hud_other(this);
+            if (@player != null)
+                player.update_hud_other(this);
         }
     }
 
     void update_hud_bests() {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
-            if (player.score == best_score)
+            if (@player != null && player.score == best_score)
                 player.update_hud_other(this);
         }
     }
@@ -278,9 +287,12 @@ class Players {
     int count() {
         int n = 0;
         for (int i = 0; i < size; i++) {
-            cClient @client = get(i).client;
-            if (@client != null && client.team != TEAM_SPECTATOR)
-                n++;
+            Player @player = get(i);
+            if (@player != null) {
+                cClient @client = player.client;
+                if (@client != null && client.team != TEAM_SPECTATOR)
+                    n++;
+            }
         }
         return n;
     }
