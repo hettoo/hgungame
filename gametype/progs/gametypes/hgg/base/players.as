@@ -159,7 +159,8 @@ class Players {
             return;
 
         Player @player = get(target.playerNum());
-        player.say("** You have been killed by " + attacker.getName());
+        player.say_routine("You have been killed by " + S_COLOR_RESET
+                + attacker.getName());
         player.killed();
         check_row(target, attacker);
 
