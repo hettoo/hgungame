@@ -136,10 +136,6 @@ bool increase_ammo(cClient @client, int weapon) {
     return true;
 }
 
-int exp_needed(int level) {
-    return level * level + 40 * level;
-}
-
 bool for_real() {
     return match.getState() == MATCH_STATE_PLAYTIME;
 }

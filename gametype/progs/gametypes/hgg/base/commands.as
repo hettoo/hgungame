@@ -189,7 +189,6 @@ class Commands {
         list += fixed_field("name", 20);
         list += fixed_field("clan", 7);
         list += fixed_field("rank", 4);
-        list += fixed_field("level", 5);
         list += "\n";
         bool first = true;
         for (int i = 0; i <= players.max; i++) {
@@ -201,7 +200,6 @@ class Commands {
                 list += fixed_field(player.client.getName(), 20);
                 list += fixed_field(player.client.getClanName(), 7);
                 list += fixed_field(player.dbitem.rank, 4);
-                list += fixed_field(player.dbitem.level, 5);
                 first = false;
             }
         }
@@ -244,15 +242,11 @@ class Commands {
         if (@other == null || @other.client == null) {
             player.say_bad("Target player does not exist.");
         } else {
-            int next_exp = exp_needed(other.dbitem.level + 1);
             player.print("Stats for " + other.client.getName()
                     + (other.client.getClanName() == "" ? ""
                         : " of " + other.client.getClanName()) + "\n"
                 + "Rank: " + other.dbitem.rank + " ("
                 + highlight(players.ranks.name(other.dbitem.rank)) + ")\n"
-                + "Level: " + other.dbitem.level + "\n"
-                + "Exp: " + other.dbitem.exp + " / " + next_exp + " ("
-                + (100 * other.dbitem.exp / next_exp) + "%)\n"
                 + "Top row: " + other.dbitem.row + "\n"
                 + "Kills / deaths: " + other.dbitem.kills + " / "
                 + other.dbitem.deaths + " (" + (float(other.dbitem.kills)

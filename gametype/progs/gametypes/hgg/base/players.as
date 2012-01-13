@@ -19,12 +19,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 const int SPECIAL_ROW = 5;
 
-const int EXP_AWARD_GREEN = 2;
-const int EXP_AWARD_ORANGE = EXP_AWARD_GREEN;
-const int EXP_AWARD_YELLOW = 4;
-const int EXP_AWARD_BLUE = 6;
-const int EXP_WEAK = 10;
-
 class Players {
     Player[] players;
     int max;
@@ -104,7 +98,6 @@ class Players {
     void award(cClient @client, int row, bool show, int weapon) {
         Player @player = get(client.playerNum());
         player.add_score(1);
-        player.add_exp(row);
 
         player.update_hud_self();
         update_best(client.playerNum());
@@ -129,7 +122,6 @@ class Players {
                 if (weapons.heavy(award))
                     increase_ammo(client, award);
             }
-            player.add_exp(EXP_WEAK);
         }
     }
 
@@ -165,19 +157,6 @@ class Players {
         check_row(target, attacker);
 
         killed_anyway(target, attacker, inflictor);
-    }
-
-    void exp_for_award(cClient @client, cString &award) {
-        Player @player = get(client.playerNum());
-        cString color = award.substr(0, 2);
-        if (color == S_COLOR_GREEN)
-            player.add_exp(EXP_AWARD_GREEN);
-        else if (color == S_COLOR_ORANGE)
-            player.add_exp(EXP_AWARD_ORANGE);
-        else if (color == S_COLOR_YELLOW)
-            player.add_exp(EXP_AWARD_YELLOW);
-        else if (color == S_COLOR_BLUE)
-            player.add_exp(EXP_AWARD_BLUE);
     }
 
     void check_decrease_ammo(cClient @client, int weapon) {

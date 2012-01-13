@@ -23,8 +23,6 @@ class DBItem {
     cString password;
 
     int rank;
-    int level;
-    int exp;
     int row;
     int kills;
     int deaths;
@@ -36,8 +34,6 @@ class DBItem {
         password = "";
 
         rank = 0;
-        level = 0;
-        exp = 0;
         row = 0;
         kills = 0;
         deaths = 0;
@@ -62,8 +58,6 @@ class DBItem {
         password = file.getToken(index++);
 
         rank = file.getToken(index++).toInt();
-        level = file.getToken(index++).toInt();
-        exp = file.getToken(index++).toInt();
         row = file.getToken(index++).toInt();
         kills = file.getToken(index++).toInt();
         deaths = file.getToken(index++).toInt();
@@ -78,8 +72,6 @@ class DBItem {
         file += "\"" + password + "\" ";
 
         file += "\"" + rank + "\" ";
-        file += "\"" + level + "\" ";
-        file += "\"" + exp + "\" ";
         file += "\"" + row + "\" ";
         file += "\"" + kills + "\" ";
         file += "\"" + deaths + "\" ";

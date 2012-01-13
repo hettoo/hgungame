@@ -135,19 +135,6 @@ class Player {
             dbitem.update_row(row);
     }
 
-    void add_exp(int exp) {
-        if (!for_real())
-            return;
-
-        dbitem.exp += exp;
-        while (dbitem.exp >= exp_needed(dbitem.level + 1))
-        {
-            dbitem.exp -= exp_needed(++dbitem.level);
-            if (state == DBI_IDENTIFIED)
-                administrate("You are now a level " + dbitem.level + " user!");
-        }
-    }
-
     void update_hud_self() {
         if (client.team == TEAM_SPECTATOR)
             return;
