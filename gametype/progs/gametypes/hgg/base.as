@@ -29,12 +29,14 @@ class HGGBase {
 
     int sound_dummy_killed;
 
-    uint last_time;
+    uint last_second;
+    uint last_minute_second;
 
     HGGBase() {
         sound_dummy_killed = G_SoundIndex("sounds/misc/kill");
 
-        last_time = 0;
+        last_second = 0;
+        last_minute_second = 0;
     }
 
     void spawn_gametype() {
@@ -76,6 +78,8 @@ class HGGBase {
     }
 
     void playtime_started() {
+        last_second = levelTime / 1000;
+        last_minute_second = last_second;
         scoreboard.set_layout(SB_MATCH);
         players.update_best();
         players.update_hud();
@@ -174,7 +178,7 @@ class HGGBase {
 
         GENERIC_Think();
         players.charge_gunblades();
-        check_minute();
+        check_time();
     }
 
     void player_respawn(cEntity @ent, int old_team, int new_team) {
@@ -187,12 +191,16 @@ class HGGBase {
             players.respawn(ent.client);
     }
 
-    void check_minute() {
-        uint time = levelTime / 60000;
-        if (time != last_time) {
-            players.increase_minutes();
-            dummies.spawn();
-            last_time = time;
+    void check_time() {
+        uint second = levelTime / 1000;
+        if (second != last_second) {
+            uint minute_second = last_minute_second + 60;
+            if (second == minute_second) {
+                players.increase_minutes();
+                dummies.spawn();
+                last_minute_second = minute_second;
+            }
+            last_second = second;
         }
     }
 
