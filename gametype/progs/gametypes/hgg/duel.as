@@ -67,7 +67,7 @@ class HGG : HGGBase {
 
     void killed(cClient @attacker, cClient @target, cClient @inflictor) {
         HGGBase::killed(attacker, target, inflictor);
-        if (@target != null && @target != @attacker)
+        if (@target != null && @target != @attacker && for_real())
             G_GetTeam(attacker.team).stats.addScore(1);
     }
 }
