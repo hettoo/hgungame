@@ -197,9 +197,9 @@ class Commands {
         list += fixed_field("rank", 4);
         list += "\n";
         bool first = true;
-        for (int i = 0; i <= players.max; i++) {
+        for (int i = 0; i < players.size; i++) {
             Player @player = players.get(i);
-            if (@player.client != null) {
+            if (@player != null && @player.client != null) {
                 if (!first)
                     list += "\n";
                 list += fixed_field(i, 3);

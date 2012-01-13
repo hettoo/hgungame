@@ -121,6 +121,8 @@ class HGGBase {
             killed(client, target, inflictor);
         } else if (score_event == "userinfochanged") {
             players.namechange(client);
+        } else if (score_event == "disconnect") {
+            players.disconnect(client);
         }
     }
 

@@ -20,8 +20,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 const int SPECIAL_ROW = 5;
 
 class Players {
-    Player[] players;
-    int max;
+    Player@[] players;
+    int size;
     DB db;
     Ranks ranks;
     Weapons weapons;
@@ -31,7 +31,7 @@ class Players {
 
     Players() {
         players.resize(maxClients);
-        max = -1;
+        size = 0;
 
         best_score = -1;
         second_score = -1;
@@ -43,25 +43,29 @@ class Players {
     }
 
     Player @get(int playernum) {
-        if (playernum < 0 || playernum > max)
+        if (playernum < 0 || playernum >= size)
             return null;
         return players[playernum];
     }
 
     void init_client(cClient @client) {
         int playernum = client.playerNum();
-        if (playernum > max)
-            max = playernum;
-        get(playernum).init(client, db);
+        Player @player = get(playernum);
+        if (@player == null) {
+            @players[playernum] = Player();
+            if (playernum >= size)
+                size = playernum + 1;
+        }
+        players[playernum].init(client, db);
     }
 
     void welcome_all(cString &msg) {
-        for (int i = 0; i <= max; i++)
+        for (int i = 0; i < size; i++)
             get(i).welcome(msg);
     }
 
     void reset() {
-        for (int i = 0; i <= max; i++) {
+        for (int i = 0; i < size; i++) {
             Player @player = get(i);
             check_row(player.client, null);
             player.minutes_played = 0;
@@ -185,7 +189,7 @@ class Players {
     }
 
     void increase_minutes() {
-        for (int i = 0; i <= max; i++) {
+        for (int i = 0; i < size; i++) {
             Player @player = get(i);
             if (@player.client != null && player.client.team != TEAM_SPECTATOR)
                 player.add_minute();
@@ -206,19 +210,19 @@ class Players {
     void update_best() {
         best_score = UNKNOWN;
         second_score = UNKNOWN;
-        for (int i = 0; i <= max; i++)
+        for (int i = 0; i < size; i++)
             update_best(i);
     }
 
     void update_hud() {
-        for (int i = 0; i <= max; i++) {
+        for (int i = 0; i < size; i++) {
             Player @player = get(i);
             player.update_hud_other(this);
         }
     }
 
     void update_hud_bests() {
-        for (int i = 0; i <= max; i++) {
+        for (int i = 0; i < size; i++) {
             Player @player = get(i);
             if (player.score == best_score)
                 player.update_hud_other(this);
@@ -251,10 +255,21 @@ class Players {
         player.ip_check();
     }
 
+    void disconnect(cClient @client) {
+        int playernum = client.playerNum();
+        @players[playernum] = null;
+        for (int i = playernum; i < size; i++) {
+            if (@players[i] != null)
+                return;
+        }
+        size = playernum;
+    }
+
     void charge_gunblades() {
-        for (int i = 0; i <= max; i++) {
+        for (int i = 0; i < size; i++) {
             Player @player = get(i);
-            if (@player.client != null && player.client.state() >= CS_SPAWNED
+            if (@player != null && @player.client != null
+                    && player.client.state() >= CS_SPAWNED
                     && player.client.getEnt().team != TEAM_SPECTATOR)
                 GENERIC_ChargeGunblade(player.client);
         }
@@ -262,7 +277,7 @@ class Players {
 
     int count() {
         int n = 0;
-        for (int i = 0; i <= max; i++) {
+        for (int i = 0; i < size; i++) {
             cClient @client = get(i).client;
             if (@client != null && client.team != TEAM_SPECTATOR)
                 n++;
