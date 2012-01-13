@@ -46,9 +46,11 @@ class Commands {
         add("identify", "<password>", "Identify yourself after an ip change.",
                 RANK_GUEST);
 
+        add("restart", "", "Restart this map.", RANK_MEMBER);
         add("nextmap", "", "Proceed to the next map.", RANK_MEMBER);
 
         add("map", "<mapname>", "Change the current map.", RANK_VIP);
+        add("kick", "<id>", "Kick a player.", RANK_VIP);
 
         add("devmap", "<mapname>", "Change the current map and enable cheats.",
                 RANK_ADMIN);
@@ -134,8 +136,12 @@ class Commands {
                     cmd_gt_register(player, args, argc, players);
                 else if (command.name == "identify")
                     cmd_gt_identify(player, args, argc, players);
+                else if (command.name == "restart")
+                    cmd_gt_restart(player, args, argc, players);
                 else if (command.name == "nextmap")
                     cmd_gt_nextmap(player, args, argc, players);
+                else if (command.name == "kick")
+                    cmd_gt_kick(player, args, argc, players);
                 else if (command.name == "map")
                     cmd_gt_map(player, args, argc, players);
                 else if (command.name == "devmap")
@@ -277,9 +283,26 @@ class Commands {
         player.print(response);
     }
 
+    void cmd_gt_restart(Player @player, cString &args, int argc,
+            Players @players) {
+        exec("match restart");
+    }
+
     void cmd_gt_nextmap(Player @player, cString &args, int argc,
             Players @players) {
         exec("match advance");
+    }
+
+    void cmd_gt_kick(Player @player, cString &args, int argc,
+            Players @players) {
+        int id = args.getToken(1).toInt();
+        Player @other = players.get(id);
+        if (@other == null)
+            player.say_bad("Target player does not exist.");
+        else if (other.dbitem.rank < player.dbitem.rank)
+            exec("kick " + id);
+        else
+            player.say_bad("You can only kick people with a lower rank.");
     }
 
     void cmd_gt_map(Player @player, cString &args, int argc,
