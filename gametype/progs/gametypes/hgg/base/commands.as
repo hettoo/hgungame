@@ -246,8 +246,8 @@ class Commands {
         } else {
             int next_exp = exp_needed(other.dbitem.level + 1);
             player.print("Stats for " + other.client.getName()
-                    + (other.client.getClan() == "" ? ""
-                        : " of " + other.client.getClan()) + "\n"
+                    + (other.client.getClanName() == "" ? ""
+                        : " of " + other.client.getClanName()) + "\n"
                 + "Rank: " + other.dbitem.rank + " ("
                 + highlight(players.ranks.name(other.dbitem.rank)) + ")\n"
                 + "Level: " + other.dbitem.level + "\n"
@@ -255,8 +255,9 @@ class Commands {
                 + (100 * other.dbitem.exp / next_exp) + "%)\n"
                 + "Top row: " + other.dbitem.row + "\n"
                 + "Kills / deaths: " + other.dbitem.kills + " / "
-                + other.dbitem.deaths + " (" + (r_int(100 * other.dbitem.kills
-                            / other.dbitem.deaths) / 100.0f) + ")\n"
+                + other.dbitem.deaths + " (" + (float(other.dbitem.kills)
+                            / (other.dbitem.deaths == 0 ? 1
+                                : other.dbitem.deaths)) + ")\n"
                 + "Minutes played: " + other.dbitem.minutes_played + "\n");
         }
     }
