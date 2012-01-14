@@ -59,7 +59,7 @@ class HGG : HGGBase {
     }
 
     cString @scoreboard_message(int max_len) {
-        cString board= "";
+        cString board = "";
         scoreboard.add_team(board, TEAM_ALPHA, max_len, players);
         scoreboard.add_team(board, TEAM_BETA, max_len, players);
         return board;

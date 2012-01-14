@@ -125,11 +125,13 @@ class HGGBase {
         }
     }
 
-    void set_gametype_settings() {
+    void set_gametype_info() {
         gametype.setTitle("hGunGame " + gt.name);
         gametype.setVersion("0.0-dev");
         gametype.setAuthor("^0<].^7h^2e^9tt^2o^7o^0.[>^7");
+    }
 
+    void set_gametype_settings() {
         gametype.isRace = false;
 
         gametype.spawnableItemsMask = 0;
@@ -159,8 +161,9 @@ class HGGBase {
 
     void init_gametype() {
         players.init();
-        set_gametype_settings();
+        set_gametype_info();
         gt.init();
+        set_gametype_settings();
         gt.check_default_config();
 
         commands.init();
