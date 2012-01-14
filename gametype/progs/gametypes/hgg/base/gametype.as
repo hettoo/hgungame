@@ -59,6 +59,34 @@ class Gametype {
                 CVAR_ARCHIVE);
     }
 
+    void set_defaults() {
+        gametype.isRace = false;
+
+        gametype.spawnableItemsMask = 0;
+        gametype.respawnableItemsMask = gametype.spawnableItemsMask;
+        gametype.dropableItemsMask = gametype.spawnableItemsMask;
+        gametype.pickableItemsMask = gametype.spawnableItemsMask;
+
+        gametype.ammoRespawn = 0;
+        gametype.armorRespawn = 0;
+        gametype.weaponRespawn = 0;
+        gametype.healthRespawn = 0;
+        gametype.powerupRespawn = 0;
+        gametype.megahealthRespawn = 0;
+        gametype.ultrahealthRespawn = 0;
+
+        gametype.countdownEnabled = false;
+        gametype.mathAbortDisabled = false;
+        gametype.shootingDisabled = false;
+        gametype.infiniteAmmo = true;
+        gametype.canForceModels = true;
+
+        gametype.spawnpointRadius = 256;
+
+        if (gametype.isInstagib())
+            gametype.spawnpointRadius *= 2;
+    }
+
     cString @map_list() {
         if (!has_map_list)
             return "";

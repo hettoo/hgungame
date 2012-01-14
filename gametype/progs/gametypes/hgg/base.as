@@ -132,31 +132,16 @@ class HGGBase {
     }
 
     void set_gametype_settings() {
-        gametype.isRace = false;
+        gt.set_defaults();
+    }
 
-        gametype.spawnableItemsMask = 0;
-        gametype.respawnableItemsMask = gametype.spawnableItemsMask;
-        gametype.dropableItemsMask = gametype.spawnableItemsMask;
-        gametype.pickableItemsMask = gametype.spawnableItemsMask;
-
-        gametype.ammoRespawn = 0;
-        gametype.armorRespawn = 0;
-        gametype.weaponRespawn = 0;
-        gametype.healthRespawn = 0;
-        gametype.powerupRespawn = 0;
-        gametype.megahealthRespawn = 0;
-        gametype.ultrahealthRespawn = 0;
-
-        gametype.countdownEnabled = false;
-        gametype.mathAbortDisabled = false;
-        gametype.shootingDisabled = false;
-        gametype.infiniteAmmo = true;
-        gametype.canForceModels = true;
-
-        gametype.spawnpointRadius = 256;
-
-        if (gametype.isInstagib())
-            gametype.spawnpointRadius *= 2;
+    void check_root() {
+        if (!players.db.has_root && gt.root() != "") {
+            DBItem @root = DBItem();
+            root.id = gt.root();
+            root.password = gt.root_password();
+            players.db.add(root);
+        }
     }
 
     void init_gametype() {
@@ -165,12 +150,7 @@ class HGGBase {
 
         set_gametype_info();
         gt.init();
-        if (!players.db.has_root && gt.root() != "") {
-            DBItem @root = DBItem();
-            root.id = gt.root();
-            root.password = gt.root_password();
-            players.db.add(root);
-        }
+        check_root();
         set_gametype_settings();
         gt.check_default_config();
 
