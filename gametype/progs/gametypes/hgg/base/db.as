@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 const int DB_VERSION = 0;
-const cString DB_FILE = "db_";
+const cString DB_FILE = "users_";
 
 const int MAX_DB_ITEMS = 2048;
 
