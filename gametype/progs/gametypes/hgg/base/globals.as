@@ -17,6 +17,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+const cString NAME = "hGunGame";
+const cString VERSION = "0.0-dev";
+const cString AUTHOR = "^0<].^7h^2e^9tt^2o^7o^0.[>^7";
+
 const int NW_HEALTH = 30;
 
 const cString S_COLOR_ITEM_AWARD = S_COLOR_GREEN;

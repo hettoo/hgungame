@@ -126,9 +126,9 @@ class HGGBase {
     }
 
     void set_gametype_info() {
-        gametype.setTitle("hGunGame " + gt.name);
-        gametype.setVersion("0.0-dev");
-        gametype.setAuthor("^0<].^7h^2e^9tt^2o^7o^0.[>^7");
+        gametype.setTitle(NAME + " " + gt.name);
+        gametype.setVersion(VERSION);
+        gametype.setAuthor(AUTHOR);
     }
 
     void set_gametype_settings() {
