@@ -125,12 +125,6 @@ class HGGBase {
         }
     }
 
-    void set_gametype_info() {
-        gametype.setTitle(NAME + " " + gt.name);
-        gametype.setVersion(VERSION);
-        gametype.setAuthor(AUTHOR);
-    }
-
     void set_gametype_settings() {
         gt.set_defaults();
     }
@@ -148,7 +142,7 @@ class HGGBase {
         players.init();
         players.db.read();
 
-        set_gametype_info();
+        gt.set_info();
         gt.init();
         check_root();
         set_gametype_settings();

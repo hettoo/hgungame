@@ -87,6 +87,12 @@ class Gametype {
             gametype.spawnpointRadius *= 2;
     }
 
+    void set_info() {
+        gametype.setTitle(NAME + " " + name);
+        gametype.setVersion(VERSION);
+        gametype.setAuthor(AUTHOR);
+    }
+
     cString @map_list() {
         if (!has_map_list)
             return "";
