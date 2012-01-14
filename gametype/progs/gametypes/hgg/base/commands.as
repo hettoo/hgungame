@@ -38,11 +38,9 @@ class Commands {
         G_RegisterCommand(COMMAND_BASE);
 
         add("listplayers", "List all players with their ids.", RANK_GUEST);
-        add("pm <id> <message>...", "Send a message to a player.",
-                RANK_GUEST);
+        add("pm <id> <message>...", "Send a message to a player.", RANK_GUEST);
         add("stats [id]", "Show the statistics of a player.", RANK_GUEST);
-        add("register <password> <password>", "Register yourself.",
-                RANK_GUEST);
+        add("register <password> <password>", "Register yourself.", RANK_GUEST);
         add("identify <password>", "Identify yourself after an ip change.",
                 RANK_GUEST);
 
