@@ -93,6 +93,11 @@ class Player {
         dbitem.set_password(password);
     }
 
+    void set_rank(int rank) {
+        administrate("You are now a rank " + rank + " user!");
+        dbitem.rank = rank;
+    }
+
     void welcome(cString &msg) {
         if (@client != null && client.team != TEAM_SPECTATOR)
             client.addAward(msg);
