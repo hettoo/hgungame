@@ -37,31 +37,31 @@ class Commands {
         G_RegisterCommand("gametype");
         G_RegisterCommand(COMMAND_BASE);
 
-        add("listplayers", "", "List all players with their ids.", RANK_GUEST);
-        add("pm", "<id> <message>...", "Send a message to a player.",
+        add("listplayers", "List all players with their ids.", RANK_GUEST);
+        add("pm <id> <message>...", "Send a message to a player.",
                 RANK_GUEST);
-        add("stats", "[id]", "Show the statistics of a player.", RANK_GUEST);
-        add("register", "<password> <password>", "Register yourself.",
+        add("stats [id]", "Show the statistics of a player.", RANK_GUEST);
+        add("register <password> <password>", "Register yourself.",
                 RANK_GUEST);
-        add("identify", "<password>", "Identify yourself after an ip change.",
+        add("identify <password>", "Identify yourself after an ip change.",
                 RANK_GUEST);
 
-        add("restart", "", "Restart this map.", RANK_MEMBER);
-        add("nextmap", "", "Proceed to the next map.", RANK_MEMBER);
+        add("restart", "Restart this map.", RANK_MEMBER);
+        add("nextmap", "Proceed to the next map.", RANK_MEMBER);
 
-        add("map", "<mapname>", "Change the current map.", RANK_VIP);
-        add("kick", "<id>", "Kick a player.", RANK_VIP);
-        add("setrank", "<id> <rank>", "Set the rank of a player.", RANK_VIP);
+        add("map <mapname>", "Change the current map.", RANK_VIP);
+        add("kick <id>", "Kick a player.", RANK_VIP);
+        add("setrank <id> <rank>", "Set the rank of a player.", RANK_VIP);
 
-        add("devmap", "<mapname>", "Change the current map and enable cheats.",
+        add("devmap <mapname>", "Change the current map and enable cheats.",
                 RANK_ADMIN);
 
-        add("shutdown", "", "Shutdown the server.", RANK_ROOT);
+        add("shutdown", "Shutdown the server.", RANK_ROOT);
     }
 
-    void add(cString &name, cString &usage, cString &description,
+    void add(cString &usage, cString &description,
             int min_rank) {
-        @commands[size++] = Command(name, usage, description, min_rank);
+        @commands[size++] = Command(usage, description, min_rank);
     }
 
     Command @find(cString &name) {

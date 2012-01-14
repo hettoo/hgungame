@@ -26,14 +26,12 @@ class Command {
     int min_argc;
     int max_argc;
 
-    Command(cString &new_name, cString &new_usage, cString &new_description,
-            int new_min_rank) {
-        set(new_name, new_usage, new_description, new_min_rank);
+    Command(cString &new_usage, cString &new_description, int new_min_rank) {
+        set(new_usage, new_description, new_min_rank);
     }
 
-    void set(cString &new_name, cString &new_usage, cString &new_description,
-            int new_min_rank) {
-        name = new_name;
+    void set(cString &new_usage, cString &new_description, int new_min_rank) {
+        name = "";
         usage = new_usage;
         description = new_description;
         min_rank = new_min_rank;
@@ -49,24 +47,34 @@ class Command {
         min_argc = 0;
         max_argc = 0;
         int dots = 0;
+        bool naming = true;
         for (int i = 0; i < usage.len(); i++) {
             cString c = usage.substr(i, 1);
-            if (c == "<") {
-                min_argc++;
-                if (max_argc != INFINITY)
-                    max_argc++;
-            } else if (c == "[") {
-                if (max_argc != INFINITY)
-                    max_argc++;
-            }
-
-            if (c == ".") {
-                dots++;
-                if (dots == 3)
-                    max_argc = INFINITY;
+            if (naming) {
+                if (c == " ")
+                    naming = false;
+                else
+                    name += c;
             } else {
-                new_usage += c;
-                dots = 0;
+                if (c == "<") {
+                    min_argc++;
+                    if (max_argc != INFINITY)
+                        max_argc++;
+                } else if (c == "[") {
+                    if (max_argc != INFINITY)
+                        max_argc++;
+                }
+
+                if (c == ".") {
+                    dots++;
+                    if (dots == 3)
+                        max_argc = INFINITY;
+                } else {
+                    for (int i = 0; i < dots; i++)
+                        new_usage += ".";
+                    new_usage += c;
+                    dots = 0;
+                }
             }
         }
         usage = new_usage;
