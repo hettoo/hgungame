@@ -20,7 +20,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 const float DUMMY_WEIGHT_MULTIPLIER = 0.4f;
 
 class HGGBase {
-    Config config;
     Gametype gt;
     Players players;
     Scoreboard scoreboard;
@@ -73,7 +72,7 @@ class HGGBase {
     }
     
     void countdown_started() {
-        players.welcome_all(config.motd());
+        players.welcome_all(gt.motd());
         GENERIC_SetUpCountdown();
     }
 
@@ -160,7 +159,6 @@ class HGGBase {
 
     void init_gametype() {
         players.init();
-        config.init();
         set_gametype_settings();
         gt.init();
         gt.check_default_config();

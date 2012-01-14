@@ -18,7 +18,6 @@ hgg/base/player.as;
 hgg/base/db.as;
 hgg/base/dbitem.as;
 hgg/base/scoreboard.as;
-hgg/base/config.as;
 hgg/base/weapons.as;
 hgg/base/commands.as;
 hgg/base/command.as;

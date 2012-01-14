@@ -19,11 +19,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 const cString CONFIGS_DIR = "configs/server/gametypes/";
 
+const cString CVAR_BASE = "g_hgg_";
+
 enum Gametypes {
     GT_FFA,
     GT_CA,
     GT_DM,
     GT_DUEL
+};
+
+enum CVars {
+    CV_MOTD,
+    CV_TOTAL
 };
 
 class Gametype {
@@ -34,12 +41,17 @@ class Gametype {
     bool has_challengers_queue;
     bool has_map_list;
 
+    cVar[] cvars;
+
     void init() {
         name = "???";
         file = CONFIGS_DIR + gametype.getName() + ".cfg";
 
         has_challengers_queue = false;
         has_map_list = true;
+
+        cvars.resize(CV_TOTAL);
+        cvars[CV_MOTD].get(CVAR_BASE + "MOTD", "Have Fun!", CVAR_ARCHIVE);
     }
 
     cString @map_list() {
@@ -99,5 +111,9 @@ class Gametype {
         G_Print("Created default config file for '" + gametype.getName()
                 + "'\n");
         G_CmdExecute("exec " + file + " silent");
+    }
+
+    cString @motd() {
+        return cvars[CV_MOTD].getString();
     }
 }
