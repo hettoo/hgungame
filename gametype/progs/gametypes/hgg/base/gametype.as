@@ -30,6 +30,8 @@ enum Gametypes {
 
 enum CVars {
     CV_MOTD,
+    CV_ROOT,
+    CV_ROOT_PASSWORD,
     CV_TOTAL
 };
 
@@ -52,6 +54,9 @@ class Gametype {
 
         cvars.resize(CV_TOTAL);
         cvars[CV_MOTD].get(CVAR_BASE + "MOTD", "Have Fun!", CVAR_ARCHIVE);
+        cvars[CV_ROOT].get(CVAR_BASE + "root", "", CVAR_ARCHIVE);
+        cvars[CV_ROOT_PASSWORD].get(CVAR_BASE + "rootPassword", "",
+                CVAR_ARCHIVE);
     }
 
     cString @map_list() {
@@ -126,5 +131,13 @@ class Gametype {
 
     cString @motd() {
         return cvars[CV_MOTD].getString();
+    }
+
+    cString @root() {
+        return cvars[CV_ROOT].getString();
+    }
+
+    cString @root_password() {
+        return cvars[CV_ROOT_PASSWORD].getString();
     }
 }

@@ -39,7 +39,6 @@ class Players {
 
     void init() {
         db.init();
-        db.read();
     }
 
     Player @get(int playernum) {

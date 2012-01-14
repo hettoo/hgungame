@@ -161,8 +161,16 @@ class HGGBase {
 
     void init_gametype() {
         players.init();
+        players.db.read();
+
         set_gametype_info();
         gt.init();
+        if (!players.db.has_root && gt.root() != "") {
+            DBItem @root = DBItem();
+            root.id = gt.root();
+            root.password = gt.root_password();
+            players.db.add(root);
+        }
         set_gametype_settings();
         gt.check_default_config();
 

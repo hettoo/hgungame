@@ -40,6 +40,7 @@ class DB {
 
     void read() {
         size = -1;
+        has_root = false;
         cString file = G_LoadFile(file_name);
 
         int index;
@@ -48,6 +49,8 @@ class DB {
             index = new_index;
             @items[++size] = DBItem();
             new_index = items[size].read(file, index);
+            if (items[size].rank == RANK_ROOT)
+                has_root = true;
         } while (new_index > index);
     }
 
