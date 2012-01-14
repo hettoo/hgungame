@@ -72,6 +72,14 @@ class Gametype {
         return "wca3";
     }
 
+    cString @cvar_defaults() {
+        cString total = "";
+        for (int i = 0; i < CV_TOTAL; i++)
+            total += "set " + cvars[i].getName() + " \""
+                + cvars[i].getDefaultString() + "\"\n";
+        return total;
+    }
+
     void check_default_config() {
         if (G_FileExists(file))
             return;
@@ -86,6 +94,9 @@ class Gametype {
             + "set g_maprotation " + (has_map_list ? 1 : 0)
             + " // 0 = same map, 1 = in order, 2 = random\n"
             + "\n"
+            + "// gametype specific settings\n"
+            + cvar_defaults()
+            + "\n"
             + "// game settings\n"
             + "set g_scorelimit 0\n"
             + "set g_timelimit 15\n"
@@ -94,7 +105,7 @@ class Gametype {
             + "set g_allow_falldamage 0\n"
             + "set g_allow_selfdamage 0\n"
             + "set g_allow_stun 1\n"
-            + "set g_teams_maxplayers 0\n"
+            + "set g_teams_maxplayers " + gametype.maxPlayersPerTeam + "\n"
             + "set g_countdown_time 5\n"
             + "set g_instajump 1\n"
             + "set g_instashield 0\n"
