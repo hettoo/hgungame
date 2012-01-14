@@ -75,4 +75,8 @@ class Command {
     bool valid_usage(int argc) {
         return argc >= min_argc && (argc <= max_argc || max_argc == INFINITY);
     }
+
+    void say(cString &msg) {
+        notify(highlight(name) + ": " + msg);
+    }
 }

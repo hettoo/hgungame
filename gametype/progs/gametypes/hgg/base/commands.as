@@ -118,8 +118,9 @@ class Commands {
     bool cmd_gt(cClient @client, cString &args, int argc, Players @players) {
         Command @command = find(args.getToken(0));
         Player @player = players.get(client.playerNum());
-        if (@command == null) {
-            cmd_gt_help(player, args, argc, players);
+        if (@player == null) {
+        } else if (@command == null) {
+            cmd_gt_help(command, player, args, argc, players);
         } else {
             if (player.dbitem.rank < command.min_rank) {
                 player.say_bad("You need to be at least rank "
@@ -128,31 +129,31 @@ class Commands {
                         + S_COLOR_BAD + ") to use this command.");
             } else if (command.valid_usage(argc - 1)) {
                 if (command.name == "listplayers")
-                    cmd_gt_listplayers(player, args, argc, players);
+                    cmd_gt_listplayers(command, player, args, argc, players);
                 else if (command.name == "pm")
-                    cmd_gt_pm(player, args, argc, players);
+                    cmd_gt_pm(command, player, args, argc, players);
                 else if (command.name == "stats")
-                    cmd_gt_stats(player, args, argc, players);
+                    cmd_gt_stats(command, player, args, argc, players);
                 else if (command.name == "register")
-                    cmd_gt_register(player, args, argc, players);
+                    cmd_gt_register(command, player, args, argc, players);
                 else if (command.name == "identify")
-                    cmd_gt_identify(player, args, argc, players);
+                    cmd_gt_identify(command, player, args, argc, players);
                 else if (command.name == "restart")
-                    cmd_gt_restart(player, args, argc, players);
+                    cmd_gt_restart(command, player, args, argc, players);
                 else if (command.name == "nextmap")
-                    cmd_gt_nextmap(player, args, argc, players);
+                    cmd_gt_nextmap(command, player, args, argc, players);
                 else if (command.name == "kick")
-                    cmd_gt_kick(player, args, argc, players);
+                    cmd_gt_kick(command, player, args, argc, players);
                 else if (command.name == "setrank")
-                    cmd_gt_setrank(player, args, argc, players);
+                    cmd_gt_setrank(command, player, args, argc, players);
                 else if (command.name == "map")
-                    cmd_gt_map(player, args, argc, players);
+                    cmd_gt_map(command, player, args, argc, players);
                 else if (command.name == "devmap")
-                    cmd_gt_devmap(player, args, argc, players);
+                    cmd_gt_devmap(command, player, args, argc, players);
                 else if (command.name == "shutdown")
-                    cmd_gt_shutdown(player, args, argc, players);
+                    cmd_gt_shutdown(command, player, args, argc, players);
                 else
-                    cmd_gt_unimplemented(player, args, argc, players);
+                    cmd_gt_unimplemented(command, player, args, argc, players);
             } else {
                 player.say(highlight("Usage") + ": "
                         + cmd_with_usage(command));
@@ -162,8 +163,8 @@ class Commands {
         return true;
     }
 
-    void cmd_gt_register(Player @player, cString &args, int argc,
-            Players @players) {
+    void cmd_gt_register(Command @command, Player @player, cString &args,
+            int argc, Players @players) {
         cString password = args.getToken(1);
         if (player.state != DBI_UNKNOWN) {
             player.say_bad("Your name is already registered.");
@@ -175,11 +176,12 @@ class Commands {
             player.set_registered(password);
             players.db.add(player.dbitem);
             player.administrate("You are now registered!");
+            command.say(player.client.getName() + " registered himself");
         }
     }
 
-    void cmd_gt_identify(Player @player, cString &args, int argc,
-            Players @players) {
+    void cmd_gt_identify(Command @command, Player @player, cString &args,
+            int argc, Players @players) {
         if (player.state != DBI_WRONG_IP) {
             player.say_bad("You did not need to identify.");
         } else if (args.getToken(1) != player.dbitem.password) {
@@ -187,12 +189,13 @@ class Commands {
         } else {
             player.state = DBI_IDENTIFIED;
             player.dbitem.ip = get_ip(player.client);
-            player.administrate("IP changed successfully");
+            player.administrate("IP changed successfully!");
+            command.say(player.client.getName() + " identified himself");
         }
     }
 
-    void cmd_gt_listplayers(Player @player, cString &args, int argc,
-            Players @players) {
+    void cmd_gt_listplayers(Command @command, Player @player, cString &args,
+            int argc, Players @players) {
         cString list = "";
         list += fixed_field("id", 3);
         list += fixed_field("name", 20);
@@ -227,7 +230,8 @@ class Commands {
         pm_message(from, to, message, false);
     }
 
-    void cmd_gt_pm(Player @player, cString &args, int argc, Players @players) {
+    void cmd_gt_pm(Command @command, Player @player, cString &args, int argc,
+            Players @players) {
         int n = args.getToken(1).toInt();
         Player @other = players.get(n);
         if (@other == null || @other.client == null) {
@@ -240,7 +244,7 @@ class Commands {
         }
     }
 
-    void cmd_gt_stats(Player @player, cString &args, int argc,
+    void cmd_gt_stats(Command @command, Player @player, cString &args, int argc,
             Players @players) {
         int n;
         if (argc > 1)
@@ -265,7 +269,7 @@ class Commands {
         }
     }
 
-    void cmd_gt_help(Player @player, cString &args, int argc,
+    void cmd_gt_help(Command @command, Player @player, cString &args, int argc,
             Players @players) {
         cString response = "Available /" + COMMAND_BASE
             + " commands, sorted by rank:\n";
@@ -286,66 +290,80 @@ class Commands {
         player.print(response);
     }
 
-    void cmd_gt_restart(Player @player, cString &args, int argc,
-            Players @players) {
+    void cmd_gt_restart(Command @command, Player @player, cString &args,
+            int argc, Players @players) {
+        command.say(player.client.getName() + " is restarting the match");
         exec("match restart");
     }
 
-    void cmd_gt_nextmap(Player @player, cString &args, int argc,
-            Players @players) {
+    void cmd_gt_nextmap(Command @command, Player @player, cString &args,
+            int argc, Players @players) {
+        command.say(player.client.getName() + " is advancing the match");
         exec("match advance");
     }
 
-    void cmd_gt_kick(Player @player, cString &args, int argc,
+    void cmd_gt_kick(Command @command, Player @player, cString &args, int argc,
             Players @players) {
         int id = args.getToken(1).toInt();
         Player @other = players.get(id);
-        if (@other == null)
+        if (@other == null) {
             player.say_bad("Target player does not exist.");
-        else if (other.dbitem.rank >= player.dbitem.rank)
+        } else if (other.dbitem.rank >= player.dbitem.rank) {
             player.say_bad(
                     "You can only kick people with lower ranks than yours.");
-        else
+        } else {
+            command.say(player.client.getName() + " is kicking "
+                    + other.client.getName());
             exec("kick " + id);
+        }
     }
 
-    void cmd_gt_setrank(Player @player, cString &args, int argc,
-            Players @players) {
+    void cmd_gt_setrank(Command @command, Player @player, cString &args,
+            int argc, Players @players) {
         int id = args.getToken(1).toInt();
         int rank = args.getToken(2).toInt();
         Player @other = players.get(id);
-        if (@other == null)
+        if (@other == null) {
             player.say_bad("Target player does not exist.");
-        else if (other.state != DBI_IDENTIFIED)
+        } else if (other.state != DBI_IDENTIFIED) {
             player.say_bad(
-                    "This player is not registered or properly identified");
-        else if (other.dbitem.rank >= player.dbitem.rank)
+                    "This player is not registered or properly identified.");
+        } else if (other.dbitem.rank >= player.dbitem.rank) {
             player.say_bad(
                     "You can only setrank people with lower ranks than yours.");
-        else if (rank >= player.dbitem.rank)
+        } else if (rank >= player.dbitem.rank) {
             player.say_bad(
                     "You can only set ranks to lower ranks than yours.");
-        else
+        } else {
+            command.say(player.client.getName() + " set the rank of "
+                    + other.client.getName() + " to " + rank + " ("
+                    + highlight(players.ranks.name(rank)) + ")");
             other.set_rank(rank);
+        }
     }
 
-    void cmd_gt_map(Player @player, cString &args, int argc,
+    void cmd_gt_map(Command @command, Player @player, cString &args, int argc,
             Players @players) {
-        exec("map " + args.getToken(1));
+        cString @map = args.getToken(1);
+        command.say(player.client.getName() + " is changing to map " + map);
+        exec("map " + map);
     }
 
-    void cmd_gt_devmap(Player @player, cString &args, int argc,
-            Players @players) {
-        exec("devmap " + args.getToken(1));
+    void cmd_gt_devmap(Command @command, Player @player, cString &args,
+            int argc, Players @players) {
+        cString @map = args.getToken(1);
+        command.say(player.client.getName() + " is changing to devmap " + map);
+        exec("devmap " + map);
     }
 
-    void cmd_gt_shutdown(Player @player, cString &args, int argc,
-            Players @players) {
+    void cmd_gt_shutdown(Command @command, Player @player, cString &args,
+            int argc, Players @players) {
+        command.say(player.client.getName() + " is shutting down the server");
         exec("quit");
     }
 
-    void cmd_gt_unimplemented(Player @player, cString &args, int argc,
-            Players @players) {
+    void cmd_gt_unimplemented(Command @command, Player @player, cString &args,
+            int argc, Players @players) {
         player.say("Somehow this command was not implemented.\n"
                 + "Please report this bug to a developer.");
     }
