@@ -84,7 +84,8 @@ class Scoreboard {
     void add_player(cString &scoreboard, cEntity @ent, int max_len,
             Players @players) {
         Player @player = players.get(ent.client.playerNum());
-        int id = ent.isGhosting() ? -(ent.playerNum() + 1) : ent.playerNum();
+        int id = ent.isGhosting() && for_real() ? -(ent.playerNum() + 1)
+            : ent.playerNum();
         cString registered_color = player.state == DBI_IDENTIFIED
             ? S_COLOR_PERSISTENT : S_COLOR_TEMPORARY;
         cString entry = "&p " + players.ranks.icon(player.dbitem.rank) + " "
