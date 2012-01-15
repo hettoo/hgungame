@@ -289,7 +289,8 @@ class Players {
     void respawn() {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
-            if (@player != null)
+            if (@player != null && @player.client != null
+                    && player.client.team != TEAM_SPECTATOR)
                 player.client.respawn(false);
         }
     }
