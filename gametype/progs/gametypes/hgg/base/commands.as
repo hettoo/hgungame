@@ -121,45 +121,45 @@ class Commands {
         if (@player == null) {
         } else if (@command == null) {
             cmd_gt_help(command, player, args, argc, players);
+        } else if (player.state == DBI_WRONG_IP
+                && command.min_rank > RANK_GUEST) {
+            player.say_bad("You are not identified.");
+        } else if (player.dbitem.rank < command.min_rank) {
+            player.say_bad("You need to be at least rank " + command.min_rank
+                    + " ("
+                    + highlight(players.ranks.name(command.min_rank).tolower())
+                    + S_COLOR_BAD + ") to use this command.");
+        } else if (command.valid_usage(argc - 1)) {
+            if (command.name == "listplayers")
+                cmd_gt_listplayers(command, player, args, argc, players);
+            else if (command.name == "pm")
+                cmd_gt_pm(command, player, args, argc, players);
+            else if (command.name == "stats")
+                cmd_gt_stats(command, player, args, argc, players);
+            else if (command.name == "register")
+                cmd_gt_register(command, player, args, argc, players);
+            else if (command.name == "identify")
+                cmd_gt_identify(command, player, args, argc, players);
+            else if (command.name == "showoff")
+                cmd_gt_showoff(command, player, args, argc, players);
+            else if (command.name == "restart")
+                cmd_gt_restart(command, player, args, argc, players);
+            else if (command.name == "nextmap")
+                cmd_gt_nextmap(command, player, args, argc, players);
+            else if (command.name == "kick")
+                cmd_gt_kick(command, player, args, argc, players);
+            else if (command.name == "setrank")
+                cmd_gt_setrank(command, player, args, argc, players);
+            else if (command.name == "map")
+                cmd_gt_map(command, player, args, argc, players);
+            else if (command.name == "devmap")
+                cmd_gt_devmap(command, player, args, argc, players);
+            else if (command.name == "shutdown")
+                cmd_gt_shutdown(command, player, args, argc, players);
+            else
+                cmd_gt_unimplemented(command, player, args, argc, players);
         } else {
-            if (player.dbitem.rank < command.min_rank) {
-                player.say_bad("You need to be at least rank "
-                        + command.min_rank + " (" + highlight(
-                            players.ranks.name(command.min_rank).tolower())
-                        + S_COLOR_BAD + ") to use this command.");
-            } else if (command.valid_usage(argc - 1)) {
-                if (command.name == "listplayers")
-                    cmd_gt_listplayers(command, player, args, argc, players);
-                else if (command.name == "pm")
-                    cmd_gt_pm(command, player, args, argc, players);
-                else if (command.name == "stats")
-                    cmd_gt_stats(command, player, args, argc, players);
-                else if (command.name == "register")
-                    cmd_gt_register(command, player, args, argc, players);
-                else if (command.name == "identify")
-                    cmd_gt_identify(command, player, args, argc, players);
-                else if (command.name == "showoff")
-                    cmd_gt_showoff(command, player, args, argc, players);
-                else if (command.name == "restart")
-                    cmd_gt_restart(command, player, args, argc, players);
-                else if (command.name == "nextmap")
-                    cmd_gt_nextmap(command, player, args, argc, players);
-                else if (command.name == "kick")
-                    cmd_gt_kick(command, player, args, argc, players);
-                else if (command.name == "setrank")
-                    cmd_gt_setrank(command, player, args, argc, players);
-                else if (command.name == "map")
-                    cmd_gt_map(command, player, args, argc, players);
-                else if (command.name == "devmap")
-                    cmd_gt_devmap(command, player, args, argc, players);
-                else if (command.name == "shutdown")
-                    cmd_gt_shutdown(command, player, args, argc, players);
-                else
-                    cmd_gt_unimplemented(command, player, args, argc, players);
-            } else {
-                player.say(highlight("Usage") + ": "
-                        + cmd_with_usage(command));
-            }
+            player.say(highlight("Usage") + ": " + cmd_with_usage(command));
         }
 
         return true;
@@ -336,7 +336,7 @@ class Commands {
             player.say_bad("Target player does not exist.");
         } else if (other.state != DBI_IDENTIFIED) {
             player.say_bad(
-                    "This player is not registered or properly identified.");
+                    "This player is not registered or identified.");
         } else if (other.dbitem.rank >= player.dbitem.rank) {
             player.say_bad(
                     "You can only setrank people with lower ranks than yours.");

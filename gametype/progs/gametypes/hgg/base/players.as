@@ -260,7 +260,8 @@ class Players {
     void namechange(cClient @client) {
         init_client(client);
         Player @player = get(client.playerNum());
-        player.ip_check();
+        if (player.client.team != TEAM_SPECTATOR)
+            player.ip_check();
     }
 
     void disconnect(cClient @client) {
