@@ -50,10 +50,10 @@ void string_add_maxed(cString &string, cString &addition, int max) {
         string += addition;
 }
 
-void set_spawn_system(int spawn_system) {
+void set_spawn_system(int spawn_system, bool dead_cam) {
     for (int team = 0; team < GS_MAX_TEAMS; team++) {
         if (team != TEAM_SPECTATOR)
-            gametype.setTeamSpawnsystem(team, spawn_system, 0, 0, false);
+            gametype.setTeamSpawnsystem(team, spawn_system, 0, 0, dead_cam);
     }
 }
 

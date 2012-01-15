@@ -26,12 +26,18 @@ class HGGBase {
     Commands commands;
     Dummies dummies;
 
+    cEntity @spawn_alpha;
+    cEntity @spawn_beta;
+
     int sound_dummy_killed;
 
     uint last_second;
     uint last_minute_second;
 
     HGGBase() {
+        @spawn_alpha = null;
+        @spawn_beta = null;
+
         sound_dummy_killed = G_SoundIndex("sounds/misc/kill");
 
         last_second = 0;
@@ -55,8 +61,30 @@ class HGGBase {
     }
 
     cEntity @select_spawn_point(cEntity @self) {
-        return GENERIC_SelectBestRandomSpawnPoint(self,
+        cEntity @random = GENERIC_SelectBestRandomSpawnPoint(self,
                 "info_player_deathmatch");
+        if (gametype.isTeamBased) {
+            if (@spawn_alpha == null) {
+                @spawn_alpha = random;
+                cEntity @max;
+                int max_dist = UNKNOWN;
+                do {
+                    @spawn_beta = G_FindEntityWithClassname(spawn_beta,
+                            "info_player_deathmatch");
+                    if (@spawn_beta != null) {
+                        int dist = spawn_alpha.getOrigin().distance(
+                                spawn_beta.getOrigin());
+                        if (dist > max_dist || max_dist == UNKNOWN) {
+                            @max = spawn_beta;
+                            max_dist = dist;
+                        }
+                    }
+                } while (@spawn_beta != null);
+                @spawn_beta = max;
+            }
+            return self.client.team == TEAM_ALPHA ? spawn_alpha : spawn_beta;
+        }
+        return random;
     }
 
     bool command(cClient @client, cString &cmd, cString &args, int argc) {

@@ -103,9 +103,10 @@ class Players {
         player.row = 0;
     }
 
-    void award(cClient @client, int row, bool show, int weapon) {
+    void award(cClient @client, int row, bool real, int weapon) {
         Player @player = get(client.playerNum());
-        player.add_score(1);
+        if (real)
+            player.add_score(1);
 
         player.update_hud_self();
         update_best(client.playerNum());
@@ -118,9 +119,10 @@ class Players {
         if (award == WEAP_NONE)
             return;
 
+        // NOTE: heavy weapons get default ammo again on a new round
         if (award < WEAP_TOTAL)
-            award_weapon(client, award, weapons.ammo(award), show);
-        else
+            award_weapon(client, award, weapons.ammo(award), real);
+        else if (real)
             get(client.playerNum()).show_row();
 
         if (weapons.weak(weapon)) {
@@ -282,6 +284,28 @@ class Players {
                     && player.client.getEnt().team != TEAM_SPECTATOR)
                 GENERIC_ChargeGunblade(player.client);
         }
+    }
+
+    void respawn() {
+        for (int i = 0; i < size; i++) {
+            Player @player = get(i);
+            if (@player != null)
+                player.client.respawn(false);
+        }
+    }
+
+    int count_alive(int team) {
+        int n = 0;
+        for (int i = 0; i < size; i++) {
+            Player @player = get(i);
+            if (@player != null) {
+                cClient @client = player.client;
+                if (@client != null && client.team == team
+                        && !client.getEnt().isGhosting())
+                    n++;
+            }
+        }
+        return n;
     }
 
     int count() {

@@ -84,13 +84,13 @@ class Scoreboard {
     void add_player(cString &scoreboard, cEntity @ent, int max_len,
             Players @players) {
         Player @player = players.get(ent.client.playerNum());
+        int id = ent.isGhosting() ? -(ent.playerNum() + 1) : ent.playerNum();
         cString registered_color = player.state == DBI_IDENTIFIED
             ? S_COLOR_PERSISTENT : S_COLOR_TEMPORARY;
         cString entry = "&p " + players.ranks.icon(player.dbitem.rank) + " "
-            + ent.playerNum() + " " + ent.client.getClanName() + " "
-            + ent.client.stats.score + " " + registered_color
-            + player.dbitem.row + " " + ent.client.ping + " "
-            + player.minutes_played + " ";
+            + id + " " + ent.client.getClanName() + " " + ent.client.stats.score
+            + " " + registered_color + player.dbitem.row + " " + ent.client.ping
+            + " " + player.minutes_played + " ";
         if (state == SB_WARMUP)
             entry += (ent.client.isReady() ? icon_yes : icon_no) + " ";
         else if (state == SB_MATCH)

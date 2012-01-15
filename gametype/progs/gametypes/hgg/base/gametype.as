@@ -60,7 +60,7 @@ class Gametype {
     }
 
     void set_defaults() {
-        set_spawn_system(SPAWNSYSTEM_INSTANT);
+        set_spawn_system(SPAWNSYSTEM_INSTANT, false);
 
         gametype.isRace = false;
         gametype.hasChallengersQueue = false;
