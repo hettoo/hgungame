@@ -51,6 +51,8 @@ class Weapons {
                 return gametype.isInstagib() ? icon_instagun : icon_gunblade;
             case WEAP_INSTAGUN:
                 return icon_instagun;
+            case WEAP_GUNBLADE:
+                return icon_gunblade;
             case WEAP_ELECTROBOLT:
                 return icon_electro;
             case WEAP_GRENADELAUNCHER:
@@ -65,8 +67,6 @@ class Weapons {
                 return icon_machinegun;
             case WEAP_RIOTGUN:
                 return icon_riot;
-            case WEAP_GUNBLADE:
-                return icon_gunblade;
             case WEAP_TOTAL:
                 return icon_max;
         }
@@ -96,22 +96,17 @@ class Weapons {
                 return WEAP_MACHINEGUN;
             case 7:
                 return WEAP_RIOTGUN;
-            case 8:
-                return gametype.isInstagib() ? WEAP_GUNBLADE : WEAP_TOTAL;
         }
 
         return WEAP_TOTAL;
     }
 
     void select_best(cClient @client) {
-        int best = WEAP_INSTAGUN;
-        if (client.canSelectWeapon(WEAP_GUNBLADE))
-            best = WEAP_GUNBLADE;
+        int best = gametype.isInstagib() ? WEAP_INSTAGUN : WEAP_GUNBLADE;
 
         int weapon;
         for (int i = 0; (weapon = award(i)) != WEAP_TOTAL; i++) {
-            if (weapon != WEAP_NONE && weapon != WEAP_GUNBLADE
-                    && client.canSelectWeapon(weapon))
+            if (weapon != WEAP_NONE && client.canSelectWeapon(weapon))
                 best = weapon;
         }
         client.selectWeapon(best);
