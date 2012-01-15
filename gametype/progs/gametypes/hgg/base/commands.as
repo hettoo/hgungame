@@ -55,6 +55,7 @@ class Commands {
 
         add("devmap <mapname>", "Change the current map and enable cheats.",
                 RANK_ADMIN);
+        add("cvar <name> [value]", "Get / set a cVar.", RANK_ADMIN);
 
         add("shutdown", "Shutdown the server.", RANK_ROOT);
     }
@@ -154,6 +155,8 @@ class Commands {
                 cmd_gt_map(command, player, args, argc, players);
             else if (command.name == "devmap")
                 cmd_gt_devmap(command, player, args, argc, players);
+            else if (command.name == "cvar")
+                cmd_gt_cvar(command, player, args, argc, players);
             else if (command.name == "shutdown")
                 cmd_gt_shutdown(command, player, args, argc, players);
             else
@@ -363,6 +366,28 @@ class Commands {
         cString @map = args.getToken(1);
         command.say(player.client.getName() + " is changing to devmap " + map);
         exec("devmap " + map);
+    }
+
+    void cmd_gt_cvar(Command @command, Player @player, cString &args, int argc,
+            Players @players) {
+        cString name = args.getToken(1);
+        cVar @cvar = cVar(name, "", 0); // NOTE: resets the default value :-(
+        if (raw(name) == "rcon_password") {
+            player.say_bad("Forget it.");
+        } else if (argc == 2) {
+            player.say(name + " is \"" + cvar.getString() + "\"");
+        } else {
+            cString value = args.getToken(2);
+            cvar.set(value);
+            if (cvar.getString() != value)
+                player.say_bad(
+                        "Setting the cVar seems to have failed. It's value is "
+                        + cvar.getString());
+            else
+                command.say(player.client.getName() + " set " + name
+                        + S_COLOR_RESET + " to \"" + value + S_COLOR_RESET
+                        + "\"");
+        }
     }
 
     void cmd_gt_shutdown(Command @command, Player @player, cString &args,
