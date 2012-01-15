@@ -44,6 +44,8 @@ class Commands {
         add("identify <password>", "Identify yourself after an ip change.",
                 RANK_GUEST);
 
+        add("showoff", "Announces your rank.", RANK_REGULAR_USER);
+
         add("restart", "Restart this map.", RANK_MEMBER);
         add("nextmap", "Proceed to the next map.", RANK_MEMBER);
 
@@ -136,6 +138,8 @@ class Commands {
                     cmd_gt_register(command, player, args, argc, players);
                 else if (command.name == "identify")
                     cmd_gt_identify(command, player, args, argc, players);
+                else if (command.name == "showoff")
+                    cmd_gt_showoff(command, player, args, argc, players);
                 else if (command.name == "restart")
                     cmd_gt_restart(command, player, args, argc, players);
                 else if (command.name == "nextmap")
@@ -190,6 +194,13 @@ class Commands {
             player.administrate("IP changed successfully!");
             command.say(player.client.getName() + " identified himself");
         }
+    }
+
+    void cmd_gt_showoff(Command @command, Player @player, cString &args,
+            int argc, Players @players) {
+        command.say(player.client.getName() + " is a rank " + player.dbitem.rank
+                + " user (" + highlight(players.ranks.name(player.dbitem.rank))
+                        + ")");
     }
 
     void cmd_gt_listplayers(Command @command, Player @player, cString &args,

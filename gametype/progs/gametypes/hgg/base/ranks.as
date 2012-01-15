@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 enum RankTypes {
     RANK_GUEST,
+    RANK_REGULAR_USER,
     RANK_MEMBER,
     RANK_VIP,
     RANK_ADMIN,
@@ -27,6 +28,7 @@ enum RankTypes {
 
 class Ranks {
     int icon_guest;
+    int icon_regular_user;
     int icon_member;
     int icon_vip;
     int icon_admin;
@@ -34,6 +36,7 @@ class Ranks {
 
     Ranks() {
         icon_guest = G_ImageIndex("gfx/hud/icons/backpack/spawnbp");
+        icon_regular_user = G_ImageIndex("gfx/hud/icons/backpack/electrobotbp");
         icon_member = G_ImageIndex("gfx/hud/icons/backpack/grenadebp");
         icon_vip = G_ImageIndex("gfx/hud/icons/backpack/rocketbp");
         icon_admin = G_ImageIndex("gfx/hud/icons/backpack/plasmabp");
@@ -44,6 +47,8 @@ class Ranks {
         switch (rank) {
             case RANK_GUEST:
                 return "Guest";
+            case RANK_REGULAR_USER:
+                return "Regular User";
             case RANK_MEMBER:
                 return "Member";
             case RANK_VIP:
@@ -60,6 +65,8 @@ class Ranks {
         switch (rank) {
             case RANK_GUEST:
                 return icon_guest;
+            case RANK_REGULAR_USER:
+                return icon_regular_user;
             case RANK_MEMBER:
                 return icon_member;
             case RANK_VIP:
