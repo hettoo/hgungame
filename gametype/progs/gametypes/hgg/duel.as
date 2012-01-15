@@ -21,16 +21,9 @@ class HGG : HGGBase {
     void set_gametype_settings() {
         HGGBase::set_gametype_settings();
 
-        set_spawn_system(SPAWNSYSTEM_INSTANT);
-
         gametype.isTeamBased = true;
         gametype.hasChallengersQueue = true;
         gametype.maxPlayersPerTeam = 1;
-
-        gametype.readyAnnouncementEnabled = false;
-        gametype.scoreAnnouncementEnabled = false;
-        gametype.canShowMinimap = false;
-        gametype.teamOnlyMinimap = false;
 
         gt.has_challengers_queue = true;
         gt.has_map_list = false;
@@ -42,27 +35,10 @@ class HGG : HGGBase {
         HGGBase::init_gametype();
     }
 
-    void warmup_started() {
-        HGGBase::warmup_started();
-        CreateSpawnIndicators("info_player_deathmatch", TEAM_BETA);
-    }
-
-    void countdown_started() {
-        HGGBase::countdown_started();
-        DeleteSpawnIndicators();
-    }
-
     void playtime_started() {
         HGGBase::playtime_started();
         dummies.init();
         dummies.spawn();
-    }
-
-    cString @scoreboard_message(int max_len) {
-        cString board = "";
-        scoreboard.add_team(board, TEAM_ALPHA, max_len, players);
-        scoreboard.add_team(board, TEAM_BETA, max_len, players);
-        return board;
     }
 
     void killed(cClient @attacker, cClient @target, cClient @inflictor) {

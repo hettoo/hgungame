@@ -18,41 +18,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 class HGG : HGGBase {
-    void set_gametype_settings() {
-        HGGBase::set_gametype_settings();
-
-        set_spawn_system(SPAWNSYSTEM_INSTANT);
-
-        gametype.isTeamBased = false;
-        gametype.hasChallengersQueue = false;
-        gametype.maxPlayersPerTeam = 0;
-
-        gametype.readyAnnouncementEnabled = false;
-        gametype.scoreAnnouncementEnabled = false;
-        gametype.canShowMinimap = false;
-        gametype.teamOnlyMinimap = false;
-    }
-
     void init_gametype() {
         gt.name = "Free For All";
         gt.type = GT_FFA;
         HGGBase::init_gametype();
-    }
-
-    void warmup_started() {
-        HGGBase::warmup_started();
-        CreateSpawnIndicators("info_player_deathmatch", TEAM_PLAYERS);
-    }
-
-    void countdown_started() {
-        HGGBase::countdown_started();
-        DeleteSpawnIndicators();
-    }
-
-    cString @scoreboard_message(int max_len) {
-        cString board= "";
-        scoreboard.add_team(board, TEAM_PLAYERS, max_len, players);
-        return board;
     }
 }
 

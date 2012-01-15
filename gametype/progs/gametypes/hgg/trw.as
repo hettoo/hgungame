@@ -21,15 +21,7 @@ class HGG : HGGBase {
     void set_gametype_settings() {
         HGGBase::set_gametype_settings();
 
-        set_spawn_system(SPAWNSYSTEM_INSTANT);
-
         gametype.isTeamBased = true;
-        gametype.hasChallengersQueue = false;
-        gametype.maxPlayersPerTeam = 0;
-
-        gametype.readyAnnouncementEnabled = false;
-        gametype.scoreAnnouncementEnabled = false;
-        gametype.canShowMinimap = false;
         gametype.teamOnlyMinimap = true;
     }
 
@@ -37,23 +29,6 @@ class HGG : HGGBase {
         gt.name = "Team Row War";
         gt.type = GT_DM;
         HGGBase::init_gametype();
-    }
-
-    void warmup_started() {
-        HGGBase::warmup_started();
-        CreateSpawnIndicators("info_player_deathmatch", TEAM_PLAYERS);
-    }
-
-    void countdown_started() {
-        HGGBase::countdown_started();
-        DeleteSpawnIndicators();
-    }
-
-    cString @scoreboard_message(int max_len) {
-        cString board= "";
-        scoreboard.add_team(board, TEAM_ALPHA, max_len, icons, players);
-        scoreboard.add_team(board, TEAM_BETA, max_len, icons, players);
-        return board;
     }
 
     void killed(cClient @attacker, cClient @target, cClient @inflictor) {

@@ -68,6 +68,8 @@ class HGGBase {
 
     void warmup_started() {
         scoreboard.set_layout(SB_WARMUP);
+        CreateSpawnIndicators("info_player_deathmatch", gametype.isTeamBased
+                ? TEAM_BETA : TEAM_PLAYERS);
         GENERIC_SetUpWarmup();
     }
     
@@ -80,6 +82,7 @@ class HGGBase {
         last_second = levelTime / 1000;
         last_minute_second = last_second;
         scoreboard.set_layout(SB_MATCH);
+        DeleteSpawnIndicators();
         players.update_best();
         players.update_hud();
         GENERIC_SetUpMatch();
@@ -187,6 +190,17 @@ class HGGBase {
             }
             last_second = second;
         }
+    }
+
+    cString @scoreboard_message(int max_len) {
+        cString board = "";
+        if (gametype.isTeamBased) {
+            scoreboard.add_team(board, TEAM_ALPHA, max_len, players);
+            scoreboard.add_team(board, TEAM_BETA, max_len, players);
+        } else {
+            scoreboard.add_team(board, TEAM_PLAYERS, max_len, players);
+        }
+        return board;
     }
 
     void dummy_killed(cEntity @self, cEntity @attacker, cEntity @inflictor) {

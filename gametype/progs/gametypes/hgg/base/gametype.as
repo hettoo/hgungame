@@ -60,7 +60,16 @@ class Gametype {
     }
 
     void set_defaults() {
+        set_spawn_system(SPAWNSYSTEM_INSTANT);
+
         gametype.isRace = false;
+        gametype.hasChallengersQueue = false;
+        gametype.maxPlayersPerTeam = 0;
+
+        gametype.readyAnnouncementEnabled = false;
+        gametype.scoreAnnouncementEnabled = false;
+        gametype.canShowMinimap = false;
+        gametype.teamOnlyMinimap = false;
 
         gametype.spawnableItemsMask = 0;
         gametype.respawnableItemsMask = gametype.spawnableItemsMask;
