@@ -33,11 +33,11 @@ class Ranks {
     int icon_root;
 
     Ranks() {
-        icon_guest = G_ImageIndex("gfx/hud/icons/health/5");
-        icon_member = G_ImageIndex("gfx/hud/icons/health/25");
-        icon_vip = G_ImageIndex("gfx/hud/icons/health/50");
-        icon_admin = G_ImageIndex("gfx/hud/icons/health/100");
-        icon_root = G_ImageIndex("gfx/hud/icons/health/100ultra");
+        icon_guest = G_ImageIndex("gfx/hud/icons/backpack/spawnbp");
+        icon_member = G_ImageIndex("gfx/hud/icons/backpack/grenadebp");
+        icon_vip = G_ImageIndex("gfx/hud/icons/backpack/rocketbp");
+        icon_admin = G_ImageIndex("gfx/hud/icons/backpack/plasmabp");
+        icon_root = G_ImageIndex("gfx/hud/icons/backpack/riotbp");
     }
 
     cString @name(int rank) {
