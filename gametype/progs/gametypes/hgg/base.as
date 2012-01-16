@@ -146,9 +146,17 @@ class HGGBase {
 
     void score_event(cClient @client, cString &score_event, cString &args) {
         if (score_event == "kill") {
-            cClient @target = G_GetEntity(args.getToken(0).toInt()).client;
-            cClient @inflictor = G_GetEntity(args.getToken(1).toInt()).client;
-            killed(client, target, inflictor);
+            cEntity @target = G_GetEntity(args.getToken(0).toInt());
+            cEntity @inflictor = G_GetEntity(args.getToken(1).toInt());
+
+            cClient @target_client = null;
+            cClient @inflictor_client = null;
+            if (@target != null)
+                @target_client = target.client;
+            if (@inflictor != null)
+                @inflictor_client = inflictor.client;
+
+            killed(client, target_client, inflictor_client);
         } else if (score_event == "userinfochanged") {
             players.namechange(client);
         } else if (score_event == "disconnect") {
