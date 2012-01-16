@@ -8,6 +8,7 @@ INSTAGIB = 1
 SERVER_CMD = wsw-server +set fs_game $(MOD) +set sv_port $(PORT) \
 			 +set g_gametype $(GT) +set g_instagib $(INSTAGIB)
 
+THIS = Makefile
 GT_DIR = gametype
 TMP_DIR = tmp
 BASE_MOD = basewsw
@@ -23,7 +24,7 @@ GT_PK3 = hgg-$(VERSION_WORD).pk3
 
 all: $(GT_PK3)
 
-$(GT_PK3): $(shell find $(GT_DIR)/)
+$(GT_PK3): $(shell find $(GT_DIR)/) $(THIS)
 	rm -rf $(TMP_DIR)
 	mkdir $(TMP_DIR)
 	rm -f *.pk3
@@ -37,6 +38,9 @@ local: $(GT_PK3)
 production: local
 	$(SERVER_CMD)
 
+clean:
+	rm -f *.pk3
+
 destroy:
 	rm -f $(WSW_DIR)/$(BASE_MOD)/$(EVERY_PK3)
 	rm -f $(WSW_DIR)/$(BASE_MOD)/$(CONFIG_DIR)/$(EVERY_CFG)
@@ -47,4 +51,4 @@ restart: destroy local
 dev: restart
 	$(SERVER_CMD)
 
-.PHONY: all local production destroy restart dev
+.PHONY: all local production clean destroy restart dev
