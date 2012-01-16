@@ -146,7 +146,7 @@ class Player {
 
         int config_index = CS_GENERAL + client.playerNum() + 2;
         client.setHUDStat(STAT_MESSAGE_ALPHA, config_index);
-        G_ConfigString(config_index, "- " + client.stats.score + " -");
+        G_ConfigString(config_index, "- " + score + " -");
     }
 
     void update_hud_other(Players @players) {
@@ -154,7 +154,7 @@ class Player {
             return;
 
         int config_index = CS_GENERAL;
-        if (client.stats.score == players.best_score)
+        if (score == players.best_score)
             config_index++;
         client.setHUDStat(STAT_MESSAGE_BETA, config_index);
         if (players.best_score == UNKNOWN

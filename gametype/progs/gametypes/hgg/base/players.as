@@ -105,15 +105,17 @@ class Players {
 
     void award(cClient @client, int row, bool real, int weapon) {
         Player @player = get(client.playerNum());
-        if (real)
+        if (real) {
             player.add_score(1);
 
-        player.update_hud_self();
-        update_best(client.playerNum());
-        if (player.score == best_score)
-            update_hud();
-        else if (player.score == second_score)
-            update_hud_bests();
+            player.update_hud_self();
+            update_best(client.playerNum());
+
+            if (player.score == best_score)
+                update_hud();
+            else if (player.score == second_score)
+                update_hud_bests();
+        }
 
         int award = weapons.award(row);
         if (award == WEAP_NONE)
