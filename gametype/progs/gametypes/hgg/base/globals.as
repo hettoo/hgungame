@@ -186,6 +186,13 @@ cString @fixed_field(cString &text, int size) {
     return field;
 }
 
+void lock_teams() {
+    for (int team = 0; team < GS_MAX_TEAMS; team++) {
+        if (team != TEAM_SPECTATOR)
+            G_GetTeam(team).lock();
+    }
+}
+
 cString @wrap(cString &s) {
     return "\n" + s + "\n";
 }

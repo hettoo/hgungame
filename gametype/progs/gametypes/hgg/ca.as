@@ -51,6 +51,15 @@ class HGG : HGGBase {
         countdown_start = COUNTDOWN_START;
     }
 
+    void countdown_started() {
+        gametype.shootingDisabled = true;
+        gametype.readyAnnouncementEnabled = false;
+        gametype.scoreAnnouncementEnabled = false;
+        gametype.countdownEnabled = false;
+        lock_teams();
+        show_sound("sounds/announcer/countdown/get_ready_to_fight0");
+    }
+
     void playtime_started() {
         set_spawn_system(SPAWNSYSTEM_HOLD, true);
         HGGBase::playtime_started();
@@ -76,7 +85,7 @@ class HGG : HGGBase {
                 players.get_alive(TEAM_ALPHA).client.addAward(LAST_PLAYER);
             players.team_scored(TEAM_ALPHA);
         } else {
-            if (count_alpha == 1)
+            if (count_beta == 1)
                 players.get_alive(TEAM_BETA).client.addAward(LAST_PLAYER);
             players.team_scored(TEAM_BETA);
         }
@@ -85,11 +94,11 @@ class HGG : HGGBase {
         @spawn_beta = null;
     }
 
-    void one_versus(int count, int team) {
-        Player @alive = players.get_alive(team);
+    void one_versus(int count, int team, cClient @target) {
+        Player @alive = players.get_alive(team, target);
         if (count == 1) {
             int other_team = other_team(team);
-            Player @other_alive = players.get_alive(other_team);
+            Player @other_alive = players.get_alive(other_team, target);
             notify(ONE_VS_ONE);
             alive.client.addAward(S_COLOR_SPECIAL + ONE_VS_ONE);
             other_alive.client.addAward(S_COLOR_SPECIAL + ONE_VS_ONE);
@@ -100,20 +109,22 @@ class HGG : HGGBase {
         }
     }
 
-    void check_teams(int penalty_team) {
-        int count_alpha = players.count_alive(TEAM_ALPHA)
-            - (penalty_team == TEAM_ALPHA ? 1 : 0);
-        int count_beta = players.count_alive(TEAM_BETA)
-            - (penalty_team == TEAM_BETA ? 1 : 0);
+    void check_teams(cClient @target) {
+        int count_alpha = players.count_alive(TEAM_ALPHA, target);
+        int count_beta = players.count_alive(TEAM_BETA, target);
         if (count_alpha == 0 || count_beta == 0) {
             gametype.shootingDisabled = true;
             countdown_end = COUNTDOWN_END;
         } else if (count_alpha == 1 || count_beta == 1) {
             if (count_alpha == 1)
-                one_versus(count_beta, TEAM_ALPHA);
+                one_versus(count_beta, TEAM_ALPHA, target);
             else
-                one_versus(count_alpha, TEAM_BETA);
+                one_versus(count_alpha, TEAM_BETA, target);
         }
+    }
+
+    void check_teams() {
+        check_teams(null);
     }
 
     void show_sound(cString &sound) {
@@ -129,7 +140,7 @@ class HGG : HGGBase {
 
     void count_down_start() {
         countdown_start--;
-        if (countdown_start == COUNTDOWN_START - 1) {
+        if (countdown_start == COUNTDOWN_START - 2) {
             show_sound("sounds/announcer/countdown/ready0");
         } else if (countdown_start == 0) {
             countdown_start = UNKNOWN;
@@ -164,7 +175,7 @@ class HGG : HGGBase {
 
     void new_spectator(cClient @client) {
         HGGBase::new_spectator(client);
-        check_teams(0);
+        check_teams();
     }
 
     void killed(cClient @attacker, cClient @target, cClient @inflictor) {
@@ -174,7 +185,7 @@ class HGG : HGGBase {
             return;
 
         if (@attacker != null && @target != null)
-            check_teams(target.team);
+            check_teams(target);
     }
 }
 

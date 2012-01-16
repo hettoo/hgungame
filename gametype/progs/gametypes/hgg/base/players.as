@@ -308,13 +308,13 @@ class Players {
         }
     }
 
-    int count_alive(int team) {
+    int count_alive(int team, cClient @target) {
         int n = 0;
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
             if (@player != null) {
                 cClient @client = player.client;
-                if (@client != null && client.team == team
+                if (@client != null && @client != @target && client.team == team
                         && !client.getEnt().isGhosting())
                     n++;
             }
@@ -322,17 +322,25 @@ class Players {
         return n;
     }
 
-    Player @get_alive(int team) {
+    int count_alive(int team) {
+        return count_alive(team, null);
+    }
+
+    Player @get_alive(int team, cClient @target) {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
             if (@player != null) {
                 cClient @client = player.client;
-                if (@client != null && client.team == team
+                if (@client != null && @client != @target && client.team == team
                         && !client.getEnt().isGhosting())
                     return player;
             }
         }
         return null;
+    }
+
+    Player @get_alive(int team) {
+        return get_alive(team, null);
     }
 
     int count() {
