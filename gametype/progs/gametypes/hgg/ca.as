@@ -21,6 +21,9 @@ const int COUNTDOWN_START = 6;
 const int COUNTDOWN_END = 4;
 const int COUNTDOWN_SOUND_MAX = 3;
 
+const cString ONE_VS_ONE = "1v1! Good luck!";
+const cString LAST_PLAYER = S_COLOR_GREEN + "Last Player Standing!";
+
 class HGG : HGGBase {
     int countdown_start;
     int countdown_end;
@@ -66,15 +69,35 @@ class HGG : HGGBase {
         int count_alpha = players.count_alive(TEAM_ALPHA);
         int count_beta = players.count_alive(TEAM_BETA);
 
-        if (count_alpha + count_beta == 0)
+        if (count_alpha + count_beta == 0) {
             center_notify("Draw Round!");
-        else if (count_alpha > 0)
+        } else if (count_alpha > 0) {
+            if (count_alpha == 1)
+                players.get_alive(TEAM_ALPHA).client.addAward(LAST_PLAYER);
             players.team_scored(TEAM_ALPHA);
-        else
+        } else {
+            if (count_alpha == 1)
+                players.get_alive(TEAM_BETA).client.addAward(LAST_PLAYER);
             players.team_scored(TEAM_BETA);
+        }
 
         @spawn_alpha = null;
         @spawn_beta = null;
+    }
+
+    void one_versus(int count, int team) {
+        Player @alive = players.get_alive(team);
+        if (count == 1) {
+            int other_team = other_team(team);
+            Player @other_alive = players.get_alive(other_team);
+            notify(ONE_VS_ONE);
+            alive.client.addAward(S_COLOR_SPECIAL + ONE_VS_ONE);
+            other_alive.client.addAward(S_COLOR_SPECIAL + ONE_VS_ONE);
+        } else {
+            alive.client.addAward("1v" + count + "! You're on your own!");
+            players.say_team(team, "1v" + count + "! " + alive.client.getName()
+                    + " is on its own!");
+        }
     }
 
     void check_teams(int penalty_team) {
@@ -85,6 +108,11 @@ class HGG : HGGBase {
         if (count_alpha == 0 || count_beta == 0) {
             gametype.shootingDisabled = true;
             countdown_end = COUNTDOWN_END;
+        } else if (count_alpha == 1 || count_beta == 1) {
+            if (count_alpha == 1)
+                one_versus(count_beta, TEAM_ALPHA);
+            else
+                one_versus(count_alpha, TEAM_BETA);
         }
     }
 

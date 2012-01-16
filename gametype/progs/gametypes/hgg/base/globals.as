@@ -35,6 +35,7 @@ const cString S_COLOR_ADMINISTRATIVE = S_COLOR_CYAN;
 const cString S_COLOR_HIGHLIGHT = S_COLOR_YELLOW;
 const cString S_COLOR_DESCRIPTION = S_COLOR_GREY;
 const cString S_COLOR_PM = S_COLOR_GREEN;
+const cString S_COLOR_SPECIAL = S_COLOR_ORANGE;
 
 const cString INDENT = "    ";
 
@@ -142,6 +143,10 @@ bool increase_ammo(cClient @client, int weapon) {
 
 bool for_real() {
     return match.getState() == MATCH_STATE_PLAYTIME;
+}
+
+int other_team(int team) {
+    return team == TEAM_ALPHA ? TEAM_BETA : TEAM_ALPHA;
 }
 
 cString @fixed_field(cString &text, int size) {

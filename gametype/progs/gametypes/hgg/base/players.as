@@ -296,8 +296,7 @@ class Players {
                     + int(brandom(1, 2))), team, false, null);
         G_AnnouncerSound(null,
                 G_SoundIndex("sounds/announcer/ctf/score_enemy0"
-                    + int(brandom(1, 2))),
-                team == TEAM_ALPHA ? TEAM_BETA : TEAM_ALPHA, false, null);
+                    + int(brandom(1, 2))), other_team(team), false, null);
     }
 
     void respawn() {
@@ -323,6 +322,19 @@ class Players {
         return n;
     }
 
+    Player @get_alive(int team) {
+        for (int i = 0; i < size; i++) {
+            Player @player = get(i);
+            if (@player != null) {
+                cClient @client = player.client;
+                if (@client != null && client.team == team
+                        && !client.getEnt().isGhosting())
+                    return player;
+            }
+        }
+        return null;
+    }
+
     int count() {
         int n = 0;
         for (int i = 0; i < size; i++) {
@@ -334,5 +346,16 @@ class Players {
             }
         }
         return n;
+    }
+
+    void say_team(int team, cString &msg) {
+        for (int i = 0; i < size; i++) {
+            Player @player = get(i);
+            if (@player != null) {
+                cClient @client = player.client;
+                if (@client != null && client.team == team)
+                    player.say(msg);
+            }
+        }
     }
 }
