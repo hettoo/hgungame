@@ -219,16 +219,24 @@ class HGGBase {
             respawn(ent.client);
     }
 
+    void new_minute() {
+        players.increase_minutes();
+        dummies.spawn();
+    }
+
+    void new_second() {
+        uint minute_second = last_minute_second + 60;
+        if (last_second == minute_second) {
+            new_minute();
+            last_minute_second = minute_second;
+        }
+    }
+
     void check_time() {
         uint second = levelTime / 1000;
         if (second != last_second) {
-            uint minute_second = last_minute_second + 60;
-            if (second == minute_second) {
-                players.increase_minutes();
-                dummies.spawn();
-                last_minute_second = minute_second;
-            }
             last_second = second;
+            new_second();
         }
     }
 

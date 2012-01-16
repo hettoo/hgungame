@@ -17,7 +17,19 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+const int COUNTDOWN_START = 6;
+const int COUNTDOWN_END = 4;
+const int COUNTDOWN_SOUND_MAX = 3;
+
 class HGG : HGGBase {
+    int countdown_start;
+    int countdown_end;
+
+    HGG() {
+        countdown_start = UNKNOWN;
+        countdown_end = UNKNOWN;
+    }
+
     void set_gametype_settings() {
         HGGBase::set_gametype_settings();
 
@@ -31,9 +43,38 @@ class HGG : HGGBase {
         HGGBase::init_gametype();
     }
 
+    void start_round() {
+        gametype.shootingDisabled = true;
+        countdown_start = COUNTDOWN_START;
+    }
+
     void playtime_started() {
         set_spawn_system(SPAWNSYSTEM_HOLD, true);
         HGGBase::playtime_started();
+        start_round();
+    }
+
+    void new_round() {
+        players.respawn();
+        start_round();
+    }
+
+    void end_round() {
+        G_RemoveDeadBodies();
+        G_RemoveAllProjectiles();
+
+        int count_alpha = players.count_alive(TEAM_ALPHA);
+        int count_beta = players.count_alive(TEAM_BETA);
+
+        if (count_alpha + count_beta == 0)
+            center_notify("Draw Round!");
+        else if (count_alpha > 0)
+            players.team_scored(TEAM_ALPHA);
+        else
+            players.team_scored(TEAM_BETA);
+
+        @spawn_alpha = null;
+        @spawn_beta = null;
     }
 
     void check_teams(int penalty_team) {
@@ -42,20 +83,55 @@ class HGG : HGGBase {
         int count_beta = players.count_alive(TEAM_BETA)
             - (penalty_team == TEAM_BETA ? 1 : 0);
         if (count_alpha == 0 || count_beta == 0) {
-            G_RemoveDeadBodies();
-            G_RemoveAllProjectiles();
-
-            if (count_alpha + count_beta == 0)
-                center_notify("Draw Round!");
-            else if (count_alpha > 0)
-                G_GetTeam(TEAM_ALPHA).stats.addScore(1);
-            else
-                G_GetTeam(TEAM_BETA).stats.addScore(1);
-
-            @spawn_alpha = null;
-            @spawn_beta = null;
-            players.respawn();
+            gametype.shootingDisabled = true;
+            countdown_end = COUNTDOWN_END;
         }
+    }
+
+    void show_sound(cString &sound) {
+        G_AnnouncerSound(null,
+                G_SoundIndex(sound + int(brandom(1, 2))), GS_MAX_TEAMS, false,
+                null);
+    }
+
+    void show_counter(int countdown, cString &sound) {
+        show_sound(sound);
+        center_notify(countdown + "");
+    }
+
+    void count_down_start() {
+        countdown_start--;
+        if (countdown_start == COUNTDOWN_START - 1) {
+            show_sound("sounds/announcer/countdown/ready0");
+        } else if (countdown_start == 0) {
+            countdown_start = UNKNOWN;
+            gametype.shootingDisabled = false;
+            G_AnnouncerSound(null,
+                    G_SoundIndex("sounds/announcer/countdown/fight0"
+                        + int(brandom(1, 2))), GS_MAX_TEAMS, false, null);
+            center_notify("Fight!");
+        } else if (countdown_start <= COUNTDOWN_SOUND_MAX) {
+            show_counter(countdown_start, "sounds/announcer/countdown/"
+                    + countdown_start + "_0");
+        }
+    }
+
+    void count_down_end() {
+        countdown_end--;
+        if (countdown_end == 2) {
+            end_round();
+        } else if (countdown_end == 0) {
+            countdown_end = UNKNOWN;
+            new_round();
+        }
+    }
+
+    void new_second() {
+        HGGBase::new_second();
+        if (countdown_start != UNKNOWN)
+            count_down_start();
+        if (countdown_end != UNKNOWN)
+            count_down_end();
     }
 
     void new_spectator(cClient @client) {
@@ -69,7 +145,6 @@ class HGG : HGGBase {
         if (!for_real())
             return;
 
-        // NOTE: this needs to be checked when someone goes spec as well
         if (@attacker != null && @target != null)
             check_teams(target.team);
     }

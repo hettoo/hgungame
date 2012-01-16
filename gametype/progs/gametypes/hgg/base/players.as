@@ -286,6 +286,18 @@ class Players {
         }
     }
 
+    void team_scored(int team) {
+        G_GetTeam(team).stats.addScore(1);
+
+        G_AnnouncerSound(null,
+                G_SoundIndex("sounds/announcer/ctf/score_team0"
+                    + int(brandom(1, 2))), team, false, null);
+        G_AnnouncerSound(null,
+                G_SoundIndex("sounds/announcer/ctf/score_enemy0"
+                    + int(brandom(1, 2))),
+                team == TEAM_ALPHA ? TEAM_BETA : TEAM_ALPHA, false, null);
+    }
+
     void respawn() {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
