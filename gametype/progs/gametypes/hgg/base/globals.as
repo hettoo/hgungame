@@ -197,6 +197,10 @@ void notify(cString &msg) {
     G_PrintMsg(null, msg + "\n");
 }
 
+void center_notify(cString &msg) {
+    G_CenterPrintMsg(null, msg + "\n");
+}
+
 void debug(cString &msg) {
     G_Print(msg + "\n");
 }

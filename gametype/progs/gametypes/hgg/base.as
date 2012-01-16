@@ -197,14 +197,26 @@ class HGGBase {
         check_time();
     }
 
+    void new_player(cClient @client) {
+        players.new_player(client);
+    }
+
+    void new_spectator(cClient @client) {
+        players.new_spectator(client);
+    }
+
+    void respawn(cClient @client) {
+        players.respawn(client);
+    }
+
     void player_respawn(cEntity @ent, int old_team, int new_team) {
         if (old_team == TEAM_SPECTATOR && new_team != TEAM_SPECTATOR)
-            players.new_player(ent.client);
+            new_player(ent.client);
         else if (old_team != TEAM_SPECTATOR && new_team == TEAM_SPECTATOR)
-            players.new_spectator(ent.client);
+            new_spectator(ent.client);
 
         if (new_team != TEAM_SPECTATOR)
-            players.respawn(ent.client);
+            respawn(ent.client);
     }
 
     void check_time() {

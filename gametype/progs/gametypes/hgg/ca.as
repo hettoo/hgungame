@@ -36,6 +36,33 @@ class HGG : HGGBase {
         HGGBase::playtime_started();
     }
 
+    void check_teams(int penalty_team) {
+        int count_alpha = players.count_alive(TEAM_ALPHA)
+            - (penalty_team == TEAM_ALPHA ? 1 : 0);
+        int count_beta = players.count_alive(TEAM_BETA)
+            - (penalty_team == TEAM_BETA ? 1 : 0);
+        if (count_alpha == 0 || count_beta == 0) {
+            G_RemoveDeadBodies();
+            G_RemoveAllProjectiles();
+
+            if (count_alpha + count_beta == 0)
+                center_notify("Draw Round!");
+            else if (count_alpha > 0)
+                G_GetTeam(TEAM_ALPHA).stats.addScore(1);
+            else
+                G_GetTeam(TEAM_BETA).stats.addScore(1);
+
+            @spawn_alpha = null;
+            @spawn_beta = null;
+            players.respawn();
+        }
+    }
+
+    void new_spectator(cClient @client) {
+        HGGBase::new_spectator(client);
+        check_teams(0);
+    }
+
     void killed(cClient @attacker, cClient @target, cClient @inflictor) {
         HGGBase::killed(attacker, target, inflictor);
 
@@ -43,20 +70,8 @@ class HGG : HGGBase {
             return;
 
         // NOTE: this needs to be checked when someone goes spec as well
-        if (@attacker != null && @target != null) {
-            int count_attacker = players.count_alive(attacker.team);
-            int count_target = players.count_alive(target.team) - 1;
-            if (count_target == 0) {
-                G_RemoveDeadBodies();
-                G_RemoveAllProjectiles();
-
-                G_GetTeam(attacker.team).stats.addScore(1);
-
-                @spawn_alpha = null;
-                @spawn_beta = null;
-                players.respawn();
-            }
-        }
+        if (@attacker != null && @target != null)
+            check_teams(target.team);
     }
 }
 
