@@ -57,7 +57,8 @@ class HGG : HGGBase {
         gametype.scoreAnnouncementEnabled = false;
         gametype.countdownEnabled = false;
         lock_teams();
-        show_sound("sounds/announcer/countdown/get_ready_to_fight0");
+        random_announcer_sound(
+                "sounds/announcer/countdown/get_ready_to_fight0");
     }
 
     void playtime_started() {
@@ -127,27 +128,19 @@ class HGG : HGGBase {
         check_teams(null);
     }
 
-    void show_sound(cString &sound) {
-        G_AnnouncerSound(null,
-                G_SoundIndex(sound + int(brandom(1, 2))), GS_MAX_TEAMS, false,
-                null);
-    }
-
     void show_counter(int countdown, cString &sound) {
-        show_sound(sound);
+        random_announcer_sound(sound);
         center_notify(countdown + "");
     }
 
     void count_down_start() {
         countdown_start--;
         if (countdown_start == COUNTDOWN_START - 2) {
-            show_sound("sounds/announcer/countdown/ready0");
+            random_announcer_sound("sounds/announcer/countdown/ready0");
         } else if (countdown_start == 0) {
             countdown_start = UNKNOWN;
             gametype.shootingDisabled = false;
-            G_AnnouncerSound(null,
-                    G_SoundIndex("sounds/announcer/countdown/fight0"
-                        + int(brandom(1, 2))), GS_MAX_TEAMS, false, null);
+            random_announcer_sound("sounds/announcer/countdown/fight0");
             center_notify("Fight!");
         } else if (countdown_start <= COUNTDOWN_SOUND_MAX) {
             show_counter(countdown_start, "sounds/announcer/countdown/"

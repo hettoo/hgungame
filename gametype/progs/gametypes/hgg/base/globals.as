@@ -217,6 +217,27 @@ void debug(cString &msg) {
     G_Print(msg + "\n");
 }
 
+void random_announcer_sound(int team, cString &sound) {
+    G_AnnouncerSound(null, G_SoundIndex(sound + int(brandom(1, 2))), team,
+            false, null);
+}
+
+void random_announcer_sound(cString &sound) {
+    random_announcer_sound(GS_MAX_TEAMS, sound);
+}
+
+void sound(cClient @client, int sound, int channel) {
+    G_Sound(client.getEnt(), channel, sound, ATTN_UNHEARABLE);
+}
+
+void voice(cClient @client, int sound) {
+    sound(client, sound, CHAN_VOICE);
+}
+
+void pain_sound(cClient @client, int sound) {
+    sound(client, sound, CHAN_PAIN);
+}
+
 void exec(cString &cmd){
     G_CmdExecute(cmd + "\n");
 }

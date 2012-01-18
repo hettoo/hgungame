@@ -291,12 +291,9 @@ class Players {
     void team_scored(int team) {
         G_GetTeam(team).stats.addScore(1);
 
-        G_AnnouncerSound(null,
-                G_SoundIndex("sounds/announcer/ctf/score_team0"
-                    + int(brandom(1, 2))), team, false, null);
-        G_AnnouncerSound(null,
-                G_SoundIndex("sounds/announcer/ctf/score_enemy0"
-                    + int(brandom(1, 2))), other_team(team), false, null);
+        random_announcer_sound(team, "sounds/announcer/ctf/score_team0");
+        random_announcer_sound(other_team(team),
+                "sounds/announcer/ctf/score_enemy0");
     }
 
     void respawn() {

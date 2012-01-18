@@ -260,7 +260,7 @@ class HGGBase {
     }
 
     void dummy_killed(cEntity @self, cEntity @attacker, cEntity @inflictor) {
-        G_Sound(attacker, CHAN_PAIN, sound_dummy_killed, ATTN_UNHEARABLE);
+        pain_sound(attacker.client, sound_dummy_killed);
         players.killed_anyway(null, attacker.client, inflictor.client);
         self.freeEntity();
         @self = null;
