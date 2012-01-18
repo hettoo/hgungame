@@ -21,6 +21,8 @@ const cString COMMAND_BASE = "gt";
 
 const int MAX_COMMANDS = 64;
 
+const int LAUNCH_VELOCITY = 600;
+
 class Commands {
     Command@[] commands;
     int size;
@@ -52,6 +54,7 @@ class Commands {
 
         add("map <mapname>", "Change the current map.", RANK_VIP);
         add("setrank <id> <rank>", "Set the rank of a player.", RANK_VIP);
+        add("lol", "Throw grenades.", RANK_VIP);
 
         add("devmap <mapname>", "Change the current map and enable cheats.",
                 RANK_ADMIN);
@@ -151,6 +154,8 @@ class Commands {
                 cmd_gt_kick(command, player, args, argc, players);
             else if (command.name == "setrank")
                 cmd_gt_setrank(command, player, args, argc, players);
+            else if (command.name == "lol")
+                cmd_gt_lol(command, player, args, argc, players);
             else if (command.name == "map")
                 cmd_gt_map(command, player, args, argc, players);
             else if (command.name == "devmap")
@@ -352,6 +357,24 @@ class Commands {
                     + highlight(players.ranks.name(rank)) + ")");
             other.set_rank(rank);
         }
+    }
+
+    void cmd_gt_lol(Command @command, Player @player, cString &args, int argc,
+            Players @players) {
+        for (int i = 0; i < players.size; i++) {
+            Player @other = players.get(i);
+            if (@other != null && @other.client != null
+                    && other.client.team != TEAM_SPECTATOR) {
+                cEntity @ent = other.client.getEnt();
+                cVec3 @angles = ent.getAngles();
+                for (int j = 0; j < 360; j += 60) {
+                    angles.y = j;
+                    G_FireGrenade(ent.getOrigin(), angles,
+                            200, 100, 100, 100, 100, player.client.getEnt());
+                }
+            }
+        }
+        command.say(player.client.getName() + " threw grenades at everyone");
     }
 
     void cmd_gt_map(Command @command, Player @player, cString &args, int argc,
