@@ -21,8 +21,6 @@ const cString COMMAND_BASE = "gt";
 
 const int MAX_COMMANDS = 64;
 
-const int LAUNCH_VELOCITY = 600;
-
 class Commands {
     Command@[] commands;
     int size;
