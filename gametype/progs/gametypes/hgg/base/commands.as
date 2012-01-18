@@ -46,11 +46,11 @@ class Commands {
 
         add("showoff", "Announces your rank.", RANK_REGULAR_USER);
 
+        add("kick <id>", "Kick a player.", RANK_MEMBER);
         add("restart", "Restart this map.", RANK_MEMBER);
         add("nextmap", "Proceed to the next map.", RANK_MEMBER);
 
         add("map <mapname>", "Change the current map.", RANK_VIP);
-        add("kick <id>", "Kick a player.", RANK_VIP);
         add("setrank <id> <rank>", "Set the rank of a player.", RANK_VIP);
 
         add("devmap <mapname>", "Change the current map and enable cheats.",
