@@ -79,16 +79,16 @@ class Players {
 
     void announce_row(cClient @target, cClient @attacker) {
         int row = get(target.playerNum()).row;
-        target.addAward(S_COLOR_ACHIEVEMENT + "You made a row of " + S_COLOR_ROW
-                + row + S_COLOR_ACHIEVEMENT + "!");
-        cString msg = target.getName() + S_COLOR_ACHIEVEMENT + " made a row of "
-            + S_COLOR_ROW + row + S_COLOR_ACHIEVEMENT + "!";
+        target.addAward(highlight("You made a row of " + highlight_row(row)
+                    + "!"));
+        cString msg = target.getName() + highlight(" made a row of "
+            + highlight_row(row) + "!");
         if (@target == @attacker)
-            msg += " He killed " + S_COLOR_BAD + "himself"
-                + S_COLOR_ACHIEVEMENT + "!";
+            msg += highlight(" He killed ") + S_COLOR_BAD + "himself"
+                + highlight("!");
         else if (@attacker != null)
-            msg += " He was killed by " + S_COLOR_RESET + attacker.getName()
-                + S_COLOR_ACHIEVEMENT + "!";
+            msg += highlight(" He was killed by ") + attacker.getName()
+                + highlight("!");
         notify(msg);
     }
 

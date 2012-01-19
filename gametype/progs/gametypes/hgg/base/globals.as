@@ -24,15 +24,15 @@ const cString AUTHOR = "^0<].^7h^2e^9tt^2o^7o^0.[>^7";
 const int NW_HEALTH = 30;
 
 const cString S_COLOR_ITEM_AWARD = S_COLOR_GREEN;
-const cString S_COLOR_ACHIEVEMENT = S_COLOR_YELLOW;
 const cString S_COLOR_ROW = S_COLOR_ORANGE;
 const cString S_COLOR_BAD = S_COLOR_RED;
 const cString S_COLOR_RESET = S_COLOR_WHITE;
 const cString S_COLOR_PERSISTENT = S_COLOR_RESET;
 const cString S_COLOR_TEMPORARY = S_COLOR_GREY;
-const cString S_COLOR_ROUTINE = S_COLOR_GREY;
+const cString S_COLOR_ROUTINE = S_COLOR_MAGENTA;
 const cString S_COLOR_ADMINISTRATIVE = S_COLOR_CYAN;
 const cString S_COLOR_HIGHLIGHT = S_COLOR_YELLOW;
+const cString S_COLOR_HIGHLIGHT_ROW = S_COLOR_RED;
 const cString S_COLOR_DESCRIPTION = S_COLOR_GREY;
 const cString S_COLOR_PM = S_COLOR_GREEN;
 const cString S_COLOR_SPECIAL = S_COLOR_ORANGE;
@@ -203,6 +203,10 @@ cString @fixed_field(int n, int size) {
 
 cString @highlight(cString &s) {
     return S_COLOR_HIGHLIGHT + s + S_COLOR_RESET;
+}
+
+cString @highlight_row(int row) {
+    return S_COLOR_HIGHLIGHT_ROW + row + S_COLOR_HIGHLIGHT;
 }
 
 void notify(cString &msg) {
