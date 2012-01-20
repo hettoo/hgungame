@@ -167,8 +167,10 @@ class HGG : HGGBase {
     }
 
     void new_spectator(cClient @client) {
+        bool was_alive = players.get(client.playerNum()).alive;
         HGGBase::new_spectator(client);
-        check_teams();
+        if (was_alive)
+            check_teams();
     }
 
     void killed(cClient @attacker, cClient @target, cClient @inflictor) {

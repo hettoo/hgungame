@@ -163,6 +163,7 @@ class Players {
             return;
 
         Player @player = get(target.playerNum());
+        player.alive = false;
         player.say("You have been fragged by " + attacker.getName());
         player.killed();
         check_row(target, attacker);
@@ -186,6 +187,7 @@ class Players {
 
     void respawn(cClient @client) {
         Player @player = get(client.playerNum());
+        player.alive = true;
         player.update_hud_self();
         player.update_hud_other(this);
         give_spawn_weapons(client);
@@ -253,6 +255,7 @@ class Players {
 
     void new_spectator(cClient @client) {
         Player @player = get(client.playerNum());
+        player.alive = false;
         check_row(client, null);
         if (player.score == best_score || player.score == second_score) {
             update_best();

@@ -26,6 +26,7 @@ enum DBItemStates {
 class Player {
     bool inited;
     cClient @client;
+    bool alive;
     int row;
     int minutes_played;
 
@@ -35,6 +36,7 @@ class Player {
     DBItem @dbitem;
 
     Player () {
+        alive = false;
         inited = false;
     }
 
