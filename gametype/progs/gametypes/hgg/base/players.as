@@ -84,10 +84,10 @@ class Players {
         cString msg = target.getName() + highlight(" made a row of "
             + highlight_row(row) + "!");
         if (@target == @attacker)
-            msg += highlight(" He killed ") + S_COLOR_BAD + "himself"
+            msg += highlight(" He fragged ") + S_COLOR_BAD + "himself"
                 + highlight("!");
         else if (@attacker != null)
-            msg += highlight(" He was killed by ") + attacker.getName()
+            msg += highlight(" He was fragged by ") + attacker.getName()
                 + highlight("!");
         notify(msg);
     }
@@ -163,8 +163,7 @@ class Players {
             return;
 
         Player @player = get(target.playerNum());
-        player.say_routine("You have been killed by " + S_COLOR_RESET
-                + attacker.getName());
+        player.say("You have been fragged by " + attacker.getName());
         player.killed();
         check_row(target, attacker);
 

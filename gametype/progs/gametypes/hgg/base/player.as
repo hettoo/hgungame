@@ -179,10 +179,6 @@ class Player {
         print(msg + "\n");
     }
 
-    void say_routine(cString &msg) {
-        say(S_COLOR_ROUTINE + msg);
-    }
-
     void say_bad(cString &msg) {
         say(S_COLOR_BAD + msg);
     }
