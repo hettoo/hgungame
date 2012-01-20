@@ -114,9 +114,9 @@ class Weapons {
 
     void give_default(cClient @client) {
         if (gametype.isInstagib())
-            give_weapon(client, WEAP_INSTAGUN, 0);
+            give_weapon(client, WEAP_INSTAGUN, INFINITY);
         else
-            give_weapon(client, WEAP_GUNBLADE, 0);
+            give_weapon(client, WEAP_GUNBLADE, INFINITY);
     }
 
     bool heavy(int weapon) {
@@ -129,6 +129,6 @@ class Weapons {
     }
 
     int ammo(int weapon) {
-        return heavy(weapon) ? HEAVY_AMMO : 0;
+        return heavy(weapon) ? HEAVY_AMMO : INFINITY;
     }
 }

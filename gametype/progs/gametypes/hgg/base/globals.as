@@ -80,7 +80,7 @@ void give_weapon(cClient @client, int weapon, int ammo) {
     cItem @ammo_item = G_GetItem(item.ammoTag);
     cItem @weak_ammo_item = G_GetItem(item.weakAmmoTag);
 
-    if (ammo == 0) {
+    if (ammo == INFINITY) {
         client.inventorySetCount(ammo_item.tag,
                 (weapon == WEAP_GUNBLADE ? 4 : INFINITE_AMMO));
         client.inventorySetCount(weak_ammo_item.tag, 0);
@@ -110,6 +110,14 @@ void award_weapon(cClient @client, int weapon, int ammo, bool show) {
 
 void award_weapon(cClient @client, int weapon, int ammo) {
     award_weapon(client, weapon, ammo, true);
+}
+
+int ammo(cClient @client, int weapon) {
+    if (weapon == WEAP_NONE)
+        return INFINITY;
+    cItem @item = G_GetItem(weapon);
+    cItem @ammo_item = G_GetItem(item.ammoTag);
+    return client.inventoryCount(ammo_item.tag);
 }
 
 bool decrease_ammo(cClient @client, int weapon) {

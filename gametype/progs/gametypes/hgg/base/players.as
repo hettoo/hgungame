@@ -103,7 +103,7 @@ class Players {
         player.row = 0;
     }
 
-    void award(cClient @client, int row, bool real, int weapon) {
+    void award(cClient @client, int row, bool real, int weapon, int ammo) {
         Player @player = get(client.playerNum());
         if (real) {
             player.add_score(1);
@@ -123,7 +123,8 @@ class Players {
 
         // NOTE: heavy weapons get default ammo again on a new round
         if (award < WEAP_TOTAL)
-            award_weapon(client, award, weapons.ammo(award), real);
+            award_weapon(client, award,
+                    ammo == INFINITY ? weapons.ammo(award) : ammo, real);
         else if (real)
             get(client.playerNum()).show_row();
 
@@ -135,6 +136,10 @@ class Players {
                     increase_ammo(client, award);
             }
         }
+    }
+
+    void award(cClient @client, int row, bool real, int weapon) {
+        award(client, row, true, weapon, INFINITY);
     }
 
     void award(cClient @client, int row, int weapon) {
@@ -156,6 +161,7 @@ class Players {
         int weapon = attacker.weapon; // FIXME: mod
         award(attacker, weapon);
         check_decrease_ammo(attacker, weapon);
+        player.update_ammo();
     }
 
     void killed(cClient @target, cClient @attacker, cClient @inflictor) {
@@ -173,17 +179,24 @@ class Players {
     }
 
     void check_decrease_ammo(cClient @client, int weapon) {
-        if (weapon < WEAP_TOTAL && weapons.ammo(weapon) > 0) {
+        if (weapon < WEAP_TOTAL && weapons.ammo(weapon) != INFINITY) {
             if (!decrease_ammo(client, weapon) && client.weapon == weapon)
                 weapons.select_best(client);
         }
     }
 
     void give_spawn_weapons(cClient @client) {
+        Player @player = get(client.playerNum());
         weapons.give_default(client);
-        for (int i = 1; i <= get(client.playerNum()).row; i++)
-            award(client, i, false, WEAP_NONE);
-        // FIXME: should we store those weapons? :-(
+        for (int i = 1; i <= player.row; i++) {
+            int award = weapons.award(i);
+            if (award < WEAP_TOTAL) {
+                int ammo = player.get_ammo(award);
+                award(client, i, false, WEAP_NONE,
+                        weapons.ammo(award) == INFINITY
+                        ? INFINITY : player.get_ammo(award));
+            }
+        }
     }
 
     void respawn(cClient @client) {

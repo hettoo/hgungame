@@ -27,6 +27,7 @@ class Player {
     bool inited;
     cClient @client;
     bool alive;
+    int[] ammo;
     int row;
     int minutes_played;
 
@@ -36,8 +37,9 @@ class Player {
     DBItem @dbitem;
 
     Player () {
-        alive = false;
         inited = false;
+        alive = false;
+        ammo.resize(WEAP_TOTAL);
     }
 
     void init(cClient @new_client, DB @db) {
@@ -128,6 +130,11 @@ class Player {
         dbitem.add_kill();
     }
 
+    void update_ammo() {
+        for (int i = 0; i < WEAP_TOTAL; i++)
+            ammo[i] = ammo(client, i);
+    }
+
     void killed() {
         dbitem.add_death();
     }
@@ -140,6 +147,10 @@ class Player {
     void update_row() {
         if (for_real())
             dbitem.update_row(row);
+    }
+
+    int get_ammo(int weapon) {
+        return ammo[weapon];
     }
 
     void update_hud_self() {
