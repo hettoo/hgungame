@@ -108,8 +108,7 @@ class Gametype {
 
         switch (type) {
             case GT_FFA:
-                return "bipbeta2 .curved babyimstiffbeta2a yeahwhatevahb2"
-                    + " inkfinal sandboxb5";
+                return "bipbeta2 .curved yeahwhatevahb2 inkfinal sandboxb5";
             case GT_CA:
                 return "wca1 wca2 wca3";
             case GT_DM:
