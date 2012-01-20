@@ -164,7 +164,8 @@ class Players {
 
         Player @player = get(target.playerNum());
         player.alive = false;
-        player.say("You have been fragged by " + attacker.getName());
+        if (@attacker != null)
+            player.say("You have been fragged by " + attacker.getName());
         player.killed();
         check_row(target, attacker);
 
