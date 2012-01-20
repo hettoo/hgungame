@@ -53,9 +53,6 @@ class HGG : HGGBase {
 
     void countdown_started() {
         gametype.shootingDisabled = true;
-        gametype.readyAnnouncementEnabled = false;
-        gametype.scoreAnnouncementEnabled = false;
-        gametype.countdownEnabled = false;
         lock_teams();
         random_announcer_sound(
                 "sounds/announcer/countdown/get_ready_to_fight0");
