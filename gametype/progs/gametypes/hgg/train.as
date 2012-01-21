@@ -18,32 +18,20 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 class HGG : HGGBase {
-    void set_gametype_settings() {
-        HGGBase::set_gametype_settings();
-
-        gametype.isTeamBased = true;
-        gametype.hasChallengersQueue = true;
-        gametype.maxPlayersPerTeam = 1;
-
-        gt.has_challengers_queue = true;
-        gt.has_map_list = false;
+    void init_gametype() {
+        gt.name = "Train";
+        gt.type = GT_FFA;
+        HGGBase::init_gametype();
     }
 
-    void init_gametype() {
-        gt.name = "Duel";
-        gt.type = GT_DUEL;
-        HGGBase::init_gametype();
+    void warmup_started() {
+        HGGBase::warmup_started();
+        dummies.spawn();
     }
 
     void playtime_started() {
         HGGBase::playtime_started();
         dummies.spawn();
     }
-
-    void killed(cClient @attacker, cClient @target, cClient @inflictor) {
-        HGGBase::killed(attacker, target, inflictor);
-        if (@target != null && @attacker != null && for_real())
-            G_GetTeam(attacker.team).stats.addScore(1
-                    - (@target == @attacker ? 2 : 0));
-    }
 }
+

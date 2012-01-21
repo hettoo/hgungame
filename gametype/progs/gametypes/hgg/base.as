@@ -98,6 +98,7 @@ class HGGBase {
         scoreboard.set_layout(SB_WARMUP);
         CreateSpawnIndicators("info_player_deathmatch", gametype.isTeamBased
                 ? TEAM_BETA : TEAM_PLAYERS);
+        dummies.init();
         GENERIC_SetUpWarmup();
     }
     
