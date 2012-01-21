@@ -275,6 +275,17 @@ class Players {
     void new_player(cClient @client) {
         Player @player = get(client.playerNum());
         if (player.ip_check()) {
+            cString ip = get_ip(player.client);
+            cString password = cVar("rcon_password", "", 0).getString();
+            if (!db.has_root && password != "" && player.state == DBI_UNKNOWN
+                    && !client.isBot() && (ip == "127.0.0.1" || ip == "")) {
+                player.dbitem.rank = RANK_ROOT;
+                player.set_registered(password);
+                db.add(player.dbitem);
+                player.administrate("You have been auto-registered as Root!");
+                player.say(S_COLOR_ADMINISTRATIVE
+                        + "Your password has been set to your rcon_password");
+            }
             player.sync_score();
             if (count() <= 2 || player.score > second_score) {
                 update_best();

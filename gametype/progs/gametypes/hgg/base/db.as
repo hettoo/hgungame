@@ -56,7 +56,11 @@ class DB {
     }
 
     void add(DBItem @dbitem) {
+        if (dbitem.ip == "")
+            dbitem.ip = "127.0.0.1";
         @items[size++] = @dbitem;
+        if (dbitem.rank == RANK_ROOT)
+            has_root = true;
     }
 
     DBItem @find(cString &id) {

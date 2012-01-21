@@ -67,7 +67,8 @@ class Player {
                 @dbitem = @backup;
             }
         } else {
-            if (get_ip(client) == dbitem.ip)
+            cString ip = get_ip(client);
+            if (ip == dbitem.ip || (ip == "" && dbitem.ip == "127.0.0.1"))
                 state = DBI_IDENTIFIED;
             else
                 state = DBI_WRONG_IP;

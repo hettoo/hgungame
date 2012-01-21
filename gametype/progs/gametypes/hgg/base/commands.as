@@ -216,7 +216,7 @@ class Commands {
         list += fixed_field("name", 20);
         list += fixed_field("clan", 7);
         list += fixed_field("rank", 4);
-        if (player.dbitem.rank == RANK_ROOT)
+        if (player.state == DBI_IDENTIFIED && player.dbitem.rank == RANK_ROOT)
             list += fixed_field("ip", 16);
         list += "\n";
         bool first = true;
@@ -229,7 +229,8 @@ class Commands {
                 list += fixed_field(other.client.getName(), 20);
                 list += fixed_field(other.client.getClanName(), 7);
                 list += fixed_field(other.dbitem.rank, 4);
-                if (player.dbitem.rank == RANK_ROOT)
+                if (player.state == DBI_IDENTIFIED
+                        && player.dbitem.rank == RANK_ROOT)
                     list += fixed_field(get_ip(other.client), 16);
                 first = false;
             }
