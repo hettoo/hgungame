@@ -26,12 +26,16 @@ class Players {
     Ranks ranks;
     Weapons weapons;
 
+    bool first_blood;
+
     int best_score;
     int second_score;
 
     Players() {
         players.resize(maxClients);
         size = 0;
+
+        first_blood = true;
 
         best_score = -1;
         second_score = -1;
@@ -162,6 +166,11 @@ class Players {
         award(attacker, weapon);
         check_decrease_ammo(attacker, weapon);
         player.update_ammo();
+        if (for_real() && first_blood) {
+            attacker.addAward(highlight("First blood!"));
+            notify(attacker.getName() + highlight(" drew first blood!"));
+            first_blood = false;
+        }
     }
 
     void killed(cClient @target, cClient @attacker, cClient @inflictor) {
