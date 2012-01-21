@@ -1,12 +1,19 @@
-# You may have to edit these, either here or from the commandline using
+# You may want to edit these, either here or from the commandline using
 # VARIABLE=value
 WSW_DIR = ~/.warsow-0.6
+EXECUTABLE = wsw-server
 MOD = promod
-PORT = 44400
+NAME = hGunGame Server
 GT = hgg_ffa
+PORT = 44400
 INSTAGIB = 1
-SERVER_CMD = wsw-server +set fs_game $(MOD) +set sv_port $(PORT) \
-			 +set g_gametype $(GT) +set g_instagib $(INSTAGIB)
+TIMELIMIT = 15
+SCORELIMIT = 0
+
+SERVER_CMD = echo set sv_hostname '"$(NAME)"' > input && cat input - | \
+			 $(EXECUTABLE) +set fs_game $(MOD) +set sv_port $(PORT) \
+			 +set g_gametype $(GT) \ +set g_instagib $(INSTAGIB) \
+			 +set g_timelimit $(TIMELIMIT) +set g_scorelimit $(SCORELIMIT)
 
 THIS = Makefile
 GT_DIR = gametype
