@@ -59,6 +59,7 @@ class HGG : HGGBase {
     }
 
     void generic_playtime_started() {
+        G_RemoveAllProjectiles();
         players.respawn();
         players.reset_stats();
     }
