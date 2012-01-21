@@ -84,11 +84,11 @@ class HGG : HGGBase {
         if (count_alpha + count_beta == 0) {
             center_notify("Draw Round!");
         } else if (count_alpha > 0) {
-            if (count_alpha == 1)
+            if (count_alpha == 1 && players.count() > 2)
                 players.get_alive(TEAM_ALPHA).client.addAward(LAST_PLAYER);
             players.team_scored(TEAM_ALPHA);
         } else {
-            if (count_beta == 1)
+            if (count_beta == 1 && players.count() > 2)
                 players.get_alive(TEAM_BETA).client.addAward(LAST_PLAYER);
             players.team_scored(TEAM_BETA);
         }
@@ -171,6 +171,10 @@ class HGG : HGGBase {
     void new_spectator(cClient @client) {
         bool was_alive = players.get(client.playerNum()).alive;
         HGGBase::new_spectator(client);
+
+        if(!for_real())
+            return;
+
         if (was_alive)
             check_teams();
     }
