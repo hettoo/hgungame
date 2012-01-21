@@ -27,6 +27,8 @@ class HGG : HGGBase {
 
         gt.has_challengers_queue = true;
         gt.has_map_list = false;
+        gt.scorelimit = 11;
+        gt.timelimit = 0;
     }
 
     void init_gametype() {

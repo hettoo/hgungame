@@ -42,6 +42,9 @@ class Gametype {
 
     bool has_challengers_queue;
     bool has_map_list;
+    int scorelimit;
+    int timelimit;
+
     int spawn_system;
 
     cVar[] cvars;
@@ -52,6 +55,8 @@ class Gametype {
 
         has_challengers_queue = false;
         has_map_list = true;
+        scorelimit = 0;
+        timelimit = 15;
 
         cvars.resize(CV_TOTAL);
         cvars[CV_MOTD].get(CVAR_BASE + "MOTD", "Have Fun!", CVAR_ARCHIVE);
@@ -154,8 +159,8 @@ class Gametype {
             + cvar_defaults()
             + "\n"
             + "// game settings\n"
-            + "set g_scorelimit 0\n"
-            + "set g_timelimit 15\n"
+            + "set g_scorelimit " + scorelimit + "\n"
+            + "set g_timelimit " + timelimit + "\n"
             + "set g_warmup_timelimit 1\n"
             + "set g_match_extendedtime 0\n"
             + "set g_allow_falldamage 0\n"

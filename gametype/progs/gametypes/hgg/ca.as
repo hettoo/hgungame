@@ -38,6 +38,9 @@ class HGG : HGGBase {
 
         gametype.isTeamBased = true;
         gametype.teamOnlyMinimap = true;
+
+        gt.scorelimit = 21;
+        gt.timelimit = 0;
     }
 
     void init_gametype() {

@@ -7,13 +7,10 @@ NAME = hGunGame Server
 GT = hgg_ffa
 PORT = 44400
 INSTAGIB = 1
-TIMELIMIT = 15
-SCORELIMIT = 0
 
 SERVER_CMD = { echo set sv_hostname '"$(NAME)"' && cat; } | \
 			 $(EXECUTABLE) +set fs_game $(MOD) +set sv_port $(PORT) \
-			 +set g_gametype $(GT) \ +set g_instagib $(INSTAGIB) \
-			 +set g_timelimit $(TIMELIMIT) +set g_scorelimit $(SCORELIMIT)
+			 +set g_gametype $(GT) +set g_instagib $(INSTAGIB)
 
 THIS = Makefile
 GT_DIR = gametype
