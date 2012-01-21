@@ -2,7 +2,7 @@
 
 Series of Warsow gametype scripts.
 
-# Usage
+## Usage
 
 Read the head of the makefile to see what variables you can set per server. It
 is recommended to use `make` to run your servers.
