@@ -106,6 +106,10 @@ class HGGBase {
         GENERIC_SetUpCountdown();
     }
 
+    void generic_playtime_started () {
+        GENERIC_SetUpMatch();
+    }
+
     void playtime_started() {
         last_second = levelTime / 1000;
         last_minute_second = last_second;
@@ -113,7 +117,7 @@ class HGGBase {
         DeleteSpawnIndicators();
         players.update_best();
         players.update_hud();
-        GENERIC_SetUpMatch();
+        generic_playtime_started();
     }
 
     void postmatch_started() {

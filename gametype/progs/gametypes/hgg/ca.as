@@ -58,6 +58,11 @@ class HGG : HGGBase {
                 "sounds/announcer/countdown/get_ready_to_fight0");
     }
 
+    void generic_playtime_started() {
+        players.respawn();
+        players.reset_stats();
+    }
+
     void playtime_started() {
         set_spawn_system(SPAWNSYSTEM_HOLD, true);
         HGGBase::playtime_started();

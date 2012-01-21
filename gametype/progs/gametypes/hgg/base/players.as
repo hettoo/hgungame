@@ -211,6 +211,14 @@ class Players {
             client.getEnt().health = NW_HEALTH;
     }
 
+    void reset_stats() {
+        for (int i = 0; i < size; i++) {
+            Player @player = get(i);
+            if (@player != null && @player.client != null)
+                player.client.stats.clear();
+        }
+    }
+
     void increase_minutes() {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
