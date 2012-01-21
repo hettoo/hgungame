@@ -37,6 +37,7 @@ class HGG : HGGBase {
 
     void playtime_started() {
         HGGBase::playtime_started();
+        dummies.init();
         dummies.spawn();
     }
 

@@ -26,6 +26,7 @@ class HGG : HGGBase {
 
     void warmup_started() {
         HGGBase::warmup_started();
+        dummies.init();
         dummies.spawn();
     }
 
