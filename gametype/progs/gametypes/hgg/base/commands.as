@@ -216,17 +216,21 @@ class Commands {
         list += fixed_field("name", 20);
         list += fixed_field("clan", 7);
         list += fixed_field("rank", 4);
+        if (player.dbitem.rank == RANK_ROOT)
+            list += fixed_field("ip", 16);
         list += "\n";
         bool first = true;
         for (int i = 0; i < players.size; i++) {
-            Player @player = players.get(i);
-            if (@player != null && @player.client != null) {
+            Player @other = players.get(i);
+            if (@other != null && @other.client != null) {
                 if (!first)
                     list += "\n";
                 list += fixed_field(i, 3);
-                list += fixed_field(player.client.getName(), 20);
-                list += fixed_field(player.client.getClanName(), 7);
-                list += fixed_field(player.dbitem.rank, 4);
+                list += fixed_field(other.client.getName(), 20);
+                list += fixed_field(other.client.getClanName(), 7);
+                list += fixed_field(other.dbitem.rank, 4);
+                if (player.dbitem.rank == RANK_ROOT)
+                    list += fixed_field(get_ip(other.client), 16);
                 first = false;
             }
         }
@@ -393,10 +397,15 @@ class Commands {
             Players @players) {
         cString name = args.getToken(1);
         cVar @cvar = cVar(name, "", 0); // NOTE: resets the default value :-(
-        if (raw(name) == "rcon_password") {
+        if ((raw(name) == "g_operator_password" && player.dbitem.rank < RANK_VIP)
+                || (raw(name) == "rcon_password"
+                    && player.dbitem.rank < RANK_ROOT)) {
             player.say_bad("Forget it.");
         } else if (argc == 2) {
             player.say(name + " is \"" + cvar.getString() + "\"");
+        } else if (raw(name).substr(0, 3) == "sv_"
+                && player.dbitem.rank < RANK_ADMIN) {
+            player.say_bad("Forget it.");
         } else {
             cString value = args.getToken(2);
             cvar.set(value);
