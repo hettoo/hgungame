@@ -42,6 +42,7 @@ class Gametype {
 
     bool has_challengers_queue;
     bool has_map_list;
+    int spawn_system;
 
     cVar[] cvars;
 
@@ -57,6 +58,13 @@ class Gametype {
         cvars[CV_ROOT].get(CVAR_BASE + "root", "", CVAR_ARCHIVE);
         cvars[CV_ROOT_PASSWORD].get(CVAR_BASE + "rootPassword", "",
                 CVAR_ARCHIVE);
+    }
+
+    void set_spawn_system(int spawn_system, bool dead_cam) {
+        for (int team = 0; team < GS_MAX_TEAMS; team++) {
+            if (team != TEAM_SPECTATOR)
+                gametype.setTeamSpawnsystem(team, spawn_system, 0, 0, dead_cam);
+        }
     }
 
     void set_defaults() {

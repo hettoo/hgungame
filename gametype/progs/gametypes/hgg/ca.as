@@ -65,7 +65,7 @@ class HGG : HGGBase {
     }
 
     void playtime_started() {
-        set_spawn_system(SPAWNSYSTEM_HOLD, true);
+        gt.set_spawn_system(SPAWNSYSTEM_HOLD, true);
         HGGBase::playtime_started();
         start_round();
     }

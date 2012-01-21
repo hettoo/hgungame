@@ -63,7 +63,7 @@ class HGGBase {
     cEntity @select_spawn_point(cEntity @self) {
         cEntity @random = GENERIC_SelectBestRandomSpawnPoint(self,
                 "info_player_deathmatch");
-        if (gametype.isTeamBased) {
+        if (gt.spawn_system != SPAWNSYSTEM_INSTANT && gametype.isTeamBased) {
             if (@spawn_alpha == null) {
                 @spawn_alpha = random;
                 cEntity @max;
