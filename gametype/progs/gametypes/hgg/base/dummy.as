@@ -49,6 +49,7 @@ class Dummy {
         ent.moveType = MOVETYPE_TOSS;
         ent.svflags &= ~SVF_NOCLIENT;
         ent.health = gametype.isInstagib() ? 100 : NW_HEALTH;
+        ent.mass = 400;
         ent.takeDamage = 1;
         ent.nextThink = levelTime + 1;
         ent.linkEntity();
