@@ -41,7 +41,7 @@ su username -c 'cd; sh server.sh'
 
 And it will be run every time after a reboot.
 
-I would recommend a `basewsw/dedicated\_autoexec.cfg` that looks something like
+I would recommend a `basewsw/dedicated_autoexec.cfg` that looks something like
 this:
 
 ```
