@@ -252,3 +252,7 @@ void pain_sound(cClient @client, int sound) {
 void exec(cString &cmd){
     G_CmdExecute(cmd + "\n");
 }
+
+void exec(cString &cmd, cString &arg) {
+    exec(cmd + " \"" + arg + "\"");
+}

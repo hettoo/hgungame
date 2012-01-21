@@ -379,14 +379,14 @@ class Commands {
             Players @players) {
         cString @map = args.getToken(1);
         command.say(player.client.getName() + " is changing to map " + map);
-        exec("map " + map);
+        exec("map", map);
     }
 
     void cmd_gt_devmap(Command @command, Player @player, cString &args,
             int argc, Players @players) {
         cString @map = args.getToken(1);
         command.say(player.client.getName() + " is changing to devmap " + map);
-        exec("devmap " + map);
+        exec("devmap ", map);
     }
 
     void cmd_gt_cvar(Command @command, Player @player, cString &args, int argc,
