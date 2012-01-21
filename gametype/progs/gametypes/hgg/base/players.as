@@ -107,6 +107,14 @@ class Players {
         player.row = 0;
     }
 
+    void check_rows() {
+        for (int i = 0; i < size; i++) {
+            Player @player = get(i);
+            if (@player != null)
+                check_row(player.client, null);
+        }
+    }
+
     void award(cClient @client, int row, bool real, int weapon, int ammo) {
         Player @player = get(client.playerNum());
         if (real) {
