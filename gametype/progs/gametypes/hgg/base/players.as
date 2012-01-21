@@ -125,7 +125,6 @@ class Players {
         if (award == WEAP_NONE)
             return;
 
-        // NOTE: heavy weapons get default ammo again on a new round
         if (award < WEAP_TOTAL)
             award_weapon(client, award,
                     ammo == INFINITY ? weapons.ammo(award) : ammo, real);
