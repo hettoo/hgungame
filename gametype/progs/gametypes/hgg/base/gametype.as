@@ -114,11 +114,12 @@ class Gametype {
         if (!has_map_list)
             return "";
 
+        cString ffa_maps = "bipbeta2 .curved yeahwhatevahb2 inkfinal sandboxb5";
         switch (type) {
             case GT_FFA:
-                return "bipbeta2 .curved yeahwhatevahb2 inkfinal sandboxb5";
+                return ffa_maps;
             case GT_CA:
-                return "wca1 wca2 wca3";
+                return "wca1 " + ffa_maps;
             case GT_DM:
                 return "wdm1 wdm2 wdm3 wdm4 wdm5 wdm6 wdm7 wdm8 wdm9 wdm10"
                     + " wdm11 wdm12 wdm13 wdm14 wdm15 wdm16 wdm17";
