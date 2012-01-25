@@ -17,6 +17,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+/*
+ * This is the base class on which all hgg gametypes are based. It handles all
+ * callbacks and connects them to the subclasses.
+ */
+
 const float DUMMY_WEIGHT_MULTIPLIER = 0.4f;
 
 class HGGBase {
@@ -34,6 +39,9 @@ class HGGBase {
     uint last_second;
     uint last_minute_second;
 
+    /*
+     * Initializes the variables that can be initialized already.
+     */
     HGGBase() {
         @spawn_alpha = null;
         @spawn_beta = null;
@@ -44,9 +52,20 @@ class HGGBase {
         last_minute_second = 0;
     }
 
+    /*
+     * The map entities have just been spawned. The level is initialized for
+     * playing, but nothing has yet started.
+     */
     void spawn_gametype() {
     }
 
+    /*
+     * When this function is called the weights of items have been reset to
+     * their default values, this means, the weights *are set*, and what this
+     * function does is scaling them depending on the current bot status.
+     * Player, and non-item entities don't have any weight set. So they will be
+     * ignored by the bot unless a weight is assigned here.
+     */
     bool update_bot_status(cEntity @self) {
         GENERIC_UpdateBotStatus(self);
         cEntity @goal;
@@ -60,6 +79,9 @@ class HGGBase {
         return true;
     }
 
+    /*
+     * Select a spawning point for a player.
+     */
     cEntity @select_spawn_point(cEntity @self) {
         cEntity @random = GENERIC_SelectBestRandomSpawnPoint(self,
                 "info_player_deathmatch");
@@ -87,13 +109,16 @@ class HGGBase {
         return random;
     }
 
+    /*
+     * A client has issued a command.
+     */
     bool command(cClient @client, cString &cmd, cString &args, int argc) {
         return commands.handle(client, cmd, args, argc, players);
     }
 
-    void match_state_started() {
-    }
-
+    /*
+     * The warmup has started.
+     */
     void warmup_started() {
         scoreboard.set_layout(SB_WARMUP);
         CreateSpawnIndicators("info_player_deathmatch", gametype.isTeamBased
@@ -101,15 +126,24 @@ class HGGBase {
         GENERIC_SetUpWarmup();
     }
     
+    /*
+     * The countdown has started.
+     */
     void countdown_started() {
         players.welcome_all(gt.motd());
         GENERIC_SetUpCountdown();
     }
 
+    /*
+     * Calls the generic match setup function so that it can be overloaded.
+     */
     void generic_playtime_started () {
         GENERIC_SetUpMatch();
     }
 
+    /*
+     * The match has started.
+     */
     void playtime_started() {
         last_second = levelTime / 1000;
         last_minute_second = last_second;
@@ -120,18 +154,25 @@ class HGGBase {
         generic_playtime_started();
     }
 
+    /*
+     * The postmatch has started.
+     */
     void postmatch_started() {
         scoreboard.set_layout(SB_POST);
         GENERIC_SetUpEndMatch();
     }
 
+    /*
+     * The game has detected the end of the match state, but it doesn't advance
+     * it before calling this function. This function must give permission to
+     * move into the next state by returning true.
+     */
     bool match_state_finished(int new_match_state) {
         if (match.getState() <= MATCH_STATE_WARMUP
                 && new_match_state > MATCH_STATE_WARMUP
                 && new_match_state < MATCH_STATE_POSTMATCH)
             match.startAutorecord();
-
-        if (match.getState() == MATCH_STATE_POSTMATCH)
+        else if (match.getState() == MATCH_STATE_POSTMATCH)
             match.stopAutorecord();
 
         if (new_match_state == MATCH_STATE_PLAYTIME) {
@@ -142,14 +183,25 @@ class HGGBase {
         return true;
     }
 
+    /*
+     * The gametype is shutting down cause of a match restart or map change.
+     */
     void shutdown() {
         players.db.write();
     }
 
+    /*
+     * A player has been killed.
+     */
     void killed(cClient @attacker, cClient @target, cClient @inflictor) {
         players.killed(target, attacker, inflictor);
     }
 
+    /*
+     * Some game actions trigger score events. These are events not related to
+     * killing opponents, like capturing a flag.
+     * Warning: client can be null.
+     */
     void score_event(cClient @client, cString &score_event, cString &args) {
         if (score_event == "kill") {
             cEntity @target = G_GetEntity(args.getToken(0).toInt());
@@ -170,10 +222,17 @@ class HGGBase {
         }
     }
 
+    /*
+     * Sets the gametype settings.
+     */
     void set_gametype_settings() {
         gt.set_defaults();
     }
 
+    /*
+     * Add the root account from the cVars if there is no root yet and the
+     * account name is not empty.
+     */
     void check_root() {
         if (!players.db.has_root && gt.root() != "") {
             DBItem @root = DBItem();
@@ -183,6 +242,12 @@ class HGGBase {
         }
     }
 
+    /*
+     * Important: This function is called before any entity is spawned, and
+     * spawning entities from it is forbidden. If you want to make any entity
+     * spawning at initialization do it in GT_SpawnGametype, which is called
+     * right after the map entities spawning.
+     */
     void init_gametype() {
         players.init();
         players.db.read();
@@ -198,6 +263,9 @@ class HGGBase {
         debug("Gametype '" + gametype.getTitle() + "' initialized");
     }
 
+    /*
+     * Thinking function. Called each frame.
+     */
     void think_rules() {
         if (match.scoreLimitHit() || match.timeLimitHit()
                 || match.suddenDeathFinished())
@@ -211,18 +279,32 @@ class HGGBase {
         check_time();
     }
 
+    /*
+     * Someone moved from the spectators to a player team.
+     */
     void new_player(cClient @client) {
         players.new_player(client);
     }
 
+    /*
+     * Someone moved from a player team to the spectators.
+     */
     void new_spectator(cClient @client) {
         players.new_spectator(client);
     }
 
+    /*
+     * A non-spectator is respawning.
+     */
     void respawn(cClient @client) {
         players.respawn(client);
     }
 
+    /*
+     * A player is being respawned. This can happen from several ways, as dying,
+     * changing team, being moved to ghost state, be placed in respawn queue,
+     * being spawned from spawn queue, etc.
+     */
     void player_respawn(cEntity @ent, int old_team, int new_team) {
         if (old_team == TEAM_SPECTATOR && new_team != TEAM_SPECTATOR)
             new_player(ent.client);
@@ -233,11 +315,17 @@ class HGGBase {
             respawn(ent.client);
     }
 
+    /*
+     * A new minute has started.
+     */
     void new_minute() {
         players.increase_minutes();
         dummies.spawn();
     }
 
+    /*
+     * A new second has started.
+     */
     void new_second() {
         uint minute_second = last_minute_second + 60;
         if (last_second == minute_second) {
@@ -246,6 +334,9 @@ class HGGBase {
         }
     }
 
+    /*
+     * Checks for new seconds and minutes.
+     */
     void check_time() {
         uint second = levelTime / 1000;
         if (second != last_second) {
@@ -254,6 +345,9 @@ class HGGBase {
         }
     }
 
+    /*
+     * Create the scoreboard contents.
+     */
     cString @scoreboard_message(int max_len) {
         cString board = "";
         if (gametype.isTeamBased) {
@@ -265,6 +359,9 @@ class HGGBase {
         return board;
     }
 
+    /*
+     * A dummy has been killed.
+     */
     void dummy_killed(cEntity @self, cEntity @attacker, cEntity @inflictor) {
         pain_sound(attacker.client, sound_dummy_killed);
         players.killed_anyway(null, attacker.client, inflictor.client);
