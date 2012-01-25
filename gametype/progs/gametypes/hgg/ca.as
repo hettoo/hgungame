@@ -107,7 +107,7 @@ class HGG : HGGBase {
             int other_team = other_team(team);
             Player @other_alive = players.get_alive(other_team, target);
             notify(ONE_VS_ONE);
-            alive.client.addAward(S_COLOR_SPECIAL + ONE_VS_ONE);
+            alive.client.addAward(ONE_VS_ONE);
             other_alive.client.addAward(S_COLOR_SPECIAL + ONE_VS_ONE);
         } else {
             alive.client.addAward("1v" + count + "! You're on your own!");
