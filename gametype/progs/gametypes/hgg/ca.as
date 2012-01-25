@@ -21,7 +21,7 @@ const int COUNTDOWN_START = 6;
 const int COUNTDOWN_END = 4;
 const int COUNTDOWN_SOUND_MAX = 3;
 
-const cString ONE_VS_ONE = "1v1! Good luck!";
+const cString ONE_VS_ONE = S_COLOR_SPECIAL + "1v1! Good luck!";
 const cString LAST_PLAYER = S_COLOR_GREEN + "Last Player Standing!";
 
 class HGG : HGGBase {
@@ -108,7 +108,7 @@ class HGG : HGGBase {
             Player @other_alive = players.get_alive(other_team, target);
             notify(ONE_VS_ONE);
             alive.client.addAward(ONE_VS_ONE);
-            other_alive.client.addAward(S_COLOR_SPECIAL + ONE_VS_ONE);
+            other_alive.client.addAward(ONE_VS_ONE);
         } else {
             alive.client.addAward("1v" + count + "! You're on your own!");
             players.say_team(team, "1v" + count + "! " + alive.client.getName()
