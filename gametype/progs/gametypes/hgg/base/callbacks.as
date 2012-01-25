@@ -61,15 +61,12 @@ void GT_MatchStateStarted() {
         case MATCH_STATE_WARMUP:
             hgg.warmup_started();
             break;
-
         case MATCH_STATE_COUNTDOWN:
             hgg.countdown_started();
             break;
-
         case MATCH_STATE_PLAYTIME:
             hgg.playtime_started();
             break;
-
         case MATCH_STATE_POSTMATCH:
             hgg.postmatch_started();
             break;
