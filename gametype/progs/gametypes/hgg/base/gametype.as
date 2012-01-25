@@ -65,7 +65,8 @@ class Gametype {
                 CVAR_ARCHIVE);
     }
 
-    void set_spawn_system(int spawn_system, bool dead_cam) {
+    void set_spawn_system(int new_spawn_system, bool dead_cam) {
+        spawn_system = new_spawn_system;
         for (int team = 0; team < GS_MAX_TEAMS; team++) {
             if (team != TEAM_SPECTATOR)
                 gametype.setTeamSpawnsystem(team, spawn_system, 0, 0, dead_cam);
