@@ -198,7 +198,7 @@ class HGGBase {
     }
 
     /*
-     * Some game actions trigger score events. These are events not related to
+     * Some game actions trigger score events. There are events not related to
      * killing opponents, like capturing a flag.
      * Warning: client can be null.
      */
