@@ -400,13 +400,14 @@ class Commands {
             Players @players) {
         cString name = args.getToken(1);
         cVar @cvar = cVar(name, "", 0); // NOTE: resets the default value :-(
-        if ((raw(name) == "g_operator_password" && player.dbitem.rank < RANK_VIP)
-                || (raw(name) == "rcon_password"
+        if ((clean(name) == "g_operator_password"
+                    && player.dbitem.rank < RANK_VIP)
+                || (clean(name) == "rcon_password"
                     && player.dbitem.rank < RANK_ROOT)) {
             player.say_bad("Forget it.");
         } else if (argc == 2) {
             player.say(name + " is \"" + cvar.getString() + "\"");
-        } else if (raw(name).substr(0, 3) == "sv_"
+        } else if (clean(name).substr(0, 3) == "sv_"
                 && player.dbitem.rank < RANK_ADMIN) {
             player.say_bad("Forget it.");
         } else {

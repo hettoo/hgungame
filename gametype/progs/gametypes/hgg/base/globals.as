@@ -56,8 +56,25 @@ bool is_vowel(cString character) {
         || character == "i" || character == "u";
 }
 
-cString @raw(cString &str) {
+cString @clean(cString &str) {
     return str.removeColorTokens().tolower();
+}
+
+cString @remove_additive(cString &str) {
+    if (str.substr(str.len() - 1, 1) == ")") {
+        int i;
+        cString sub;
+        for (i = str.len() - 2; (sub = str.substr(i, 1)) != "("; i--) {
+            if (!sub.isNumerical())
+                return str;
+        }
+        return str.substr(0, i);
+    }
+    return str;
+}
+
+cString @raw(cString &str) {
+    return remove_additive(clean(str));
 }
 
 cString get_ip(cClient @client) {
