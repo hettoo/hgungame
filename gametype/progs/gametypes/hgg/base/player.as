@@ -103,6 +103,13 @@ class Player {
         dbitem.rank = rank;
     }
 
+    void instruct() {
+        say(S_COLOR_SPECIAL + "Welcome " + client.getName()
+                + S_COLOR_SPECIAL + " and have fun!\n"
+                + S_COLOR_SPECIAL
+                + "Use the /gt command to see the commands you can use here!");
+    }
+
     void welcome(cString &msg) {
         if (@client != null && client.team != TEAM_SPECTATOR)
             client.addAward(msg);

@@ -295,6 +295,7 @@ class Players {
                         + "Your password has been set to your rcon_password");
             }
             player.sync_score();
+            player.instruct();
             if (count() <= 2 || player.score > second_score) {
                 update_best();
                 update_hud();
