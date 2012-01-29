@@ -121,7 +121,7 @@ class Players {
             player.add_score(1);
 
             player.update_hud_self();
-            update_best(client.playerNum());
+            update_best();
 
             if (player.score == best_score)
                 update_hud();
@@ -249,10 +249,13 @@ class Players {
         if (@player != null) {
             cClient @client = player.client;
             if (@client != null && client.team != TEAM_SPECTATOR) {
-                if (player.score > best_score || best_score == UNKNOWN)
+                if (player.score >= best_score || best_score == UNKNOWN) {
+                    second_score = best_score;
                     best_score = player.score;
-                else if (player.score > second_score || second_score == UNKNOWN)
+                } else if (player.score > second_score
+                        || second_score == UNKNOWN) {
                     second_score = player.score;
+                }
             }
         }
     }
