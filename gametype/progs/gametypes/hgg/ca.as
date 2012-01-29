@@ -134,14 +134,10 @@ class HGG : HGGBase {
         check_teams(null);
     }
 
-    void show_counter(int countdown, cString &sound) {
-        random_announcer_sound(sound);
-        center_notify(countdown + "");
-    }
-
     void count_down_start() {
         countdown_start--;
-        if (countdown_start == COUNTDOWN_START - 2) {
+        int ready_start = COUNTDOWN_SOUND_MAX + 1;
+        if (countdown_start == ready_start) {
             random_announcer_sound("sounds/announcer/countdown/ready0");
         } else if (countdown_start == 0) {
             countdown_start = UNKNOWN;
@@ -149,9 +145,12 @@ class HGG : HGGBase {
             random_announcer_sound("sounds/announcer/countdown/fight0");
             center_notify("Fight!");
         } else if (countdown_start <= COUNTDOWN_SOUND_MAX) {
-            show_counter(countdown_start, "sounds/announcer/countdown/"
+            random_announcer_sound("sounds/announcer/countdown/"
                     + countdown_start + "_0");
         }
+
+        if (countdown_start <= ready_start)
+            center_notify(countdown_start + "");
     }
 
     void count_down_end() {
