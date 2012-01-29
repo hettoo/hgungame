@@ -104,10 +104,11 @@ class Player {
     }
 
     void instruct() {
-        say(S_COLOR_SPECIAL + "Welcome " + client.getName()
+        say("Fork this project on GitHub: github.com/hettoo/hgungame\n"
+                + S_COLOR_SPECIAL + "Welcome " + client.getName()
                 + S_COLOR_SPECIAL + " and have fun!\n"
                 + S_COLOR_SPECIAL
-                + "Use the /gt command to see the commands you can use here!");
+                + "Use /gt to see the /gt commands you can use here!");
     }
 
     void welcome(cString &msg) {
