@@ -176,6 +176,9 @@ class Commands {
         cString password = args.getToken(1);
         if (player.state != DBI_UNKNOWN) {
             player.say_bad("Your name is already registered.");
+        } else if (@players.db.find(raw(player.client.getName())) != null) {
+            player.say_bad("This name has been registered by another player"
+                    + " during this match.");
         } else if (raw(player.client.getName()) == "player") {
             player.say_bad("You are not allowed to register this name.");
         } else if (password == "") {
