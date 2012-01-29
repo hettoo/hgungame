@@ -36,6 +36,8 @@ const cString S_COLOR_DESCRIPTION = S_COLOR_GREY;
 const cString S_COLOR_PM = S_COLOR_GREEN;
 const cString S_COLOR_SPECIAL = S_COLOR_ORANGE;
 
+const cString COMMAND_BASE = "gt";
+
 const cString INDENT = "    ";
 
 const float ATTN_UNHEARABLE = 999f;
