@@ -120,12 +120,14 @@ class Weapons {
     }
 
     bool heavy(int weapon) {
-        return weapon == WEAP_MACHINEGUN || weapon == WEAP_RIOTGUN;
+        return gametype.isInstagib()
+            && (weapon == WEAP_MACHINEGUN || weapon == WEAP_RIOTGUN);
     }
 
     bool weak(int weapon) {
-        return weapon == WEAP_INSTAGUN || weapon == WEAP_ELECTROBOLT
-            || weapon == WEAP_GUNBLADE;
+        return gametype.isInstagib()
+            && (weapon == WEAP_INSTAGUN || weapon == WEAP_ELECTROBOLT
+                    || weapon == WEAP_GUNBLADE);
     }
 
     int ammo(int weapon) {

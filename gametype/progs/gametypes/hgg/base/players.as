@@ -119,6 +119,14 @@ class Players {
         Player @player = get(client.playerNum());
         if (real) {
             player.add_score(1);
+            if (!gametype.isInstagib()) {
+                client.getEnt().health += NW_HEALTH_BONUS;
+                float new_armor = client.armor + NW_ARMOR_BONUS;
+                if (new_armor < MAX_ARMOR)
+                    client.armor = new_armor;
+                else
+                    client.armor = MAX_ARMOR;
+            }
 
             player.update_hud_self();
             update_best();
@@ -223,8 +231,10 @@ class Players {
         give_spawn_weapons(client);
         weapons.select_best(client);
         client.getEnt().respawnEffect();
-        if (!gametype.isInstagib())
+        if (!gametype.isInstagib()) {
             client.getEnt().health = NW_HEALTH;
+            client.armor = NW_ARMOR;
+        }
     }
 
     void reset_stats() {
@@ -331,6 +341,18 @@ class Players {
                 return;
         }
         size = playernum;
+    }
+
+    void fix_health() {
+        for (int i = 0; i < size; i++) {
+            Player @player = get(i);
+            if (@player != null && @player.client != null
+                    && player.client.state() >= CS_SPAWNED) {
+                cEntity @ent = player.client.getEnt();
+                if (ent.team != TEAM_SPECTATOR && ent.health > ent.maxHealth)
+                    ent.health -= (frameTime * 0.001f);
+            }
+        }
     }
 
     void charge_gunblades() {

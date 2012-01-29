@@ -275,6 +275,8 @@ class HGGBase {
             return;
 
         GENERIC_Think();
+        if (!gametype.isInstagib())
+            players.fix_health();
         players.charge_gunblades();
         check_time();
     }
