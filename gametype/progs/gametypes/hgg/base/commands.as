@@ -285,11 +285,11 @@ class Commands {
                         : " of " + other.client.getClanName()) + "\n"
                 + "Rank: " + other.dbitem.rank + " ("
                 + highlight(players.ranks.name(other.dbitem.rank)) + ")\n"
-                + "Top row: " + other.dbitem.row + "\n"
+                + "Top row: " + S_COLOR_ROW + other.dbitem.row + "\n"
                 + "Kills / deaths: " + other.dbitem.kills + " / "
-                + other.dbitem.deaths + " (" + (float(other.dbitem.kills)
-                            / (other.dbitem.deaths == 0 ? 1
-                                : other.dbitem.deaths)) + ")\n"
+                + other.dbitem.deaths + " (" + highlight("" +
+                        float(other.dbitem.kills) / (other.dbitem.deaths == 0
+                            ? 1 : other.dbitem.deaths)) + ")\n"
                 + "Minutes played: " + other.dbitem.minutes_played + "\n"));
         }
     }
