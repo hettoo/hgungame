@@ -22,10 +22,10 @@ const cString VERSION = "0.1-dev";
 const cString AUTHOR = "^0<].^7h^2e^9tt^2o^7o^0.[>^7";
 
 const int NW_HEALTH = 20;
-const int NW_HEALTH_BONUS = 8;
+const int NW_HEALTH_BONUS = 10;
 const int NW_ARMOR = 50;
-const int NW_ARMOR_BONUS = 16;
-const float MAX_ARMOR = 150.0;
+const int NW_ARMOR_BONUS = 8;
+const float MAX_ARMOR = 100.0;
 
 const cString S_COLOR_ITEM_AWARD = S_COLOR_GREEN;
 const cString S_COLOR_ROW = S_COLOR_ORANGE;
