@@ -108,7 +108,7 @@ class Player {
                 + S_COLOR_SPECIAL + "Welcome " + client.getName()
                 + S_COLOR_SPECIAL + " and have fun!\n"
                 + S_COLOR_SPECIAL
-                + "Use /gt to see the /gt commands you can use here!");
+                + "Use /gt to see the /gt commands you may use here!");
     }
 
     void welcome(cString &msg) {
