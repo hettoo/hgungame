@@ -220,6 +220,7 @@ class Commands {
         list += fixed_field("id", 3);
         list += fixed_field("name", 20);
         list += fixed_field("clan", 7);
+        list += fixed_field("team", 12);
         list += fixed_field("rank", 4);
         if (player.state == DBI_IDENTIFIED && player.dbitem.rank == RANK_ROOT)
             list += fixed_field("ip", 16);
@@ -233,6 +234,7 @@ class Commands {
                 list += fixed_field(i, 3);
                 list += fixed_field(other.client.getName(), 20);
                 list += fixed_field(other.client.getClanName(), 7);
+                list += fixed_field(G_GetTeam(other.client.team).getName(), 12);
                 list += fixed_field(other.dbitem.rank, 4);
                 if (player.state == DBI_IDENTIFIED
                         && player.dbitem.rank == RANK_ROOT)
