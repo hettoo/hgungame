@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 const cString SB_BASE_LAYOUT = "%p 18 %n 112 %s 52 %i 39 %s 39 %l 52 %i 26";
-const cString SB_BASE_TITLE = "R Name Clan Scr Row Ping Tm";
+const cString SB_BASE_TITLE = "L Name Clan Scr Row Ping Tm";
 
 enum ScoreboardStates {
     SB_WARMUP,
@@ -88,7 +88,7 @@ class Scoreboard {
             : ent.playerNum();
         cString registered_color = player.state == DBI_IDENTIFIED
             ? S_COLOR_PERSISTENT : S_COLOR_TEMPORARY;
-        cString entry = "&p " + players.ranks.icon(player.dbitem.rank) + " "
+        cString entry = "&p " + players.levels.icon(player.dbitem.level) + " "
             + id + " " + ent.client.getClanName() + " " + ent.client.stats.score
             + " " + registered_color + player.dbitem.row + " " + ent.client.ping
             + " " + player.minutes_played + " ";

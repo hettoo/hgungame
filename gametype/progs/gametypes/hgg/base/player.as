@@ -98,9 +98,9 @@ class Player {
         dbitem.set_password(password);
     }
 
-    void set_rank(int rank) {
-        administrate("You are now a rank " + rank + " user!");
-        dbitem.rank = rank;
+    void set_level(int level) {
+        administrate("You are now a level " + level + " user!");
+        dbitem.level = level;
     }
 
     void instruct() {

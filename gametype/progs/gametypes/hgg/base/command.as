@@ -21,23 +21,23 @@ class Command {
     cString name;
     cString usage;
     cString description;
-    int min_rank;
+    int min_level;
     bool sub_command;
 
     int min_argc;
     int max_argc;
 
-    Command(cString &new_usage, cString &new_description, int new_min_rank,
+    Command(cString &new_usage, cString &new_description, int new_min_level,
             bool new_sub_command) {
-        set(new_usage, new_description, new_min_rank, new_sub_command);
+        set(new_usage, new_description, new_min_level, new_sub_command);
     }
 
-    void set(cString &new_usage, cString &new_description, int new_min_rank,
+    void set(cString &new_usage, cString &new_description, int new_min_level,
             bool new_sub_command) {
         name = "";
         usage = new_usage;
         description = new_description;
-        min_rank = new_min_rank;
+        min_level = new_min_level;
         sub_command = new_sub_command;
 
         analyze_usage();

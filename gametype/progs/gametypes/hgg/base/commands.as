@@ -34,41 +34,42 @@ class Commands {
     void init() {
         G_RegisterCommand(COMMAND_BASE);
 
-        add("gametype", "Gametype info.", RANK_GUEST, false);
-        add("listplayers", "List all players with their ids.", RANK_GUEST,
+        add("gametype", "Gametype info.", LEVEL_GUEST, false);
+        add("listplayers", "List all players with their ids.", LEVEL_GUEST,
                 false);
-        add("pm <id> <message>...", "Send a message to a player.", RANK_GUEST,
+        add("pm <id> <message>...", "Send a message to a player.", LEVEL_GUEST,
                 false);
-        add("stats [id]", "Show the statistics of a player.", RANK_GUEST);
-        add("register <password> <password>", "Register yourself.", RANK_GUEST);
+        add("stats [id]", "Show the statistics of a player.", LEVEL_GUEST);
+        add("register <password> <password>", "Register yourself.",
+                LEVEL_GUEST);
         add("identify <password>", "Identify yourself after an ip change.",
-                RANK_GUEST);
+                LEVEL_GUEST);
 
-        add("showoff", "Announces your rank.", RANK_REGULAR_USER);
+        add("showoff", "Announces your level.", LEVEL_REGULAR_USER);
 
-        add("kick <id>", "Kick a player.", RANK_MEMBER);
-        add("restart", "Restart this map.", RANK_MEMBER);
-        add("nextmap", "Proceed to the next map.", RANK_MEMBER);
+        add("kick <id>", "Kick a player.", LEVEL_MEMBER);
+        add("restart", "Restart this map.", LEVEL_MEMBER);
+        add("nextmap", "Proceed to the next map.", LEVEL_MEMBER);
 
-        add("map <mapname>", "Change the current map.", RANK_VIP);
-        add("setrank <id> <rank>", "Set the rank of a player.", RANK_VIP);
-        add("lol", "Throw grenades.", RANK_VIP);
+        add("map <mapname>", "Change the current map.", LEVEL_VIP);
+        add("setlevel <id> <level>", "Set the level of a player.", LEVEL_VIP);
+        add("lol", "Throw grenades.", LEVEL_VIP);
 
         add("devmap <mapname>", "Change the current map and enable cheats.",
-                RANK_ADMIN);
-        add("cvar <name> [value]", "Get / set a cVar.", RANK_ADMIN);
+                LEVEL_ADMIN);
+        add("cvar <name> [value]", "Get / set a cVar.", LEVEL_ADMIN);
 
-        add("shutdown", "Shutdown the server.", RANK_ROOT);
+        add("shutdown", "Shutdown the server.", LEVEL_ROOT);
     }
 
     void add(cString &usage, cString &description,
-            int min_rank, bool sub_command) {
-        @commands[size++] = Command(usage, description, min_rank, sub_command);
+            int min_level, bool sub_command) {
+        @commands[size++] = Command(usage, description, min_level, sub_command);
     }
 
     void add(cString &usage, cString &description,
-            int min_rank) {
-        add(usage, description, min_rank, true);
+            int min_level) {
+        add(usage, description, min_level, true);
     }
 
     Command @find(cString &name) {
@@ -99,12 +100,12 @@ class Commands {
             else
                 return false;
         } else if (player.state == DBI_WRONG_IP
-                && command.min_rank > RANK_GUEST) {
+                && command.min_level > LEVEL_GUEST) {
             player.say_bad("You are not identified.");
-        } else if (player.dbitem.rank < command.min_rank) {
-            player.say_bad("You need to be at least rank " + command.min_rank
-                    + " ("
-                    + highlight(players.ranks.name(command.min_rank).tolower())
+        } else if (player.dbitem.level < command.min_level) {
+            player.say_bad("You need to be at least level " + command.min_level
+                    + " (" + highlight(
+                        players.levels.name(command.min_level).tolower())
                     + S_COLOR_BAD + ") to use this command.");
         } else if (!command.valid_usage(argc, sub_command)) {
             player.say(highlight("Usage") + ": " + full_usage(command));
@@ -148,8 +149,8 @@ class Commands {
             cmd_nextmap(command, player, args, argc, players);
         else if (command.name == "kick")
             cmd_kick(command, player, args, argc, players);
-        else if (command.name == "setrank")
-            cmd_setrank(command, player, args, argc, players);
+        else if (command.name == "setlevel")
+            cmd_setlevel(command, player, args, argc, players);
         else if (command.name == "lol")
             cmd_lol(command, player, args, argc, players);
         else if (command.name == "map")
@@ -222,9 +223,9 @@ class Commands {
 
     void cmd_showoff(Command @command, Player @player, cString &args,
             int argc, Players @players) {
-        command.say(player.client.getName() + " is a rank " + player.dbitem.rank
-                + " user (" + highlight(players.ranks.name(player.dbitem.rank))
-                        + ")");
+        command.say(player.client.getName() + " is a level "
+                + player.dbitem.level + " user ("
+                + highlight(players.levels.name(player.dbitem.level)) + ")");
     }
 
     void cmd_listplayers(Command @command, Player @player, cString &args,
@@ -234,8 +235,8 @@ class Commands {
         list += fixed_field("name", 20);
         list += fixed_field("clan", 7);
         list += fixed_field("team", 12);
-        list += fixed_field("rank", 4);
-        if (player.state == DBI_IDENTIFIED && player.dbitem.rank == RANK_ROOT)
+        list += fixed_field("level", 4);
+        if (player.state == DBI_IDENTIFIED && player.dbitem.level == LEVEL_ROOT)
             list += fixed_field("ip", 16);
         list += "\n";
         bool first = true;
@@ -248,9 +249,9 @@ class Commands {
                 list += fixed_field(other.client.getName(), 20);
                 list += fixed_field(other.client.getClanName(), 7);
                 list += fixed_field(G_GetTeam(other.client.team).getName(), 12);
-                list += fixed_field(other.dbitem.rank, 4);
+                list += fixed_field(other.dbitem.level, 4);
                 if (player.state == DBI_IDENTIFIED
-                        && player.dbitem.rank == RANK_ROOT)
+                        && player.dbitem.level == LEVEL_ROOT)
                     list += fixed_field(get_ip(other.client), 16);
                 first = false;
             }
@@ -298,8 +299,8 @@ class Commands {
             player.print(wrap("Stats for " + other.client.getName()
                     + (raw(other.client.getClanName()) == "" ? ""
                         : " of " + other.client.getClanName()) + "\n"
-                + "Rank: " + other.dbitem.rank + " ("
-                + highlight(players.ranks.name(other.dbitem.rank)) + ")\n"
+                + "Level: " + other.dbitem.level + " ("
+                + highlight(players.levels.name(other.dbitem.level)) + ")\n"
                 + "Top row: " + S_COLOR_ROW + other.dbitem.row + "\n"
                 + S_COLOR_RESET + "Kills / deaths: " + other.dbitem.kills
                 + " / " + other.dbitem.deaths + " (" + highlight("" +
@@ -311,13 +312,13 @@ class Commands {
 
     void cmd_help(Command @command, Player @player, cString &args, int argc,
             Players @players) {
-        cString response = "Available commands, sorted by rank:\n";
-        for (int rank = 0; rank <= player.dbitem.rank; rank++) {
+        cString response = "Available commands, sorted by level:\n";
+        for (int level = 0; level <= player.dbitem.level; level++) {
             bool first = true;
             for (int i = 0; i < size; i++) {
-                if (commands[i].min_rank == rank) {
+                if (commands[i].min_level == level) {
                     if (first) {
-                        response += "\n" + highlight(players.ranks.name(rank)
+                        response += "\n" + highlight(players.levels.name(level)
                                 + ":\n");
                         first = false;
                     }
@@ -347,9 +348,9 @@ class Commands {
         Player @other = players.get(id);
         if (@other == null) {
             player.say_bad("Target player does not exist.");
-        } else if (other.dbitem.rank >= player.dbitem.rank) {
+        } else if (other.dbitem.level >= player.dbitem.level) {
             player.say_bad(
-                    "You can only kick people with lower ranks than yours.");
+                    "You can only kick people with lower levels than yours.");
         } else {
             command.say(player.client.getName() + " is kicking "
                     + other.client.getName());
@@ -357,27 +358,27 @@ class Commands {
         }
     }
 
-    void cmd_setrank(Command @command, Player @player, cString &args,
+    void cmd_setlevel(Command @command, Player @player, cString &args,
             int argc, Players @players) {
         int id = args.getToken(1).toInt();
-        int rank = args.getToken(2).toInt();
+        int level = args.getToken(2).toInt();
         Player @other = players.get(id);
         if (@other == null) {
             player.say_bad("Target player does not exist.");
         } else if (other.state != DBI_IDENTIFIED) {
             player.say_bad(
                     "This player is not registered or identified.");
-        } else if (other.dbitem.rank >= player.dbitem.rank) {
+        } else if (other.dbitem.level >= player.dbitem.level) {
+            player.say_bad("You can only setlevel people with lower levels than"
+                    + " yours.");
+        } else if (level >= player.dbitem.level) {
             player.say_bad(
-                    "You can only setrank people with lower ranks than yours.");
-        } else if (rank >= player.dbitem.rank) {
-            player.say_bad(
-                    "You can only set ranks to lower ranks than yours.");
+                    "You can only set levels to lower levels than yours.");
         } else {
-            command.say(player.client.getName() + " set the rank of "
-                    + other.client.getName() + " to " + rank + " ("
-                    + highlight(players.ranks.name(rank)) + ")");
-            other.set_rank(rank);
+            command.say(player.client.getName() + " set the level of "
+                    + other.client.getName() + " to " + level + " ("
+                    + highlight(players.levels.name(level)) + ")");
+            other.set_level(level);
         }
     }
 
@@ -420,12 +421,12 @@ class Commands {
         cVar @cvar = cVar(name, "", 0); // NOTE: resets the default value :-(
         if ((clean_name == "g_operator_password"
                     || clean_name == "rcon_password")
-                && player.dbitem.rank < RANK_ROOT) {
+                && player.dbitem.level < LEVEL_ROOT) {
             player.say_bad("Forget it.");
         } else if (argc == 2) {
             player.say(name + " is \"" + cvar.getString() + "\"");
         } else if (clean(name).substr(0, 3) == "sv_"
-                && player.dbitem.rank < RANK_ADMIN) {
+                && player.dbitem.level < LEVEL_ADMIN) {
             player.say_bad("Forget it.");
         } else {
             cString value = args.getToken(2);

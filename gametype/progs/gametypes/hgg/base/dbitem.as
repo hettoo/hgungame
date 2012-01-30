@@ -22,7 +22,7 @@ class DBItem {
     cString ip;
     cString password;
 
-    int rank;
+    int level;
     int row;
     int kills;
     int deaths;
@@ -33,7 +33,7 @@ class DBItem {
         ip = "";
         password = "";
 
-        rank = 0;
+        level = 0;
         row = 0;
         kills = 0;
         deaths = 0;
@@ -57,7 +57,7 @@ class DBItem {
         ip = file.getToken(index++);
         password = file.getToken(index++);
 
-        rank = file.getToken(index++).toInt();
+        level = file.getToken(index++).toInt();
         row = file.getToken(index++).toInt();
         kills = file.getToken(index++).toInt();
         deaths = file.getToken(index++).toInt();
@@ -71,7 +71,7 @@ class DBItem {
         file += "\"" + ip + "\" ";
         file += "\"" + password + "\" ";
 
-        file += "\"" + rank + "\" ";
+        file += "\"" + level + "\" ";
         file += "\"" + row + "\" ";
         file += "\"" + kills + "\" ";
         file += "\"" + deaths + "\" ";

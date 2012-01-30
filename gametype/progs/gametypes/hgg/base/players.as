@@ -23,7 +23,7 @@ class Players {
     Player@[] players;
     int size;
     DB db;
-    Ranks ranks;
+    Levels levels;
     Weapons weapons;
     bool team_hud;
 
@@ -339,13 +339,13 @@ class Players {
                     player.say(S_COLOR_ADMINISTRATIVE
                             + "Please set your rcon_password and rejoin a"
                             + " players team to auto-register as "
-                            + ranks.name(RANK_ROOT) + ".");
+                            + levels.name(LEVEL_ROOT) + ".");
                 } else {
-                    player.dbitem.rank = RANK_ROOT;
+                    player.dbitem.level = LEVEL_ROOT;
                     player.set_registered(password);
                     db.add(player.dbitem);
                     player.administrate("You have been auto-registered as "
-                            + ranks.name(RANK_ROOT));
+                            + levels.name(LEVEL_ROOT));
                     player.say(S_COLOR_ADMINISTRATIVE + "Your password has been"
                             + " set to your rcon_password.");
                 }

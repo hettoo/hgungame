@@ -50,7 +50,7 @@ class DB {
             index = new_index;
             @items[++size] = DBItem();
             new_index = items[size].read(file, index);
-            if (items[size].rank == RANK_ROOT)
+            if (items[size].level == LEVEL_ROOT)
                 has_root = true;
         } while (new_index > index);
     }
@@ -59,7 +59,7 @@ class DB {
         if (dbitem.ip == "")
             dbitem.ip = "127.0.0.1";
         @items[size++] = @dbitem;
-        if (dbitem.rank == RANK_ROOT)
+        if (dbitem.level == LEVEL_ROOT)
             has_root = true;
     }
 
