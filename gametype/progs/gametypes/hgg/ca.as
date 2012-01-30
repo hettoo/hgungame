@@ -41,6 +41,7 @@ class HGG : HGGBase {
 
         gt.scorelimit = 21;
         gt.timelimit = 0;
+        gt.countdown_time = 3;
     }
 
     void init_gametype() {

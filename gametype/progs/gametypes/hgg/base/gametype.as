@@ -44,6 +44,7 @@ class Gametype {
     bool has_map_list;
     int scorelimit;
     int timelimit;
+    int countdown_time;
 
     int spawn_system;
 
@@ -57,6 +58,7 @@ class Gametype {
         has_map_list = true;
         scorelimit = 0;
         timelimit = 15;
+        countdown_time = 5;
 
         cvars.resize(CV_TOTAL);
         cvars[CV_MOTD].get(CVAR_BASE + "MOTD", "Have Fun!", CVAR_ARCHIVE);
@@ -168,7 +170,7 @@ class Gametype {
             + "set g_allow_selfdamage 0\n"
             + "set g_allow_stun 1\n"
             + "set g_teams_maxplayers " + gametype.maxPlayersPerTeam + "\n"
-            + "set g_countdown_time 5\n"
+            + "set g_countdown_time " + countdown_time + "\n"
             + "set g_instajump 1\n"
             + "set g_instashield 0\n"
             + "set g_allow_falldamage 0\n"
