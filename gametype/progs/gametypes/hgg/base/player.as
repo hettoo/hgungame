@@ -84,6 +84,10 @@ class Player {
         client.respawn(ghost);
     }
 
+    void put_team(int team) {
+        put_team(team, client.getEnt().isGhosting());
+    }
+
     void force_spec(cString &msg) {
         put_team(TEAM_SPECTATOR, true);
         client.addAward(S_COLOR_BAD + msg);

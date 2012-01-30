@@ -489,4 +489,39 @@ class Players {
             }
         }
     }
+
+    void shuffle() {
+        int[] total;
+        int total_size = 0;
+        total.resize(size);
+
+        for (int i = 0; i < size; i++) {
+            Player @player = get(i);
+            if (@player != null && @player.client != null) {
+                if (player.client.team == TEAM_ALPHA
+                        || player.client.team == TEAM_BETA)
+                    total[total_size++] = i;
+            }
+        }
+
+        int count_alpha = 0;
+        int count_beta = 0;
+        for (int i = 0; i < total_size; i++) {
+            Player @player = get(i);
+            bool equal = count_alpha == count_beta;
+            if (count_alpha == total_size / 2 && !equal) {
+                player.put_team(TEAM_BETA);
+                count_beta++;
+            } else if (count_beta == total_size / 2 && !equal) {
+                player.put_team(TEAM_ALPHA);
+                count_alpha++;
+            } else if (brandom(0, 2) < 1) {
+                player.put_team(TEAM_ALPHA);
+                count_alpha++;
+            } else {
+                player.put_team(TEAM_BETA);
+                count_beta++;
+            }
+        }
+    }
 }

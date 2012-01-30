@@ -52,6 +52,7 @@ class Commands {
         add("nextmap", "Proceed to the next map.", LEVEL_MEMBER);
         add("putteam <id> <alpha|beta|spec|players>", "Put a player in a team.",
                 LEVEL_MEMBER);
+        add("shuffle", "Randomly shuffle the teams.", LEVEL_MEMBER);
 
         add("map <mapname>", "Change the current map.", LEVEL_VIP);
         add("setlevel <id> <level>", "Set the level of a player.", LEVEL_VIP);
@@ -151,6 +152,8 @@ class Commands {
             cmd_nextmap(command, player, args, argc, players);
         else if (command.name == "putteam")
             cmd_putteam(command, player, args, argc, players);
+        else if (command.name == "shuffle")
+            cmd_shuffle(command, player, args, argc, players);
         else if (command.name == "kick")
             cmd_kick(command, player, args, argc, players);
         else if (command.name == "setlevel")
@@ -385,6 +388,16 @@ class Commands {
             other.put_team(team, team == TEAM_SPECTATOR
                     || (players.team_hud && (team == TEAM_ALPHA
                             || team == TEAM_BETA)));
+        }
+    }
+
+    void cmd_shuffle(Command @command, Player @player, cString &args, int argc,
+            Players @players) {
+        if (!gametype.isTeamBased) {
+            player.say_bad("This gametype is not team-based.");
+        } else {
+            command.say(player.client.getName() + " is shuffling the teams.");
+            players.shuffle();
         }
     }
 
