@@ -239,7 +239,7 @@ class Commands {
         list += fixed_field("name", 20);
         list += fixed_field("clan", 7);
         list += fixed_field("team", 12);
-        list += fixed_field("level", 4);
+        list += fixed_field("level", 6);
         if (player.state == AS_IDENTIFIED
                 && player.account.level == LEVEL_ROOT)
             list += fixed_field("ip", 16);
@@ -254,7 +254,7 @@ class Commands {
                 list += fixed_field(other.client.getName(), 20);
                 list += fixed_field(other.client.getClanName(), 7);
                 list += fixed_field(G_GetTeam(other.client.team).getName(), 12);
-                list += fixed_field(other.account.level, 4);
+                list += fixed_field(other.account.level, 6);
                 if (player.state == AS_IDENTIFIED
                         && player.account.level == LEVEL_ROOT)
                     list += fixed_field(get_ip(other.client), 16);
