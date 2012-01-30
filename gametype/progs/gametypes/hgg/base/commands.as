@@ -356,7 +356,8 @@ class Commands {
         Player @other = players.get(id);
         if (@other == null) {
             player.say_bad("Target player does not exist.");
-        } else if (other.account.level >= player.account.level) {
+        } else if (other.account.level >= player.account.level
+                && player.client.playerNum() != id) {
             player.say_bad("You can only change the team of people with lower"
                     + " levels than yours.");
         } else {
@@ -385,9 +386,7 @@ class Commands {
             command.say(player.client.getName() + " is putting "
                     + other.client.getName() + " in team "
                     + G_GetTeam(team).getName());
-            other.put_team(team, team == TEAM_SPECTATOR
-                    || (players.team_hud && (team == TEAM_ALPHA
-                            || team == TEAM_BETA)));
+            other.put_team(team);
         }
     }
 

@@ -85,7 +85,7 @@ class Player {
     }
 
     void put_team(int team) {
-        put_team(team, client.getEnt().isGhosting());
+        put_team(team, team == TEAM_SPECTATOR || client.getEnt().isGhosting());
     }
 
     void force_spec(cString &msg) {
