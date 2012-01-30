@@ -353,6 +353,9 @@ class Commands {
         Player @other = players.get(id);
         if (@other == null) {
             player.say_bad("Target player does not exist.");
+        } else if (other.account.level >= player.account.level) {
+            player.say_bad("You can only change the team of people with lower"
+                    + " levels than yours.");
         } else {
             cString team_name = args.getToken(2);
             int team;
