@@ -79,9 +79,13 @@ class Player {
         row = 0;
     }
 
+    void put_team(int team, bool ghost) {
+        client.team = team;
+        client.respawn(ghost);
+    }
+
     void force_spec(cString &msg) {
-        client.team = TEAM_SPECTATOR;
-        client.respawn(true);
+        put_team(TEAM_SPECTATOR, true);
         client.addAward(S_COLOR_BAD + msg);
     }
 

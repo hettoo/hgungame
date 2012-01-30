@@ -50,6 +50,8 @@ class Commands {
         add("kick <id>", "Kick a player.", LEVEL_MEMBER);
         add("restart", "Restart this map.", LEVEL_MEMBER);
         add("nextmap", "Proceed to the next map.", LEVEL_MEMBER);
+        add("putteam <id> <alpha|beta|spec|players>", "Put a player in a team.",
+                LEVEL_MEMBER);
 
         add("map <mapname>", "Change the current map.", LEVEL_VIP);
         add("setlevel <id> <level>", "Set the level of a player.", LEVEL_VIP);
@@ -147,6 +149,8 @@ class Commands {
             cmd_restart(command, player, args, argc, players);
         else if (command.name == "nextmap")
             cmd_nextmap(command, player, args, argc, players);
+        else if (command.name == "putteam")
+            cmd_putteam(command, player, args, argc, players);
         else if (command.name == "kick")
             cmd_kick(command, player, args, argc, players);
         else if (command.name == "setlevel")
@@ -341,6 +345,44 @@ class Commands {
             int argc, Players @players) {
         command.say(player.client.getName() + " is advancing the match");
         exec("match advance");
+    }
+
+    void cmd_putteam(Command @command, Player @player, cString &args,
+            int argc, Players @players) {
+        int id = args.getToken(1).toInt();
+        Player @other = players.get(id);
+        if (@other == null) {
+            player.say_bad("Target player does not exist.");
+        } else {
+            cString team_name = args.getToken(2);
+            int team;
+            if (team_name == "alpha") {
+                team = TEAM_ALPHA;
+            } else if (team_name == "beta") {
+                team = TEAM_BETA;
+            } else if (team_name == "spec") {
+                team = TEAM_SPECTATOR;
+            } else if (team_name == "players") {
+                team = TEAM_PLAYERS;
+            } else {
+                player.say_bad("Invalid team.");
+                return;
+            }
+            if (((team == TEAM_ALPHA || team == TEAM_BETA
+                        && !gametype.isTeamBased)
+                    || (team == TEAM_PLAYERS && gametype.isTeamBased))
+                    && player.account.level < LEVEL_ADMIN) {
+                player.say_bad("You can not do this.");
+                return;
+            }
+
+            command.say(player.client.getName() + " is putting "
+                    + other.client.getName() + " in team "
+                    + G_GetTeam(team).getName());
+            other.put_team(team, team == TEAM_SPECTATOR
+                    || (players.team_hud && (team == TEAM_ALPHA
+                            || team == TEAM_BETA)));
+        }
     }
 
     void cmd_kick(Command @command, Player @player, cString &args, int argc,
