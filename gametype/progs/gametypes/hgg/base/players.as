@@ -25,6 +25,7 @@ class Players {
     DB db;
     Ranks ranks;
     Weapons weapons;
+    bool team_hud;
 
     bool first_blood;
 
@@ -34,6 +35,7 @@ class Players {
     Players() {
         players.resize(maxClients);
         size = 0;
+        team_hud = false;
 
         first_blood = true;
 
@@ -128,13 +130,17 @@ class Players {
                     client.armor = MAX_ARMOR;
             }
 
-            player.update_hud_self();
-            update_best();
+            if (team_hud) {
+                update_hud_teams(other_team(client.team));
+            } else {
+                player.update_hud_self();
+                update_best();
 
-            if (player.score == best_score)
-                update_hud();
-            else if (player.score == second_score)
-                update_hud_bests();
+                if (player.score == best_score)
+                    update_hud();
+                else if (player.score == second_score)
+                    update_hud_bests();
+            }
         }
 
         int award = weapons.award(row);
@@ -226,8 +232,14 @@ class Players {
     void respawn(cClient @client) {
         Player @player = get(client.playerNum());
         player.alive = true;
-        player.update_hud_self();
-        player.update_hud_other(this);
+
+        if (team_hud) {
+            update_hud_teams();
+        } else {
+            player.update_hud_self();
+            player.update_hud_other(this);
+        }
+
         give_spawn_weapons(client);
         weapons.select_best(client);
         client.getEnt().respawnEffect();
@@ -293,6 +305,29 @@ class Players {
         }
     }
 
+    void update_hud_teams(Player @player, int penalty_team) {
+        player.update_hud_teams(count_alive(TEAM_ALPHA)
+                - (penalty_team == TEAM_ALPHA ? 1 : 0),
+                count_alive(TEAM_BETA)
+                - (penalty_team == TEAM_BETA ? 1 : 0));
+    }
+
+    void update_hud_teams(Player @player) {
+        update_hud_teams(player, GS_MAX_TEAMS);
+    }
+
+    void update_hud_teams(int penalty_team) {
+        for (int i = 0; i < size; i++) {
+            Player @player = get(i);
+            if (@player != null && player.client.team != TEAM_SPECTATOR)
+                update_hud_teams(player, penalty_team);
+        }
+    }
+
+    void update_hud_teams() {
+        update_hud_teams(GS_MAX_TEAMS);
+    }
+
     void new_player(cClient @client) {
         Player @player = get(client.playerNum());
         if (player.ip_check()) {
@@ -317,9 +352,14 @@ class Players {
             }
             player.sync_score();
             player.instruct();
-            if (count() <= 2 || player.score > second_score) {
-                update_best();
-                update_hud();
+
+            if (team_hud) {
+                update_hud_teams(player);
+            } else {
+                if (count() <= 2 || player.score > second_score) {
+                    update_best();
+                    update_hud();
+                }
             }
         }
     }

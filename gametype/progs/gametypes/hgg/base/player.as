@@ -182,11 +182,18 @@ class Player {
         if (players.best_score == UNKNOWN
                 || (score == players.best_score
                     && players.second_score == UNKNOWN) || players.count() == 0)
-            G_ConfigString(config_index,"\\ ? /");
+            G_ConfigString(config_index, "\\ ? /");
         else
             G_ConfigString(config_index, "\\ "
                     + (score == players.best_score ? players.second_score
                         : players.best_score) + " /");
+    }
+
+    void update_hud_teams(int count_alpha, int count_beta) {
+        client.setHUDStat(STAT_MESSAGE_ALPHA, CS_GENERAL);
+        G_ConfigString(CS_GENERAL, "- " + count_alpha + " -");
+        client.setHUDStat(STAT_MESSAGE_BETA, CS_GENERAL + 1);
+        G_ConfigString(CS_GENERAL + 1, "- " + count_beta + " -");
     }
 
     void print(cString &msg) {
