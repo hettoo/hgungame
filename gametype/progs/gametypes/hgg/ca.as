@@ -151,7 +151,7 @@ class HGG : HGGBase {
                     + countdown_start + "_0");
         }
 
-        if (countdown_start <= ready_start)
+        if (countdown_start <= ready_start && countdown_start > 0)
             center_notify(countdown_start + "");
     }
 
