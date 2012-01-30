@@ -113,7 +113,7 @@ class Commands {
         } else if (!command.valid_usage(argc, sub_command)) {
             player.say(highlight("Usage") + ": " + full_usage(command));
         } else {
-            return cmd(command, player, args, argc, players);
+            return handle_base(command, player, args, argc, players);
         }
 
         return true;
@@ -130,7 +130,7 @@ class Commands {
             + command.name + " " + command.usage;
     }
 
-    bool cmd(Command @command, Player @player, cString &args, int argc,
+    bool handle_base(Command @command, Player @player, cString &args, int argc,
             Players @players) {
         if (command.name == "gametype")
             cmd_gametype(command, player, args, argc, players);
