@@ -238,7 +238,8 @@ cString @highlight_row(int row) {
 }
 
 void notify(cString &msg) {
-    G_PrintMsg(null, msg + "\n");
+    if (msg != "")
+        G_PrintMsg(null, msg + "\n");
 }
 
 void center_notify(cString &msg) {

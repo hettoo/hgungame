@@ -103,10 +103,16 @@ class Player {
         account.level = level;
     }
 
-    void instruct() {
+    void greet(Levels @levels) {
+        if (state == AS_IDENTIFIED)
+            notify(levels.greeting(account.level, client.getName()));
+    }
+
+    void instruct(bool greeted) {
         say("Fork me on GitHub: github.com/hettoo/hgungame");
-        say(S_COLOR_SPECIAL + "Welcome " + S_COLOR_RESET + client.getName()
-                + S_COLOR_SPECIAL + " and have fun!");
+        if (!greeted)
+            say(S_COLOR_SPECIAL + "Welcome " + S_COLOR_RESET + client.getName()
+                    + S_COLOR_SPECIAL + " and have fun!");
         say(S_COLOR_SPECIAL + "Use /" + COMMAND_BASE
                 + " to see the commands you may use here!");
     }

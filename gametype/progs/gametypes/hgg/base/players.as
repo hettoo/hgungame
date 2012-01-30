@@ -351,7 +351,8 @@ class Players {
                 }
             }
             player.sync_score();
-            player.instruct();
+            player.instruct(levels.greeting(player.account.level, "") != "");
+            player.greet(levels);
 
             if (team_hud) {
                 update_hud_teams(player);

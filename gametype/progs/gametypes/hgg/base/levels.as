@@ -61,6 +61,27 @@ class Levels {
         return "?";
     }
 
+    cString @greeting(int level, cString @name) {
+        switch (level) {
+            case LEVEL_REGULAR_USER:
+                return S_COLOR_SPECIAL + "Welcome " + highlight(name(level))
+                    + " " + name + S_COLOR_SPECIAL + "!";
+            case LEVEL_MEMBER:
+                return S_COLOR_SPECIAL + "All welcome " + highlight(name(level))
+                    + " " + name + S_COLOR_SPECIAL + " to the game!";
+            case LEVEL_VIP:
+                return S_COLOR_SPECIAL + "Ohohhh! " + highlight(name(level))
+                    + " " + name + S_COLOR_SPECIAL + " entered the game!";
+            case LEVEL_ADMIN:
+                return S_COLOR_SPECIAL + "Stand up! " + highlight(name(level))
+                    + " " + name + S_COLOR_SPECIAL + " entered the game!";
+            case LEVEL_ROOT:
+                return S_COLOR_SPECIAL + "Attention! " + highlight(name(level))
+                    + " " + name + S_COLOR_SPECIAL + " entered the game!";
+        }
+        return "";
+    }
+
     int icon(int level) {
         switch (level) {
             case LEVEL_GUEST:
