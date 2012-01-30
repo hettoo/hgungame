@@ -416,11 +416,11 @@ class Commands {
     void cmd_cvar(Command @command, Player @player, cString &args, int argc,
             Players @players) {
         cString name = args.getToken(1);
+        cString clean_name = clean(name);
         cVar @cvar = cVar(name, "", 0); // NOTE: resets the default value :-(
-        if ((clean(name) == "g_operator_password"
-                    && player.dbitem.rank < RANK_VIP)
-                || (clean(name) == "rcon_password"
-                    && player.dbitem.rank < RANK_ROOT)) {
+        if ((clean_name == "g_operator_password"
+                    || clean_name == "rcon_password")
+                && player.dbitem.rank < RANK_ROOT) {
             player.say_bad("Forget it.");
         } else if (argc == 2) {
             player.say(name + " is \"" + cvar.getString() + "\"");
