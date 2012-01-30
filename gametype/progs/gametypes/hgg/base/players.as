@@ -298,14 +298,22 @@ class Players {
         if (player.ip_check()) {
             cString ip = get_ip(player.client);
             cString password = cVar("rcon_password", "", 0).getString();
-            if (!db.has_root && password != "" && player.state == DBI_UNKNOWN
-                    && !client.isBot() && (ip == "127.0.0.1" || ip == "")) {
-                player.dbitem.rank = RANK_ROOT;
-                player.set_registered(password);
-                db.add(player.dbitem);
-                player.administrate("You have been auto-registered as Root!");
-                player.say(S_COLOR_ADMINISTRATIVE
-                        + "Your password has been set to your rcon_password");
+            if (!db.has_root && player.state == DBI_UNKNOWN && !client.isBot()
+                    && (ip == "127.0.0.1" || ip == "")) {
+                if (password == "") {
+                    player.say(S_COLOR_ADMINISTRATIVE
+                            + "Please set your rcon_password and rejoin a"
+                            + " players team to auto-register as "
+                            + ranks.name(RANK_ROOT) + ".");
+                } else {
+                    player.dbitem.rank = RANK_ROOT;
+                    player.set_registered(password);
+                    db.add(player.dbitem);
+                    player.administrate("You have been auto-registered as "
+                            + ranks.name(RANK_ROOT));
+                    player.say(S_COLOR_ADMINISTRATIVE + "Your password has been"
+                            + " set to your rcon_password.");
+                }
             }
             player.sync_score();
             player.instruct();
