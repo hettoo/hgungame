@@ -99,10 +99,10 @@ class Commands {
                 cmd_help(command, player, args, argc, players);
             else
                 return false;
-        } else if (player.state == DBI_WRONG_IP
+        } else if (player.state == AS_WRONG_IP
                 && command.min_level > LEVEL_GUEST) {
             player.say_bad("You are not identified.");
-        } else if (player.dbitem.level < command.min_level) {
+        } else if (player.account.level < command.min_level) {
             player.say_bad("You need to be at least level " + command.min_level
                     + " (" + highlight(
                         players.levels.name(command.min_level).tolower())
@@ -188,7 +188,7 @@ class Commands {
     void cmd_register(Command @command, Player @player, cString &args,
             int argc, Players @players) {
         cString password = args.getToken(1);
-        if (player.state != DBI_UNKNOWN) {
+        if (player.state != AS_UNKNOWN) {
             player.say_bad("Your name is already registered.");
         } else if (@players.db.find(raw(player.client.getName())) != null) {
             player.say_bad("This name has been registered by another player"
@@ -201,7 +201,7 @@ class Commands {
             player.say_bad("Passwords didn't match.");
         } else {
             player.set_registered(password);
-            players.db.add(player.dbitem);
+            players.db.add(player.account);
             player.administrate("You are now registered!");
             command.say(player.client.getName() + " registered himself");
         }
@@ -209,13 +209,13 @@ class Commands {
 
     void cmd_identify(Command @command, Player @player, cString &args,
             int argc, Players @players) {
-        if (player.state != DBI_WRONG_IP) {
+        if (player.state != AS_WRONG_IP) {
             player.say_bad("You did not need to identify.");
-        } else if (args.getToken(1) != player.dbitem.password) {
+        } else if (args.getToken(1) != player.account.password) {
             player.say_bad("Wrong password.");
         } else {
-            player.state = DBI_IDENTIFIED;
-            player.dbitem.ip = get_ip(player.client);
+            player.state = AS_IDENTIFIED;
+            player.account.ip = get_ip(player.client);
             player.administrate("IP changed successfully!");
             command.say(player.client.getName() + " identified himself");
         }
@@ -224,8 +224,8 @@ class Commands {
     void cmd_showoff(Command @command, Player @player, cString &args,
             int argc, Players @players) {
         command.say(player.client.getName() + " is a level "
-                + player.dbitem.level + " user ("
-                + highlight(players.levels.name(player.dbitem.level)) + ")");
+                + player.account.level + " user ("
+                + highlight(players.levels.name(player.account.level)) + ")");
     }
 
     void cmd_listplayers(Command @command, Player @player, cString &args,
@@ -236,7 +236,8 @@ class Commands {
         list += fixed_field("clan", 7);
         list += fixed_field("team", 12);
         list += fixed_field("level", 4);
-        if (player.state == DBI_IDENTIFIED && player.dbitem.level == LEVEL_ROOT)
+        if (player.state == AS_IDENTIFIED
+                && player.account.level == LEVEL_ROOT)
             list += fixed_field("ip", 16);
         list += "\n";
         bool first = true;
@@ -249,9 +250,9 @@ class Commands {
                 list += fixed_field(other.client.getName(), 20);
                 list += fixed_field(other.client.getClanName(), 7);
                 list += fixed_field(G_GetTeam(other.client.team).getName(), 12);
-                list += fixed_field(other.dbitem.level, 4);
-                if (player.state == DBI_IDENTIFIED
-                        && player.dbitem.level == LEVEL_ROOT)
+                list += fixed_field(other.account.level, 4);
+                if (player.state == AS_IDENTIFIED
+                        && player.account.level == LEVEL_ROOT)
                     list += fixed_field(get_ip(other.client), 16);
                 first = false;
             }
@@ -299,21 +300,21 @@ class Commands {
             player.print(wrap("Stats for " + other.client.getName()
                     + (raw(other.client.getClanName()) == "" ? ""
                         : " of " + other.client.getClanName()) + "\n"
-                + "Level: " + other.dbitem.level + " ("
-                + highlight(players.levels.name(other.dbitem.level)) + ")\n"
-                + "Top row: " + S_COLOR_ROW + other.dbitem.row + "\n"
-                + S_COLOR_RESET + "Kills / deaths: " + other.dbitem.kills
-                + " / " + other.dbitem.deaths + " (" + highlight("" +
-                        float(other.dbitem.kills) / (other.dbitem.deaths == 0
-                            ? 1 : other.dbitem.deaths)) + ")\n"
-                + "Minutes played: " + other.dbitem.minutes_played + "\n"));
+                + "Level: " + other.account.level + " ("
+                + highlight(players.levels.name(other.account.level)) + ")\n"
+                + "Top row: " + S_COLOR_ROW + other.account.row + "\n"
+                + S_COLOR_RESET + "Kills / deaths: " + other.account.kills
+                + " / " + other.account.deaths + " (" + highlight("" +
+                        float(other.account.kills) / (other.account.deaths == 0
+                            ? 1 : other.account.deaths)) + ")\n"
+                + "Minutes played: " + other.account.minutes_played + "\n"));
         }
     }
 
     void cmd_help(Command @command, Player @player, cString &args, int argc,
             Players @players) {
         cString response = "Available commands, sorted by level:\n";
-        for (int level = 0; level <= player.dbitem.level; level++) {
+        for (int level = 0; level <= player.account.level; level++) {
             bool first = true;
             for (int i = 0; i < size; i++) {
                 if (commands[i].min_level == level) {
@@ -348,7 +349,7 @@ class Commands {
         Player @other = players.get(id);
         if (@other == null) {
             player.say_bad("Target player does not exist.");
-        } else if (other.dbitem.level >= player.dbitem.level) {
+        } else if (other.account.level >= player.account.level) {
             player.say_bad(
                     "You can only kick people with lower levels than yours.");
         } else {
@@ -365,13 +366,13 @@ class Commands {
         Player @other = players.get(id);
         if (@other == null) {
             player.say_bad("Target player does not exist.");
-        } else if (other.state != DBI_IDENTIFIED) {
+        } else if (other.state != AS_IDENTIFIED) {
             player.say_bad(
                     "This player is not registered or identified.");
-        } else if (other.dbitem.level >= player.dbitem.level) {
+        } else if (other.account.level >= player.account.level) {
             player.say_bad("You can only setlevel people with lower levels than"
                     + " yours.");
-        } else if (level >= player.dbitem.level) {
+        } else if (level >= player.account.level) {
             player.say_bad(
                     "You can only set levels to lower levels than yours.");
         } else {
@@ -421,12 +422,12 @@ class Commands {
         cVar @cvar = cVar(name, "", 0); // NOTE: resets the default value :-(
         if ((clean_name == "g_operator_password"
                     || clean_name == "rcon_password")
-                && player.dbitem.level < LEVEL_ROOT) {
+                && player.account.level < LEVEL_ROOT) {
             player.say_bad("Forget it.");
         } else if (argc == 2) {
             player.say(name + " is \"" + cvar.getString() + "\"");
         } else if (clean(name).substr(0, 3) == "sv_"
-                && player.dbitem.level < LEVEL_ADMIN) {
+                && player.account.level < LEVEL_ADMIN) {
             player.say_bad("Forget it.");
         } else {
             cString value = args.getToken(2);

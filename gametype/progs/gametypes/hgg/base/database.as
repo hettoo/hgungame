@@ -22,14 +22,14 @@ const cString DB_FILE = "users_";
 
 const int MAX_DB_ITEMS = 2048;
 
-class DB {
-    DBItem@[] items;
+class DataBase {
+    Account@[] accounts;
     int size;
     bool has_root;
     cString file_name;
 
-    DB() {
-        items.resize(MAX_DB_ITEMS);
+    DataBase() {
+        accounts.resize(MAX_DB_ITEMS);
         size = 0;
         has_root = false;
     }
@@ -47,25 +47,25 @@ class DB {
         int new_index = 0;
         do {
             index = new_index;
-            @items[++size] = DBItem();
-            new_index = items[size].read(file, index);
-            if (items[size].level == LEVEL_ROOT)
+            @accounts[++size] = Account();
+            new_index = accounts[size].read(file, index);
+            if (accounts[size].level == LEVEL_ROOT)
                 has_root = true;
         } while (new_index > index);
     }
 
-    void add(DBItem @dbitem) {
+    void add(Account @dbitem) {
         if (dbitem.ip == "")
             dbitem.ip = "127.0.0.1";
-        @items[size++] = @dbitem;
+        @accounts[size++] = @dbitem;
         if (dbitem.level == LEVEL_ROOT)
             has_root = true;
     }
 
-    DBItem @find(cString &id) {
+    Account @find(cString &id) {
         for (int i = 0; i < size; i++) {
-            if (items[i].id == id)
-                return items[i];
+            if (accounts[i].id == id)
+                return accounts[i];
         }
         return null;
     }
@@ -74,7 +74,7 @@ class DB {
         cString file = "// " + gametype.getName() + " user database version "
             + DB_VERSION + "\n";
         for (int i = 0; i < size; i++)
-            items[i].write(file);
+            accounts[i].write(file);
         G_WriteFile(file_name, file);
     }
 }

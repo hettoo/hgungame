@@ -22,7 +22,7 @@ const int SPECIAL_ROW = 5;
 class Players {
     Player@[] players;
     int size;
-    DB db;
+    DataBase db;
     Levels levels;
     Weapons weapons;
     bool team_hud;
@@ -333,7 +333,7 @@ class Players {
         if (player.ip_check()) {
             cString ip = get_ip(player.client);
             cString password = cVar("rcon_password", "", 0).getString();
-            if (!db.has_root && player.state == DBI_UNKNOWN && !client.isBot()
+            if (!db.has_root && player.state == AS_UNKNOWN && !client.isBot()
                     && (ip == "127.0.0.1" || ip == "")) {
                 if (password == "") {
                     player.say(S_COLOR_ADMINISTRATIVE
@@ -341,9 +341,9 @@ class Players {
                             + " players team to auto-register as "
                             + levels.name(LEVEL_ROOT) + ".");
                 } else {
-                    player.dbitem.level = LEVEL_ROOT;
+                    player.account.level = LEVEL_ROOT;
                     player.set_registered(password);
-                    db.add(player.dbitem);
+                    db.add(player.account);
                     player.administrate("You have been auto-registered as "
                             + levels.name(LEVEL_ROOT));
                     player.say(S_COLOR_ADMINISTRATIVE + "Your password has been"

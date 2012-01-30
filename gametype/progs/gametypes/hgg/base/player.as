@@ -17,10 +17,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-enum DBItemStates {
-    DBI_UNKNOWN,
-    DBI_WRONG_IP,
-    DBI_IDENTIFIED
+enum AccountStates {
+    AS_UNKNOWN,
+    AS_WRONG_IP,
+    AS_IDENTIFIED
 };
 
 class Player {
@@ -34,7 +34,7 @@ class Player {
     int score;
 
     int state;
-    DBItem @dbitem;
+    Account @account;
 
     Player () {
         inited = false;
@@ -42,7 +42,7 @@ class Player {
         ammo.resize(WEAP_TOTAL);
     }
 
-    void init(cClient @new_client, DB @db) {
+    void init(cClient @new_client, DataBase @db) {
         bool update = @client == @new_client;
         if (!update) {
             if (@new_client == null || inited)
@@ -56,22 +56,22 @@ class Player {
             score = 0;
         }
 
-        DBItem @backup = @dbitem;
-        @dbitem = db.find(raw(client.getName()));
-        if (@dbitem == null) {
-            if (!update || state != DBI_UNKNOWN) {
-                state = DBI_UNKNOWN;
-                @dbitem = @DBItem();
-                dbitem.init(client);
+        Account @backup = @account;
+        @account = db.find(raw(client.getName()));
+        if (@account == null) {
+            if (!update || state != AS_UNKNOWN) {
+                state = AS_UNKNOWN;
+                @account = @Account();
+                account.init(client);
             } else {
-                @dbitem = @backup;
+                @account = @backup;
             }
         } else {
             cString ip = get_ip(client);
-            if (ip == dbitem.ip || (ip == "" && dbitem.ip == "127.0.0.1"))
-                state = DBI_IDENTIFIED;
+            if (ip == account.ip || (ip == "" && account.ip == "127.0.0.1"))
+                state = AS_IDENTIFIED;
             else
-                state = DBI_WRONG_IP;
+                state = AS_WRONG_IP;
         }
     }
 
@@ -86,7 +86,7 @@ class Player {
     }
 
     bool ip_check() {
-        if (state == DBI_WRONG_IP) {
+        if (state == AS_WRONG_IP) {
             force_spec("Wrong IP");
             return false;
         }
@@ -94,13 +94,13 @@ class Player {
     }
 
     void set_registered(cString &password) {
-        state = DBI_IDENTIFIED;
-        dbitem.set_password(password);
+        state = AS_IDENTIFIED;
+        account.set_password(password);
     }
 
     void set_level(int level) {
         administrate("You are now a level " + level + " user!");
-        dbitem.level = level;
+        account.level = level;
     }
 
     void instruct() {
@@ -136,7 +136,7 @@ class Player {
 
     void killer() {
         row++;
-        dbitem.add_kill();
+        account.add_kill();
     }
 
     void update_ammo() {
@@ -145,17 +145,17 @@ class Player {
     }
 
     void killed() {
-        dbitem.add_death();
+        account.add_death();
     }
 
     void add_minute() {
         minutes_played++;
-        dbitem.add_minute();
+        account.add_minute();
     }
 
     void update_row() {
         if (for_real())
-            dbitem.update_row(row);
+            account.update_row(row);
     }
 
     int get_ammo(int weapon) {

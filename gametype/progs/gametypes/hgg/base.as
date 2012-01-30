@@ -235,7 +235,7 @@ class HGGBase {
      */
     void check_root() {
         if (!players.db.has_root && gt.root() != "") {
-            DBItem @root = DBItem();
+            Account @root = Account();
             root.id = gt.root();
             root.password = gt.root_password();
             players.db.add(root);

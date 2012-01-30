@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-class DBItem {
+class Account {
     cString id;
     cString ip;
     cString password;
@@ -28,7 +28,7 @@ class DBItem {
     int deaths;
     int minutes_played;
 
-    DBItem() {
+    Account() {
         id = "";
         ip = "";
         password = "";
