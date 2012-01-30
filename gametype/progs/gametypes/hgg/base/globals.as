@@ -51,6 +51,11 @@ const cString DATA_DIR = "gtdata/";
 const int UNKNOWN = -1;
 const int INFINITY = -1;
 
+cString @data_file(cString &filename) {
+    return DATA_DIR + gametype.getName() + "/"
+        + (gametype.isInstagib() ? "insta" : "nw") + "/" + filename;
+}
+
 void string_add_maxed(cString &string, cString &addition, int max) {
     if (string.len() + addition.len() <= max)
         string += addition;

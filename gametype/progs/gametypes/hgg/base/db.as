@@ -35,8 +35,7 @@ class DB {
     }
 
     void init() {
-        file_name = DATA_DIR + gametype.getName() + "/"
-            + (gametype.isInstagib() ? "insta_" : "" ) + DB_FILE + DB_VERSION;
+        file_name = data_file(DB_FILE + DB_VERSION);
     }
 
     void read() {
