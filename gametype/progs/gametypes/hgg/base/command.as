@@ -87,8 +87,7 @@ class Command {
         usage = new_usage;
     }
 
-    bool valid_usage(int argc, bool as_sub_command) {
-        argc -= as_sub_command ? 1 : 0;
+    bool valid_usage(int argc) {
         return argc >= min_argc && (argc <= max_argc || max_argc == INFINITY);
     }
 

@@ -89,12 +89,14 @@ class Commands {
         if (cmd == "cvarinfo")
             return cmd_cvarinfo(client, args, argc, players);
 
-        Command @command;
         bool sub_command = cmd == COMMAND_BASE;
-        if (sub_command)
-            @command = find(args.getToken(0));
-        else
-            @command = find(cmd);
+        if (sub_command) {
+            cmd = args.getToken(0);
+            args = args.substr(cmd.len(), args.len());
+            argc--;
+        }
+        Command @command = find(cmd);
+
         Player @player = players.get(client.playerNum());
         if (@player == null) {
         } else if (@command == null) {
@@ -110,7 +112,7 @@ class Commands {
                     + " (" + highlight(
                         players.levels.name(command.min_level).tolower())
                     + S_COLOR_BAD + ") to use this command.");
-        } else if (!command.valid_usage(argc, sub_command)) {
+        } else if (!command.valid_usage(argc)) {
             player.say(highlight("Usage") + ": " + full_usage(command));
         } else {
             return handle_base(command, player, args, argc, players);
@@ -194,7 +196,7 @@ class Commands {
 
     void cmd_register(Command @command, Player @player, cString &args,
             int argc, Players @players) {
-        cString password = args.getToken(1);
+        cString password = args.getToken(0);
         if (player.state != AS_UNKNOWN) {
             player.say_bad("Your name is already registered.");
         } else if (@players.db.find(raw(player.client.getName())) != null) {
@@ -204,7 +206,7 @@ class Commands {
             player.say_bad("You are not allowed to register this name.");
         } else if (password == "") {
             player.say_bad("Your password should not be empty.");
-        } else if (password != args.getToken(2)) {
+        } else if (password != args.getToken(1)) {
             player.say_bad("Passwords didn't match.");
         } else {
             player.set_registered(password);
@@ -218,7 +220,7 @@ class Commands {
             int argc, Players @players) {
         if (player.state != AS_WRONG_IP) {
             player.say_bad("You did not need to identify.");
-        } else if (args.getToken(1) != player.account.password) {
+        } else if (args.getToken(0) != player.account.password) {
             player.say_bad("Wrong password.");
         } else {
             player.state = AS_IDENTIFIED;
@@ -281,7 +283,7 @@ class Commands {
 
     void cmd_pm(Command @command, Player @player, cString &args, int argc,
             Players @players) {
-        int n = args.getToken(1).toInt();
+        int n = args.getToken(0).toInt();
         Player @other = players.get(n);
         if (@other == null || @other.client == null) {
             player.say_bad("Target player does not exist.");
@@ -296,8 +298,8 @@ class Commands {
     void cmd_stats(Command @command, Player @player, cString &args, int argc,
             Players @players) {
         int n;
-        if (argc > 1)
-            n = args.getToken(1).toInt();
+        if (argc >= 1)
+            n = args.getToken(0).toInt();
         else
             n = player.client.playerNum();
         Player @other = players.get(n);
@@ -352,7 +354,7 @@ class Commands {
 
     void cmd_putteam(Command @command, Player @player, cString &args,
             int argc, Players @players) {
-        int id = args.getToken(1).toInt();
+        int id = args.getToken(0).toInt();
         Player @other = players.get(id);
         if (@other == null) {
             player.say_bad("Target player does not exist.");
@@ -361,7 +363,7 @@ class Commands {
             player.say_bad("You can only change the team of people with lower"
                     + " levels than yours.");
         } else {
-            cString team_name = args.getToken(2);
+            cString team_name = args.getToken(1);
             int team;
             if (team_name == "alpha") {
                 team = TEAM_ALPHA;
@@ -402,7 +404,7 @@ class Commands {
 
     void cmd_kick(Command @command, Player @player, cString &args, int argc,
             Players @players) {
-        int id = args.getToken(1).toInt();
+        int id = args.getToken(0).toInt();
         Player @other = players.get(id);
         if (@other == null) {
             player.say_bad("Target player does not exist.");
@@ -418,8 +420,8 @@ class Commands {
 
     void cmd_setlevel(Command @command, Player @player, cString &args,
             int argc, Players @players) {
-        int id = args.getToken(1).toInt();
-        int level = args.getToken(2).toInt();
+        int id = args.getToken(0).toInt();
+        int level = args.getToken(1).toInt();
         Player @other = players.get(id);
         if (@other == null) {
             player.say_bad("Target player does not exist.");
@@ -460,34 +462,34 @@ class Commands {
 
     void cmd_map(Command @command, Player @player, cString &args, int argc,
             Players @players) {
-        cString @map = args.getToken(1);
+        cString @map = args.getToken(0);
         command.say(player.client.getName() + " is changing to map " + map);
         exec("map", map);
     }
 
     void cmd_devmap(Command @command, Player @player, cString &args,
             int argc, Players @players) {
-        cString @map = args.getToken(1);
+        cString @map = args.getToken(0);
         command.say(player.client.getName() + " is changing to devmap " + map);
         exec("devmap ", map);
     }
 
     void cmd_cvar(Command @command, Player @player, cString &args, int argc,
             Players @players) {
-        cString name = args.getToken(1);
+        cString name = args.getToken(0);
         cString clean_name = clean(name);
         cVar @cvar = cVar(name, "", 0); // NOTE: resets the default value :-(
         if ((clean_name == "g_operator_password"
                     || clean_name == "rcon_password")
                 && player.account.level < LEVEL_ROOT) {
             player.say_bad("Forget it.");
-        } else if (argc == 2) {
+        } else if (argc == 1) {
             player.say(name + " is \"" + cvar.getString() + "\"");
         } else if (clean(name).substr(0, 3) == "sv_"
                 && player.account.level < LEVEL_ADMIN) {
             player.say_bad("Forget it.");
         } else {
-            cString value = args.getToken(2);
+            cString value = args.getToken(1);
             cvar.set(value);
             if (cvar.getString() != value)
                 player.say_bad(
