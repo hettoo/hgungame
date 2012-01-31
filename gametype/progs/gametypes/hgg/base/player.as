@@ -27,6 +27,7 @@ class Player {
     bool inited;
     cClient @client;
     bool alive;
+    bool greeted;
     int[] ammo;
     int row;
     int minutes_played;
@@ -39,6 +40,7 @@ class Player {
     Player () {
         inited = false;
         alive = false;
+        greeted = false;
         ammo.resize(WEAP_TOTAL);
     }
 
@@ -112,8 +114,10 @@ class Player {
     }
 
     void greet(Levels @levels) {
-        if (state == AS_IDENTIFIED)
+        if (!greeted && state == AS_IDENTIFIED) {
             notify(levels.greeting(account.level, client.getName()));
+            greeted = true;
+        }
     }
 
     void instruct(bool greeted) {
