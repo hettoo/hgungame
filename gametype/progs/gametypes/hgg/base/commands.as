@@ -34,7 +34,7 @@ class Commands {
     void init() {
         G_RegisterCommand(COMMAND_BASE);
 
-        add("gametype", "Gametype info.", LEVEL_GUEST, false);
+        add("gametype", "See some global gametype info.", LEVEL_GUEST, false);
         add("listplayers", "List all players with their ids.", LEVEL_GUEST,
                 false);
         add("pm <id> <message>...", "Send a message to a player.", LEVEL_GUEST,
@@ -45,13 +45,13 @@ class Commands {
         add("identify <password>", "Identify yourself after an ip change.",
                 LEVEL_GUEST);
 
-        add("showoff", "Announces your level.", LEVEL_REGULAR_USER);
+        add("whoami", "Announces your level.", LEVEL_REGULAR_USER);
+        add("putteam <id> <alpha|beta|spec|players>", "Put a player in a team.",
+                LEVEL_REGULAR_USER);
 
         add("kick <id>", "Kick a player.", LEVEL_MEMBER);
-        add("restart", "Restart this map.", LEVEL_MEMBER);
+        add("restart", "Restart this match.", LEVEL_MEMBER);
         add("nextmap", "Proceed to the next map.", LEVEL_MEMBER);
-        add("putteam <id> <alpha|beta|spec|players>", "Put a player in a team.",
-                LEVEL_MEMBER);
         add("shuffle", "Randomly shuffle the teams.", LEVEL_MEMBER);
 
         add("map <mapname>", "Change the current map.", LEVEL_VIP);
@@ -60,8 +60,9 @@ class Commands {
 
         add("devmap <mapname>", "Change the current map and enable cheats.",
                 LEVEL_ADMIN);
-        add("cvar <name> [value]", "Get / set a cVar.", LEVEL_ADMIN);
+        add("cvar <name> [value]", "Get or set a cVar.", LEVEL_ADMIN);
 
+        add("do <command>...", "Execute a server command.", LEVEL_ROOT);
         add("shutdown", "Shutdown the server.", LEVEL_ROOT);
     }
 
@@ -146,8 +147,8 @@ class Commands {
             cmd_register(command, player, args, argc, players);
         else if (command.name == "identify")
             cmd_identify(command, player, args, argc, players);
-        else if (command.name == "showoff")
-            cmd_showoff(command, player, args, argc, players);
+        else if (command.name == "whoami")
+            cmd_whoami(command, player, args, argc, players);
         else if (command.name == "restart")
             cmd_restart(command, player, args, argc, players);
         else if (command.name == "nextmap")
@@ -170,6 +171,8 @@ class Commands {
             cmd_cvar(command, player, args, argc, players);
         else if (command.name == "shutdown")
             cmd_shutdown(command, player, args, argc, players);
+        else if (command.name == "do")
+            cmd_do(command, player, args, argc, players);
         else
             cmd_unimplemented(command, player, args, argc, players);
 
@@ -230,7 +233,7 @@ class Commands {
         }
     }
 
-    void cmd_showoff(Command @command, Player @player, cString &args,
+    void cmd_whoami(Command @command, Player @player, cString &args,
             int argc, Players @players) {
         command.say(player.client.getName() + " is a level "
                 + player.account.level + " user ("
@@ -322,22 +325,21 @@ class Commands {
 
     void cmd_help(Command @command, Player @player, cString &args, int argc,
             Players @players) {
-        cString response = "Available commands, sorted by level:\n";
+        player.say("Available commands, sorted by level:");
         for (int level = 0; level <= player.account.level; level++) {
             bool first = true;
             for (int i = 0; i < size; i++) {
                 if (commands[i].min_level == level) {
                     if (first) {
-                        response += "\n" + highlight(players.levels.name(level)
-                                + ":\n");
+                        player.say("\n" + highlight(players.levels.name(level)
+                                + ":"));
                         first = false;
                     }
-                    response += full_usage(commands[i]) + "\n" + INDENT
-                        + S_COLOR_DESCRIPTION + commands[i].description + "\n";
+                    player.say(full_usage(commands[i]) + "\n" + INDENT
+                        + S_COLOR_DESCRIPTION + commands[i].description);
                 }
             }
         }
-        player.print(response);
     }
 
     void cmd_restart(Command @command, Player @player, cString &args,
@@ -506,6 +508,13 @@ class Commands {
             int argc, Players @players) {
         command.say(player.client.getName() + " is shutting down the server");
         exec("quit");
+    }
+
+    void cmd_do(Command @command, Player @player, cString &args,
+            int argc, Players @players) {
+        cString @cmd = args.getToken(0);
+        //command.say(player.client.getName() + " is doing " + cmd);
+        exec(cmd);
     }
 
     void cmd_unimplemented(Command @command, Player @player, cString &args,
