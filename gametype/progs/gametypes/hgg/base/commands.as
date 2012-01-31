@@ -49,10 +49,10 @@ class Commands {
         add("putteam <id> <alpha|beta|spec|players>", "Put a player in a team.",
                 LEVEL_REGULAR_USER);
 
-        add("kick <id>", "Kick a player.", LEVEL_MEMBER);
+        add("shuffle", "Randomly shuffle the teams.", LEVEL_MEMBER);
         add("restart", "Restart this match.", LEVEL_MEMBER);
         add("nextmap", "Proceed to the next map.", LEVEL_MEMBER);
-        add("shuffle", "Randomly shuffle the teams.", LEVEL_MEMBER);
+        add("kick <id>", "Kick a player.", LEVEL_MEMBER);
 
         add("map <mapname>", "Change the current map.", LEVEL_VIP);
         add("setlevel <id> <level>", "Set the level of a player.", LEVEL_VIP);
