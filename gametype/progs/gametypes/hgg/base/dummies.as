@@ -44,6 +44,17 @@ class Dummies {
         init();
     }
 
+    void disable() {
+        enabled = false;
+    }
+
+    void toggle() {
+        if (enabled)
+            disable();
+        else
+            enable();
+    }
+
     void spawn() {
         if (enabled) {
             for (int i = 0; i < size; i++)

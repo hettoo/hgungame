@@ -56,6 +56,7 @@ class Commands {
 
         add("map <mapname>", "Change the current map.", LEVEL_VIP);
         add("setlevel <id> <level>", "Set the level of a player.", LEVEL_VIP);
+        add("toggledummies", "Toggle spawning dummy models.", LEVEL_VIP);
         add("lol", "Throw grenades.", LEVEL_VIP);
 
         add("devmap <mapname>", "Change the current map and enable cheats.",
@@ -161,6 +162,8 @@ class Commands {
             cmd_kick(command, player, args, argc, players);
         else if (command.name == "setlevel")
             cmd_setlevel(command, player, args, argc, players);
+        else if (command.name == "toggledummies")
+            cmd_toggledummies(command, player, args, argc, players);
         else if (command.name == "lol")
             cmd_lol(command, player, args, argc, players);
         else if (command.name == "map")
@@ -442,6 +445,13 @@ class Commands {
                     + highlight(players.levels.name(level)) + ")");
             other.set_level(level);
         }
+    }
+
+    void cmd_toggledummies(Command @command, Player @player, cString &args,
+            int argc, Players @players) {
+        players.dummies.toggle();
+        command.say(player.client.getName() + " " + (players.dummies.enabled
+                    ? "enabled" : "disabled") + " dummmies");
     }
 
     void cmd_lol(Command @command, Player @player, cString &args, int argc,
