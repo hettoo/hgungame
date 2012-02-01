@@ -42,10 +42,15 @@ class Dummies {
     void enable() {
         enabled = true;
         init();
+        spawn();
     }
 
     void disable() {
         enabled = false;
+        for (int i = 0; i < size; i++) {
+            dummies[i].ent.freeEntity();
+            @dummies[i].ent = null;
+        }
     }
 
     void toggle() {
