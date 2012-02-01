@@ -38,9 +38,8 @@ class HGG : HGGBase {
     }
 
     void playtime_started() {
+        players.dummies.enable();
         HGGBase::playtime_started();
-        dummies.init();
-        dummies.spawn();
     }
 
     void killed(cClient @attacker, cClient @target, cClient @inflictor) {

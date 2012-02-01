@@ -29,7 +29,6 @@ class HGGBase {
     Players players;
     Scoreboard scoreboard;
     Commands commands;
-    Dummies dummies;
 
     cEntity @spawn_alpha;
     cEntity @spawn_beta;
@@ -123,6 +122,7 @@ class HGGBase {
         scoreboard.set_layout(SB_WARMUP);
         CreateSpawnIndicators("info_player_deathmatch", gametype.isTeamBased
                 ? TEAM_BETA : TEAM_PLAYERS);
+        players.dummies.spawn();
         GENERIC_SetUpWarmup();
     }
     
@@ -138,6 +138,7 @@ class HGGBase {
      * Calls the generic match setup function so that it can be overloaded.
      */
     void generic_playtime_started () {
+        players.dummies.spawn();
         GENERIC_SetUpMatch();
     }
 
@@ -322,7 +323,7 @@ class HGGBase {
      */
     void new_minute() {
         players.increase_minutes();
-        dummies.spawn();
+        players.dummies.spawn();
     }
 
     /*

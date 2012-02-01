@@ -22,9 +22,11 @@ const int MAX_DUMMIES = 128;
 class Dummies {
     Dummy[] dummies;
     int size;
+    bool enabled;
 
     Dummies() {
         dummies.resize(MAX_DUMMIES);
+        enabled = false;
     }
 
     void init() {
@@ -37,8 +39,15 @@ class Dummies {
         } while (@spawn != null);
     }
 
+    void enable() {
+        enabled = true;
+        init();
+    }
+
     void spawn() {
-        for (int i = 0; i < size; i++)
-            dummies[i].spawn();
+        if (enabled) {
+            for (int i = 0; i < size; i++)
+                dummies[i].spawn();
+        }
     }
 }

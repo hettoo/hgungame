@@ -25,6 +25,7 @@ class Players {
     DataBase db;
     Levels levels;
     Weapons weapons;
+    Dummies dummies;
     bool team_hud;
 
     bool first_blood;

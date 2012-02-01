@@ -25,14 +25,8 @@ class HGG : HGGBase {
     }
 
     void warmup_started() {
+        players.dummies.enable();
         HGGBase::warmup_started();
-        dummies.init();
-        dummies.spawn();
-    }
-
-    void playtime_started() {
-        HGGBase::playtime_started();
-        dummies.spawn();
     }
 }
 
