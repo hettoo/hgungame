@@ -262,7 +262,11 @@ class Players {
         }
     }
 
-    void increase_minutes() {
+    void new_second() {
+        dummies.new_second();
+    }
+
+    void new_minute() {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
             if (@player != null && @player.client != null

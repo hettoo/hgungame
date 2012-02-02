@@ -318,14 +318,14 @@ class HGGBase {
      * A new minute has started.
      */
     void new_minute() {
-        players.increase_minutes();
-        players.dummies.spawn();
+        players.new_minute();
     }
 
     /*
      * A new second has started.
      */
     void new_second() {
+        players.new_second();
         uint minute_second = last_minute_second + 60;
         if (last_second == minute_second) {
             new_minute();

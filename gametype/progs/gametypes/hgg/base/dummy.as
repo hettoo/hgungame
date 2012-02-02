@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 const cString DUMMY_MODEL = "bigvic";
+const int DUMMY_RESPAWN = 40;
 
 class Dummy {
     cEntity @ent;
@@ -25,10 +26,12 @@ class Dummy {
     cVec3 pos;
     cVec3 mins;
     cVec3 maxs;
+    int respawn;
 
     Dummy() {
         mins.set(-20, -20, -20);
         maxs.set(20, 20, 48);
+        respawn = UNKNOWN;
     }
 
     void init(cEntity @spawn, int new_id) {
@@ -62,6 +65,17 @@ class Dummy {
         if (@ent != null) {
             ent.freeEntity();
             @ent = null;
+            respawn = DUMMY_RESPAWN;
+        }
+    }
+
+    void new_second() {
+        if (respawn != UNKNOWN) {
+            respawn--;
+            if (respawn == 0) {
+                spawn();
+                respawn = UNKNOWN;
+            }
         }
     }
 }

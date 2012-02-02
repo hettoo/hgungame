@@ -53,8 +53,10 @@ class Dummies {
 
     void disable() {
         enabled = false;
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < size; i++) {
             dummies[i].die();
+            dummies[i].respawn = UNKNOWN;
+        }
     }
 
     void toggle() {
@@ -62,6 +64,11 @@ class Dummies {
             disable();
         else
             enable();
+    }
+
+    void new_second() {
+        for (int i = 0; i < size; i++)
+            dummies[i].new_second();
     }
 
     void spawn() {
