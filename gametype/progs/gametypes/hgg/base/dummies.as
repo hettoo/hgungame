@@ -34,9 +34,15 @@ class Dummies {
         size = 0;
         do {
             @spawn = @G_FindEntityWithClassname(@spawn, "info_player_deathmatch");
-            if (@spawn != null)
-                dummies[size++].init(spawn);
+            if (@spawn != null) {
+                dummies[size].init(spawn, size);
+                size++;
+            }
         } while (@spawn != null);
+    }
+
+    Dummy @get(int id) {
+        return dummies[id];
     }
 
     void enable() {
@@ -47,10 +53,8 @@ class Dummies {
 
     void disable() {
         enabled = false;
-        for (int i = 0; i < size; i++) {
-            dummies[i].ent.freeEntity();
-            @dummies[i].ent = null;
-        }
+        for (int i = 0; i < size; i++)
+            dummies[i].die();
     }
 
     void toggle() {

@@ -33,8 +33,6 @@ class HGGBase {
     cEntity @spawn_alpha;
     cEntity @spawn_beta;
 
-    int sound_dummy_killed;
-
     uint last_second;
     uint last_minute_second;
 
@@ -44,8 +42,6 @@ class HGGBase {
     HGGBase() {
         @spawn_alpha = null;
         @spawn_beta = null;
-
-        sound_dummy_killed = G_SoundIndex("sounds/misc/kill");
 
         last_second = 0;
         last_minute_second = 0;
@@ -366,10 +362,7 @@ class HGGBase {
      * A dummy has been killed.
      */
     void dummy_killed(cEntity @self, cEntity @attacker, cEntity @inflictor) {
-        pain_sound(attacker.client, sound_dummy_killed);
-        players.killed_anyway(null, attacker.client, inflictor.client);
-        self.freeEntity();
-        @self = null;
+        players.dummy_killed(self.count, attacker.client, inflictor.client);
     }
 }
 

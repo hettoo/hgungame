@@ -21,6 +21,7 @@ const cString DUMMY_MODEL = "bigvic";
 
 class Dummy {
     cEntity @ent;
+    int id;
     cVec3 pos;
     cVec3 mins;
     cVec3 maxs;
@@ -30,8 +31,9 @@ class Dummy {
         maxs.set(20, 20, 48);
     }
 
-    void init(cEntity @spawn) {
+    void init(cEntity @spawn, int new_id) {
         pos = spawn.getOrigin();
+        id = new_id;
     }
 
     void spawn() {
@@ -52,6 +54,14 @@ class Dummy {
         ent.mass = 400;
         ent.takeDamage = 1;
         ent.nextThink = levelTime + 1;
+        ent.count = id;
         ent.linkEntity();
+    }
+
+    void die() {
+        if (@ent != null) {
+            ent.freeEntity();
+            @ent = null;
+        }
     }
 }

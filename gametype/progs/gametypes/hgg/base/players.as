@@ -33,6 +33,8 @@ class Players {
     int best_score;
     int second_score;
 
+    int sound_dummy_killed;
+
     Players() {
         players.resize(maxClients);
         size = 0;
@@ -42,6 +44,8 @@ class Players {
 
         best_score = -1;
         second_score = -1;
+
+        sound_dummy_killed = G_SoundIndex("sounds/misc/kill");
     }
 
     void init() {
@@ -524,5 +528,12 @@ class Players {
                 count_beta++;
             }
         }
+    }
+
+    void dummy_killed(int id, cClient @attacker, cClient @inflictor) {
+        pain_sound(attacker, sound_dummy_killed);
+        killed_anyway(null, attacker, inflictor);
+        Dummy @dummy = dummies.get(id);
+        dummy.die();
     }
 }
