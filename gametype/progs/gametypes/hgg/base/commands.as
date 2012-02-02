@@ -40,6 +40,8 @@ class Commands {
         add("pm <id> <message>...", "Send a message to a player.", LEVEL_GUEST,
                 false);
         add("stats [id]", "Show the statistics of a player.", LEVEL_GUEST);
+        add("ranking", "List all top ranked accounts with their row.",
+                LEVEL_GUEST);
         add("register <password> <password>", "Register yourself.",
                 LEVEL_GUEST);
         add("identify <password>", "Identify yourself after an ip change.",
@@ -144,6 +146,8 @@ class Commands {
             cmd_pm(command, player, args, argc, players);
         else if (command.name == "stats")
             cmd_stats(command, player, args, argc, players);
+        else if (command.name == "ranking")
+            cmd_ranking(command, player, args, argc, players);
         else if (command.name == "register")
             cmd_register(command, player, args, argc, players);
         else if (command.name == "identify")
@@ -219,6 +223,7 @@ class Commands {
             players.db.add(player.account);
             player.administrate("You are now registered!");
             command.say(player.client.getName() + " registered himself");
+            players.try_update_rank(player);
         }
     }
 
@@ -245,34 +250,29 @@ class Commands {
 
     void cmd_listplayers(Command @command, Player @player, cString &args,
             int argc, Players @players) {
-        cString list = "";
-        list += fixed_field("id", 3);
-        list += fixed_field("name", 20);
-        list += fixed_field("clan", 7);
-        list += fixed_field("team", 12);
-        list += fixed_field("level", 6);
+        Table table;
+        table.add_column("id", 3);
+        table.add_column("name", 20);
+        table.add_column("clan", 7);
+        table.add_column("team", 12);
+        table.add_column("level", 6);
         if (player.state == AS_IDENTIFIED
                 && player.account.level == LEVEL_ROOT)
-            list += fixed_field("ip", 16);
-        list += "\n";
-        bool first = true;
+            table.add_column("ip", 16);
         for (int i = 0; i < players.size; i++) {
             Player @other = players.get(i);
             if (@other != null && @other.client != null) {
-                if (!first)
-                    list += "\n";
-                list += fixed_field(i, 3);
-                list += fixed_field(other.client.getName(), 20);
-                list += fixed_field(other.client.getClanName(), 7);
-                list += fixed_field(G_GetTeam(other.client.team).getName(), 12);
-                list += fixed_field(other.account.level, 6);
+                table.add(i);
+                table.add(other.client.getName());
+                table.add(other.client.getClanName());
+                table.add(G_GetTeam(other.client.team).getName());
+                table.add(other.account.level);
                 if (player.state == AS_IDENTIFIED
                         && player.account.level == LEVEL_ROOT)
-                    list += fixed_field(get_ip(other.client), 16);
-                first = false;
+                    table.add(get_ip(other.client));
             }
         }
-        player.print(list);
+        player.print(table.string());
     }
 
     void pm_message(Player @from, Player @to, cString &message,
@@ -303,12 +303,12 @@ class Commands {
 
     void cmd_stats(Command @command, Player @player, cString &args, int argc,
             Players @players) {
-        int n;
+        int id;
         if (argc >= 1)
-            n = args.getToken(0).toInt();
+            id = args.getToken(0).toInt();
         else
-            n = player.client.playerNum();
-        Player @other = players.get(n);
+            id = player.client.playerNum();
+        Player @other = players.get(id);
         if (@other == null || @other.client == null) {
             player.say_bad("Target player does not exist.");
         } else {
@@ -317,13 +317,33 @@ class Commands {
                         : " of " + other.client.getClanName()) + "\n"
                 + "Level: " + other.account.level + " ("
                 + highlight(players.levels.name(other.account.level)) + ")\n"
-                + "Top row: " + S_COLOR_ROW + other.account.row + "\n"
-                + S_COLOR_RESET + "Kills / deaths: " + other.account.kills
+                + "Top row: " + S_COLOR_ROW + other.account.row
+                + S_COLOR_RESET + "\n"
+                + (other.account.rank == NO_RANK ? ""
+                    : "Rank: " + highlight(other.account.rank) + "\n")
+                + "Kills / deaths: " + other.account.kills
                 + " / " + other.account.deaths + " (" + highlight("" +
                         float(other.account.kills) / (other.account.deaths == 0
                             ? 1 : other.account.deaths)) + ")\n"
                 + "Minutes played: " + other.account.minutes_played + "\n"));
         }
+    }
+
+    void cmd_ranking(Command @command, Player @player, cString &args, int argc,
+            Players @players) {
+        Table table;
+        table.add_column("rank", 5);
+        table.add_column("account", 20);
+        table.add_column("row", 4);
+        for (int i = players.db.ranking.size - 1; i >= 0; i--) {
+            Account @account = players.db.ranking.get(i);
+            if (@account != null) {
+                table.add(account.rank);
+                table.add(highlight(account.id));
+                table.add(S_COLOR_ROW + account.row + S_COLOR_RESET);
+            }
+        }
+        player.print(table.string());
     }
 
     void cmd_help(Command @command, Player @player, cString &args, int argc,

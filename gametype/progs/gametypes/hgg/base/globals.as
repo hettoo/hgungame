@@ -21,6 +21,8 @@ const cString NAME = "hGunGame";
 const cString VERSION = "0.1-dev";
 const cString AUTHOR = "^0<].^7h^2e^9tt^2o^7o^0.[>^7";
 
+const int DATA_VERSION = 0;
+
 const int NW_HEALTH = 20;
 const int NW_HEALTH_BONUS = 10;
 const int NW_ARMOR = 50;
@@ -39,6 +41,7 @@ const cString S_COLOR_HIGHLIGHT_ROW = S_COLOR_RED;
 const cString S_COLOR_DESCRIPTION = S_COLOR_GREY;
 const cString S_COLOR_PM = S_COLOR_GREEN;
 const cString S_COLOR_SPECIAL = S_COLOR_ORANGE;
+const cString S_COLOR_RECORD = S_COLOR_GREEN;
 
 const cString COMMAND_BASE = "gt";
 
@@ -50,6 +53,7 @@ const cString DATA_DIR = "gtdata/";
 
 const int UNKNOWN = -1;
 const int INFINITY = -1;
+const int END = -1;
 
 cString @data_file(cString &filename) {
     return DATA_DIR + gametype.getName() + "/"
@@ -231,6 +235,10 @@ cString @fixed_field(int n, int size) {
 
 cString @highlight(cString &s) {
     return S_COLOR_HIGHLIGHT + s + S_COLOR_RESET;
+}
+
+cString @highlight(int i) {
+    return highlight(i + "");
 }
 
 cString @highlight_row(int row) {

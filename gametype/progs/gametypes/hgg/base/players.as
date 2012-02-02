@@ -103,14 +103,39 @@ class Players {
         notify(msg);
     }
 
+    void try_update_rank(Player @player) {
+        int old_rank = player.account.rank;
+        if (db.ranking.update(player.account)) {
+            if (player.account.rank != old_rank) {
+                player.client.addAward(S_COLOR_RECORD
+                        + "You claimed server rank "
+                        + highlight(player.account.rank)
+                        + S_COLOR_RECORD + "!");
+                notify(player.client.getName() + S_COLOR_RECORD
+                        + " claimed server rank "
+                        + highlight(player.account.rank)
+                        + S_COLOR_RECORD + "!");
+            } else {
+                notify(player.client.getName() + S_COLOR_RECORD
+                        + " still holds server rank "
+                        + highlight(player.account.rank)
+                        + S_COLOR_RECORD + "!");
+            }
+        }
+    }
+
     void check_row(cClient @target, cClient @attacker) {
         if (@target == null)
             return;
 
         Player @player = get(target.playerNum());
-        player.update_row();
+        bool new_record = player.state == AS_IDENTIFIED && player.update_row();
         if (player.row >= SPECIAL_ROW)
             announce_row(target, attacker);
+        if (new_record) {
+            target.addAward(S_COLOR_RECORD + "Personal record!");
+            try_update_rank(player);
+        }
         player.row = 0;
     }
 
@@ -357,6 +382,7 @@ class Players {
                             + levels.name(LEVEL_ROOT));
                     player.say(S_COLOR_ADMINISTRATIVE + "Your password has been"
                             + " set to your rcon_password.");
+                    try_update_rank(player);
                 }
             }
             player.sync_score();

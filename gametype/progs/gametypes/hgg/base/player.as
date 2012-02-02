@@ -171,9 +171,10 @@ class Player {
         account.add_minute();
     }
 
-    void update_row() {
+    bool update_row() {
         if (for_real())
-            account.update_row(row);
+            return account.update_row(row);
+        return false;
     }
 
     int get_ammo(int weapon) {

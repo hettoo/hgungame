@@ -17,49 +17,53 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-const int DB_VERSION = 0;
 const cString DB_FILE = "users_";
 
 const int MAX_DB_ITEMS = 2048;
+const int TOP_PLAYERS = 100;
 
 class DataBase {
     Account@[] accounts;
     int size;
     bool has_root;
     cString file_name;
+    Ranking @ranking;
 
     DataBase() {
         accounts.resize(MAX_DB_ITEMS);
         size = 0;
         has_root = false;
+        @ranking = Ranking(TOP_PLAYERS);
     }
 
     void init() {
-        file_name = data_file(DB_FILE + DB_VERSION);
+        file_name = data_file(DB_FILE + DATA_VERSION);
     }
 
     void read() {
-        size = -1;
+        size = 0;
         has_root = false;
         cString file = G_LoadFile(file_name);
 
-        int index;
-        int new_index = 0;
-        do {
-            index = new_index;
-            @accounts[++size] = Account();
-            new_index = accounts[size].read(file, index);
-            if (accounts[size].level == LEVEL_ROOT)
-                has_root = true;
-        } while (new_index > index);
+        int index = 0;
+        Account @account;
+        do { 
+            @account = Account();
+            index = account.read(file, index);
+            if (index != END)
+                add(account);
+        } while (index != END);
     }
 
-    void add(Account @dbitem) {
-        if (dbitem.ip == "")
-            dbitem.ip = "127.0.0.1";
-        @accounts[size++] = @dbitem;
-        if (dbitem.level == LEVEL_ROOT)
+    int add(Account @account) {
+        if (account.ip == "")
+            account.ip = "127.0.0.1";
+        int index = size++;
+        @accounts[index] = @account;
+        if (account.level == LEVEL_ROOT)
             has_root = true;
+        ranking.update(account);
+        return index;
     }
 
     Account @find(cString &id) {
@@ -72,7 +76,7 @@ class DataBase {
 
     void write() {
         cString file = "// " + gametype.getName() + " user database version "
-            + DB_VERSION + "\n";
+            + DATA_VERSION + "\n";
         for (int i = 0; i < size; i++)
             accounts[i].write(file);
         G_WriteFile(file_name, file);

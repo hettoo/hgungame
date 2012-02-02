@@ -24,6 +24,7 @@ class Account {
 
     int level;
     int row;
+    int rank;
     int kills;
     int deaths;
     int minutes_played;
@@ -35,6 +36,7 @@ class Account {
 
         level = 0;
         row = 0;
+        rank = NO_RANK;
         kills = 0;
         deaths = 0;
         minutes_played = 0;
@@ -51,7 +53,7 @@ class Account {
 
     int read(cString &file, int index) {
         if (file.getToken(index) == "")
-            return index;
+            return END;
 
         id = file.getToken(index++);
         ip = file.getToken(index++);
@@ -59,6 +61,7 @@ class Account {
 
         level = file.getToken(index++).toInt();
         row = file.getToken(index++).toInt();
+        rank = file.getToken(index++).toInt();
         kills = file.getToken(index++).toInt();
         deaths = file.getToken(index++).toInt();
         minutes_played = file.getToken(index++).toInt();
@@ -73,6 +76,7 @@ class Account {
 
         file += "\"" + level + "\" ";
         file += "\"" + row + "\" ";
+        file += "\"" + rank + "\" ";
         file += "\"" + kills + "\" ";
         file += "\"" + deaths + "\" ";
         file += "\"" + minutes_played + "\"\n";
@@ -93,8 +97,11 @@ class Account {
             minutes_played++;
     }
 
-    void update_row(int new_row) {
-        if (new_row > row)
+    bool update_row(int new_row) {
+        if (new_row > row) {
             row = new_row;
+            return true;
+        }
+        return false;
     }
 }

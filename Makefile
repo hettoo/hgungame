@@ -23,7 +23,7 @@ EVERY_PK3 = hgg-*.pk3
 EVERY_CFG = hgg_*.cfg
 
 VERSION = $(shell grep VERSION $(GT_DIR)/$(GLOBALS_FILE) \
-		  | sed 's/.*"\(.*\)".*/\1/')
+		  | head -n1 | sed 's/.*"\(.*\)".*/\1/')
 VERSION_WORD = $(subst .,_,$(VERSION))
 GT_PK3 = hgg-$(VERSION_WORD).pk3
 
