@@ -172,9 +172,11 @@ class HGGBase {
         else if (match.getState() == MATCH_STATE_POSTMATCH)
             match.stopAutorecord();
 
-        if (new_match_state == MATCH_STATE_PLAYTIME) {
+        if (new_match_state == MATCH_STATE_PLAYTIME
+                || new_match_state == MATCH_STATE_POSTMATCH) {
             players.check_rows();
-            players.reset();
+            if (new_match_state == MATCH_STATE_PLAYTIME)
+                players.reset();
         }
 
         return true;
