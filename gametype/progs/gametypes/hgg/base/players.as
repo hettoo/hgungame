@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 const int SPECIAL_ROW = 5;
+const int MAX_PLAYERS = 256;
 
 class Players {
     Player@[] players;
@@ -40,7 +41,7 @@ class Players {
     int sound_dummy_killed;
 
     Players() {
-        players.resize(maxClients);
+        players.resize(MAX_PLAYERS);
         size = 0;
         team_hud = false;
 
@@ -50,7 +51,7 @@ class Players {
         second_score = UNKNOWN;
 
         match_top_row = UNKNOWN;
-        match_top_row_players.resize(maxClients);
+        match_top_row_players.resize(MAX_PLAYERS);
 
         sound_dummy_killed = G_SoundIndex("sounds/misc/kill");
     }
