@@ -419,7 +419,7 @@ class Players {
                 } else {
                     player.account.level = LEVEL_ROOT;
                     player.set_registered(password);
-                    db.add(player.account);
+                    db.add(player.account, false);
                     player.administrate("You have been auto-registered as "
                             + levels.name(LEVEL_ROOT));
                     player.say(S_COLOR_ADMINISTRATIVE + "Your password has been"

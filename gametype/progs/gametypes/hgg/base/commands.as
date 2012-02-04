@@ -220,7 +220,7 @@ class Commands {
             player.say_bad("Passwords didn't match.");
         } else {
             player.set_registered(password);
-            players.db.add(player.account);
+            players.db.add(player.account, false);
             player.administrate("You are now registered!");
             command.say(player.client.getName() + " registered himself");
             players.try_update_rank(player);

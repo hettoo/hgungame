@@ -55,15 +55,20 @@ class DataBase {
         } while (index != END);
     }
 
-    int add(Account @account) {
+    int add(Account @account, bool update_ranking) {
         if (account.ip == "")
             account.ip = "127.0.0.1";
         int index = size++;
         @accounts[index] = @account;
         if (account.level == LEVEL_ROOT)
             has_root = true;
-        ranking.update(account);
+        if (update_ranking)
+            ranking.update(account);
         return index;
+    }
+
+    int add(Account @account) {
+        return add(account, true);
     }
 
     Account @find(cString &id) {
