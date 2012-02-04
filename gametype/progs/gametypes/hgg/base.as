@@ -157,6 +157,7 @@ class HGGBase {
     void postmatch_started() {
         scoreboard.set_layout(SB_POST);
         GENERIC_SetUpEndMatch();
+        players.show_match_top_row();
     }
 
     /*

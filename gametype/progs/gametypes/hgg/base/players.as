@@ -33,6 +33,10 @@ class Players {
     int best_score;
     int second_score;
 
+    int match_top_row;
+    cString[] match_top_row_players;
+    int match_top_row_player_count;
+
     int sound_dummy_killed;
 
     Players() {
@@ -42,8 +46,11 @@ class Players {
 
         first_blood = true;
 
-        best_score = -1;
-        second_score = -1;
+        best_score = UNKNOWN;
+        second_score = UNKNOWN;
+
+        match_top_row = UNKNOWN;
+        match_top_row_players.resize(maxClients);
 
         sound_dummy_killed = G_SoundIndex("sounds/misc/kill");
     }
@@ -129,14 +136,48 @@ class Players {
             return;
 
         Player @player = get(target.playerNum());
-        bool new_record = player.state == AS_IDENTIFIED && player.update_row();
+        bool new_record = player.update_row() && player.state == AS_IDENTIFIED;
         if (player.row >= SPECIAL_ROW)
             announce_row(target, attacker);
         if (new_record) {
             target.addAward(S_COLOR_RECORD + "Personal record!");
             try_update_rank(player);
         }
+        if (for_real()
+                && (player.row >= match_top_row || match_top_row == UNKNOWN)) {
+            if (player.row == match_top_row) {
+                bool has_match_top_row = false;
+                for (int i = 0; i < match_top_row_player_count; i++) {
+                    if (match_top_row_players[i] == player.client.getName())
+                        has_match_top_row = true;
+                }
+                if (!has_match_top_row)
+                    match_top_row_players[match_top_row_player_count++]
+                        = player.client.getName();
+            } else {
+                match_top_row = player.row;
+                match_top_row_player_count = 1;
+                match_top_row_players[0] = player.client.getName();
+            }
+        }
         player.row = 0;
+    }
+
+    void show_match_top_row() {
+        if (match_top_row == UNKNOWN)
+            return;
+        cString msg = highlight("Match top row: " + highlight_row(match_top_row)
+                + " frags by ");
+        for (int i = 0; i < match_top_row_player_count; i++) {
+            msg += match_top_row_players[i];
+            if (i < match_top_row_player_count - 1) {
+                if (i == match_top_row_player_count - 2)
+                    msg += highlight(" and ");
+                else
+                    msg += highlight(", ");
+            }
+        }
+        notify(msg);
     }
 
     void check_rows() {
