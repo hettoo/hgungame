@@ -55,17 +55,17 @@ const int UNKNOWN = -1;
 const int INFINITY = -1;
 const int END = -1;
 
-cString @data_file(cString &filename) {
+cString @dataFile(cString &filename) {
     return DATA_DIR + gametype.getName() + "/"
         + (gametype.isInstagib() ? "insta" : "nw") + "/" + filename;
 }
 
-void string_add_maxed(cString &string, cString &addition, int max) {
+void stringAddMaxed(cString &string, cString &addition, int max) {
     if (string.len() + addition.len() <= max)
         string += addition;
 }
 
-bool is_vowel(cString character) {
+bool isVowel(cString character) {
     character = character.substr(0, 1).tolower();
     return character == "a" || character == "e" || character == "o"
         || character == "i" || character == "u";
@@ -75,7 +75,7 @@ cString @clean(cString &str) {
     return str.removeColorTokens().tolower();
 }
 
-cString @remove_additive(cString &str) {
+cString @removeAdditive(cString &str) {
     if (str.substr(str.len() - 1, 1) == ")") {
         int i;
         cString sub;
@@ -89,71 +89,71 @@ cString @remove_additive(cString &str) {
 }
 
 cString @raw(cString &str) {
-    return remove_additive(clean(str));
+    return removeAdditive(clean(str));
 }
 
-cString get_ip(cClient @client) {
+cString getIP(cClient @client) {
     cString ip = client.getUserInfoKey("ip");
     ip = ip.substr(0, ip.locate(":", 0));
     return ip;
 }
 
-void give_weapon(cClient @client, int weapon, int ammo) {
+void giveWeapon(cClient @client, int weapon, int ammo) {
     client.inventoryGiveItem(weapon);
 
     cItem @item = G_GetItem(weapon);
-    cItem @ammo_item = G_GetItem(item.ammoTag);
-    cItem @weak_ammo_item = G_GetItem(item.weakAmmoTag);
+    cItem @ammoItem = G_GetItem(item.ammoTag);
+    cItem @weakAmmoItem = G_GetItem(item.weakAmmoTag);
 
     if (ammo == INFINITY) {
-        client.inventorySetCount(ammo_item.tag,
+        client.inventorySetCount(ammoItem.tag,
                 (weapon == WEAP_GUNBLADE ? 4 : INFINITE_AMMO));
-        client.inventorySetCount(weak_ammo_item.tag, 0);
+        client.inventorySetCount(weakAmmoItem.tag, 0);
     } else {
-        client.inventorySetCount(ammo_item.tag, ammo);
-        client.inventorySetCount(weak_ammo_item.tag,
+        client.inventorySetCount(ammoItem.tag, ammo);
+        client.inventorySetCount(weakAmmoItem.tag,
                 (weapon == WEAP_GUNBLADE ? INFINITE_AMMO : 0));
     }
 }
 
-void show_award(cClient @client, cString &msg) {
+void showAward(cClient @client, cString &msg) {
     client.addAward(S_COLOR_ITEM_AWARD + msg);
 }
 
-void show_item_award(cClient @client, int tag) {
+void showItemAward(cClient @client, int tag) {
     cItem @item = G_GetItem(tag);
     cString name = item.getName().tolower();
-    show_award(client, "You've got a" + (is_vowel(item.getShortName()) ? "n"
+    showAward(client, "You've got a" + (isVowel(item.getShortName()) ? "n"
                 : "") + " " + name + "!");
 }
 
-void award_weapon(cClient @client, int weapon, int ammo, bool show) {
-    give_weapon(client, weapon, ammo);
+void awardWeapon(cClient @client, int weapon, int ammo, bool show) {
+    giveWeapon(client, weapon, ammo);
     if (show)
-        show_item_award(client, weapon);
+        showItemAward(client, weapon);
 }
 
-void award_weapon(cClient @client, int weapon, int ammo) {
-    award_weapon(client, weapon, ammo, true);
+void awardWeapon(cClient @client, int weapon, int ammo) {
+    awardWeapon(client, weapon, ammo, true);
 }
 
 int ammo(cClient @client, int weapon) {
     if (weapon == WEAP_NONE)
         return INFINITY;
     cItem @item = G_GetItem(weapon);
-    cItem @ammo_item = G_GetItem(item.ammoTag);
-    return client.inventoryCount(ammo_item.tag);
+    cItem @ammoItem = G_GetItem(item.ammoTag);
+    return client.inventoryCount(ammoItem.tag);
 }
 
-bool decrease_ammo(cClient @client, int weapon) {
+bool decreaseAmmo(cClient @client, int weapon) {
     if(weapon == WEAP_NONE)
         return false;
 
     cItem @item = G_GetItem(weapon);
-    cItem @ammo_item = G_GetItem(item.ammoTag);
-    int ammo = client.inventoryCount(ammo_item.tag) - 1;
+    cItem @ammoItem = G_GetItem(item.ammoTag);
+    int ammo = client.inventoryCount(ammoItem.tag) - 1;
     if (ammo >= 0) {
-        client.inventorySetCount(ammo_item.tag, ammo);
+        client.inventorySetCount(ammoItem.tag, ammo);
         if (ammo > 0)
             return true;
     }
@@ -161,64 +161,64 @@ bool decrease_ammo(cClient @client, int weapon) {
     return false;
 }
 
-bool increase_ammo(cClient @client, int weapon) {
+bool increaseAmmo(cClient @client, int weapon) {
     if(weapon == WEAP_NONE)
         return false;
 
     cItem @item = G_GetItem(weapon);
-    cItem @ammo_item = G_GetItem(item.ammoTag);
-    int ammo = client.inventoryCount(ammo_item.tag) + 1;
-    client.inventorySetCount(ammo_item.tag, ammo);
+    cItem @ammoItem = G_GetItem(item.ammoTag);
+    int ammo = client.inventoryCount(ammoItem.tag) + 1;
+    client.inventorySetCount(ammoItem.tag, ammo);
 
     return true;
 }
 
-bool for_real() {
+bool forReal() {
     return match.getState() == MATCH_STATE_PLAYTIME;
 }
 
-int other_team(int team) {
+int otherTeam(int team) {
     return team == TEAM_ALPHA ? TEAM_BETA : TEAM_ALPHA;
 }
 
-cString @fixed_field(cString &text, int size) {
+cString @fixedField(cString &text, int size) {
     cString field;
     cString replacement = "..";
-    int real_size = 0;
-    int no_color_size = 0;
+    int realSize = 0;
+    int noColorSize = 0;
     bool stopped = false;
-    cString backup_field = "";
-    int backup_size = 0;
-    while (real_size < text.len()) {
-        if (no_color_size == size) {
-            field = backup_field + S_COLOR_RESET + replacement;
+    cString backupField = "";
+    int backupSize = 0;
+    while (realSize < text.len()) {
+        if (noColorSize == size) {
+            field = backupField + S_COLOR_RESET + replacement;
             break;
         } else {
-            cString next = text.substr(real_size, 1);
+            cString next = text.substr(realSize, 1);
             field += next;
 
             if (next == "^")
-                no_color_size--;
+                noColorSize--;
             else
-                no_color_size++;
+                noColorSize++;
 
-            real_size++;
-            while (backup_field.removeColorTokens().len()
-                    < no_color_size - replacement.removeColorTokens().len()) {
-                backup_field += field.substr(backup_size, 1);
-                backup_size++;
+            realSize++;
+            while (backupField.removeColorTokens().len()
+                    < noColorSize - replacement.removeColorTokens().len()) {
+                backupField += field.substr(backupSize, 1);
+                backupSize++;
             }
         }
     }
-    while (no_color_size < size) {
+    while (noColorSize < size) {
         field += " ";
-        no_color_size++;
+        noColorSize++;
     }
     field += " ";
     return field;
 }
 
-void lock_teams() {
+void lockTeams() {
     for (int team = 0; team < GS_MAX_TEAMS; team++) {
         if (team != TEAM_SPECTATOR)
             G_GetTeam(team).lock();
@@ -229,8 +229,8 @@ cString @wrap(cString &s) {
     return "\n" + s + "\n";
 }
 
-cString @fixed_field(int n, int size) {
-    return fixed_field(n + "", size);
+cString @fixedField(int n, int size) {
+    return fixedField(n + "", size);
 }
 
 cString @highlight(cString &s) {
@@ -241,7 +241,7 @@ cString @highlight(int i) {
     return highlight(i + "");
 }
 
-cString @highlight_row(int row) {
+cString @highlightRow(int row) {
     return S_COLOR_HIGHLIGHT_ROW + row + S_COLOR_HIGHLIGHT;
 }
 
@@ -250,7 +250,7 @@ void notify(cString &msg) {
         G_PrintMsg(null, msg + "\n");
 }
 
-void center_notify(cString &msg) {
+void centerNotify(cString &msg) {
     G_CenterPrintMsg(null, msg + "\n");
 }
 
@@ -258,13 +258,13 @@ void debug(cString &msg) {
     G_Print(msg + "\n");
 }
 
-void random_announcer_sound(int team, cString &sound) {
+void randomAnnouncerSound(int team, cString &sound) {
     G_AnnouncerSound(null, G_SoundIndex(sound + int(brandom(1, 2))), team,
             false, null);
 }
 
-void random_announcer_sound(cString &sound) {
-    random_announcer_sound(GS_MAX_TEAMS, sound);
+void randomAnnouncerSound(cString &sound) {
+    randomAnnouncerSound(GS_MAX_TEAMS, sound);
 }
 
 void sound(cClient @client, int sound, int channel) {
@@ -275,7 +275,7 @@ void voice(cClient @client, int sound) {
     sound(client, sound, CHAN_VOICE);
 }
 
-void pain_sound(cClient @client, int sound) {
+void painSound(cClient @client, int sound) {
     sound(client, sound, CHAN_PAIN);
 }
 

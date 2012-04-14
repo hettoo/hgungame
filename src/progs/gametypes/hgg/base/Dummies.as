@@ -66,9 +66,9 @@ class Dummies {
             enable();
     }
 
-    void new_second() {
+    void newSecond() {
         for (int i = 0; i < size; i++)
-            dummies[i].new_second();
+            dummies[i].newSecond();
     }
 
     void spawn() {

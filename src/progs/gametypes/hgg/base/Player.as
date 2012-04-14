@@ -30,7 +30,7 @@ class Player {
     bool greeted;
     int[] ammo;
     int row;
-    int minutes_played;
+    int minutesPlayed;
 
     int score;
 
@@ -44,17 +44,17 @@ class Player {
         ammo.resize(WEAP_TOTAL);
     }
 
-    void init(cClient @new_client, DataBase @db) {
-        bool update = @client == @new_client;
+    void init(cClient @newClient, Database @db) {
+        bool update = @client == @newClient;
         if (!update) {
-            if (@new_client == null || inited)
+            if (@newClient == null || inited)
                 return;
             else
                 inited = true;
 
-            @client = @new_client;
+            @client = @newClient;
             row = 0;
-            minutes_played = 0;
+            minutesPlayed = 0;
             score = 0;
         }
 
@@ -69,7 +69,7 @@ class Player {
                 @account = @backup;
             }
         } else {
-            cString ip = get_ip(client);
+            cString ip = getIP(client);
             if (ip == account.ip || (ip == "" && account.ip == "127.0.0.1"))
                 state = AS_IDENTIFIED;
             else
@@ -77,38 +77,38 @@ class Player {
         }
     }
 
-    void reset_row() {
+    void resetRow() {
         row = 0;
     }
 
-    void put_team(int team, bool ghost) {
+    void putTeam(int team, bool ghost) {
         client.team = team;
         client.respawn(ghost);
     }
 
-    void put_team(int team) {
-        put_team(team, team == TEAM_SPECTATOR || client.getEnt().isGhosting());
+    void putTeam(int team) {
+        putTeam(team, team == TEAM_SPECTATOR || client.getEnt().isGhosting());
     }
 
-    void force_spec(cString &msg) {
-        put_team(TEAM_SPECTATOR, true);
+    void forceSpec(cString &msg) {
+        putTeam(TEAM_SPECTATOR, true);
         client.addAward(S_COLOR_BAD + msg);
     }
 
-    bool ip_check() {
+    bool ipCheck() {
         if (state == AS_WRONG_IP) {
-            force_spec("Wrong IP");
+            forceSpec("Wrong IP");
             return false;
         }
         return true;
     }
 
-    void set_registered(cString &password) {
+    void setRegistered(cString &password) {
         state = AS_IDENTIFIED;
-        account.set_password(password);
+        account.setPassword(password);
     }
 
-    void set_level(int level) {
+    void setLevel(int level) {
         administrate("You are now a level " + level + " user!");
         account.level = level;
     }
@@ -126,7 +126,7 @@ class Player {
             say(S_COLOR_SPECIAL + "Welcome " + S_COLOR_RESET + client.getName()
                     + S_COLOR_SPECIAL + " and have fun!");
         say(S_COLOR_SPECIAL + "Use /" + COMMAND_BASE
-                + " to see the commands you may use here!");
+                + " to see the commands you may use here.");
     }
 
     void welcome(cString &msg) {
@@ -134,85 +134,85 @@ class Player {
             client.addAward(msg);
     }
 
-    void sync_score() {
+    void syncScore() {
         client.stats.setScore(score);
     }
 
-    void add_score(int n) {
+    void addScore(int n) {
         score += n;
-        sync_score();
+        syncScore();
     }
 
-    void set_score(int n) {
+    void setScore(int n) {
         score = n;
-        sync_score();
+        syncScore();
     }
 
-    void show_row() {
+    void showRow() {
         client.addAward(S_COLOR_ROW + row + "!");
     }
 
     void killer() {
         row++;
-        account.add_kill();
+        account.addKill();
     }
 
-    void update_ammo() {
+    void updateAmmo() {
         for (int i = 0; i < WEAP_TOTAL; i++)
             ammo[i] = ammo(client, i);
     }
 
     void killed() {
-        account.add_death();
+        account.addDeath();
     }
 
-    void add_minute() {
-        minutes_played++;
-        account.add_minute();
+    void addMinute() {
+        minutesPlayed++;
+        account.addMinute();
     }
 
-    bool update_row() {
-        if (for_real())
-            return account.update_row(row);
+    bool updateRow() {
+        if (forReal())
+            return account.updateRow(row);
         return false;
     }
 
-    int get_ammo(int weapon) {
+    int getAmmo(int weapon) {
         return ammo[weapon];
     }
 
-    void update_hud_self() {
+    void updateHUDSelf() {
         if (client.team == TEAM_SPECTATOR)
             return;
 
-        int config_index = CS_GENERAL + client.playerNum() + 2;
-        client.setHUDStat(STAT_MESSAGE_ALPHA, config_index);
-        G_ConfigString(config_index, "[ " + score + " ]");
+        int configIndex = CS_GENERAL + client.playerNum() + 2;
+        client.setHUDStat(STAT_MESSAGE_ALPHA, configIndex);
+        G_ConfigString(configIndex, "[ " + score + " ]");
     }
 
-    void update_hud_other(Players @players) {
+    void updateHUDOther(Players @players) {
         if (@client == null || client.team == TEAM_SPECTATOR)
             return;
 
-        int config_index = CS_GENERAL;
-        if (score == players.best_score)
-            config_index++;
-        client.setHUDStat(STAT_MESSAGE_BETA, config_index);
-        if (players.best_score == UNKNOWN
-                || (score == players.best_score
-                    && players.second_score == UNKNOWN) || players.count() == 0)
-            G_ConfigString(config_index, "[ ? ]");
+        int configIndex = CS_GENERAL;
+        if (score == players.bestScore)
+            configIndex++;
+        client.setHUDStat(STAT_MESSAGE_BETA, configIndex);
+        if (players.bestScore == UNKNOWN
+                || (score == players.bestScore
+                    && players.secondScore == UNKNOWN) || players.count() == 0)
+            G_ConfigString(configIndex, "[ ? ]");
         else
-            G_ConfigString(config_index, "[ "
-                    + (score == players.best_score ? players.second_score
-                        : players.best_score) + " ]");
+            G_ConfigString(configIndex, "[ "
+                    + (score == players.bestScore ? players.secondScore
+                        : players.bestScore) + " ]");
     }
 
-    void update_hud_teams(int count_alpha, int count_beta) {
+    void updateHUDTeams(int countAlpha, int countBeta) {
         client.setHUDStat(STAT_MESSAGE_ALPHA, CS_GENERAL);
-        G_ConfigString(CS_GENERAL, "- " + count_alpha + " -");
+        G_ConfigString(CS_GENERAL, "- " + countAlpha + " -");
         client.setHUDStat(STAT_MESSAGE_BETA, CS_GENERAL + 1);
-        G_ConfigString(CS_GENERAL + 1, "- " + count_beta + " -");
+        G_ConfigString(CS_GENERAL + 1, "- " + countBeta + " -");
     }
 
     void print(cString &msg) {
@@ -227,7 +227,7 @@ class Player {
         print(msg + "\n");
     }
 
-    void say_bad(cString &msg) {
+    void sayBad(cString &msg) {
         say(S_COLOR_BAD + msg);
     }
 

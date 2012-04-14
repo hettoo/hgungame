@@ -30,28 +30,28 @@ class HGGBase {
     Scoreboard scoreboard;
     Commands commands;
 
-    cEntity @spawn_alpha;
-    cEntity @spawn_beta;
+    cEntity @alphaSpawn;
+    cEntity @betaSpawn;
 
-    uint last_second;
-    uint last_minute_second;
+    uint lastSecond;
+    uint lastMinuteSecond;
 
     /*
      * Initializes the variables that can be initialized already.
      */
     HGGBase() {
-        @spawn_alpha = null;
-        @spawn_beta = null;
+        @alphaSpawn = null;
+        @betaSpawn = null;
 
-        last_second = 0;
-        last_minute_second = 0;
+        lastSecond = 0;
+        lastMinuteSecond = 0;
     }
 
     /*
      * The map entities have just been spawned. The level is initialized for
      * playing, but nothing has yet started.
      */
-    void spawn_gametype() {
+    void spawnGametype() {
     }
 
     /*
@@ -61,7 +61,7 @@ class HGGBase {
      * Player, and non-item entities don't have any weight set. So they will be
      * ignored by the bot unless a weight is assigned here.
      */
-    bool update_bot_status(cEntity @self) {
+    bool updateBotStatus(cEntity @self) {
         GENERIC_UpdateBotStatus(self);
         cEntity @goal;
         cBot @bot = self.client.getBot();
@@ -77,29 +77,29 @@ class HGGBase {
     /*
      * Select a spawning point for a player.
      */
-    cEntity @select_spawn_point(cEntity @self) {
+    cEntity @selectSpawnPoint(cEntity @self) {
         cEntity @random = GENERIC_SelectBestRandomSpawnPoint(self,
                 "info_player_deathmatch");
-        if (gt.spawn_system != SPAWNSYSTEM_INSTANT && gametype.isTeamBased) {
-            if (@spawn_alpha == null) {
-                @spawn_alpha = random;
+        if (gt.spawnSystem != SPAWNSYSTEM_INSTANT && gametype.isTeamBased) {
+            if (@alphaSpawn == null) {
+                @alphaSpawn = random;
                 cEntity @max;
-                int max_dist = UNKNOWN;
+                int maxDist = UNKNOWN;
                 do {
-                    @spawn_beta = G_FindEntityWithClassname(spawn_beta,
+                    @betaSpawn = G_FindEntityWithClassname(betaSpawn,
                             "info_player_deathmatch");
-                    if (@spawn_beta != null) {
-                        int dist = spawn_alpha.getOrigin().distance(
-                                spawn_beta.getOrigin());
-                        if (dist > max_dist || max_dist == UNKNOWN) {
-                            @max = spawn_beta;
-                            max_dist = dist;
+                    if (@betaSpawn != null) {
+                        int dist = alphaSpawn.getOrigin().distance(
+                                betaSpawn.getOrigin());
+                        if (dist > maxDist || maxDist == UNKNOWN) {
+                            @max = betaSpawn;
+                            maxDist = dist;
                         }
                     }
-                } while (@spawn_beta != null);
-                @spawn_beta = max;
+                } while (@betaSpawn != null);
+                @betaSpawn = max;
             }
-            return self.client.team == TEAM_ALPHA ? spawn_alpha : spawn_beta;
+            return self.client.team == TEAM_ALPHA ? alphaSpawn : betaSpawn;
         }
         return random;
     }
@@ -114,8 +114,8 @@ class HGGBase {
     /*
      * The warmup has started.
      */
-    void warmup_started() {
-        scoreboard.set_layout(SB_WARMUP);
+    void warmupStarted() {
+        scoreboard.setLayout(SB_WARMUP);
         CreateSpawnIndicators("info_player_deathmatch", gametype.isTeamBased
                 ? TEAM_BETA : TEAM_PLAYERS);
         players.dummies.spawn();
@@ -125,15 +125,15 @@ class HGGBase {
     /*
      * The countdown has started.
      */
-    void countdown_started() {
-        players.welcome_all(gt.motd());
+    void countdownStarted() {
+        players.welcomeAll(gt.motd());
         GENERIC_SetUpCountdown();
     }
 
     /*
      * Calls the generic match setup function so that it can be overloaded.
      */
-    void generic_playtime_started () {
+    void genericPlaytimeStarted () {
         players.dummies.spawn();
         GENERIC_SetUpMatch();
     }
@@ -141,23 +141,23 @@ class HGGBase {
     /*
      * The match has started.
      */
-    void playtime_started() {
-        last_second = levelTime / 1000;
-        last_minute_second = last_second;
-        scoreboard.set_layout(SB_MATCH);
+    void playtimeStarted() {
+        lastSecond = levelTime / 1000;
+        lastMinuteSecond = lastSecond;
+        scoreboard.setLayout(SB_MATCH);
         DeleteSpawnIndicators();
-        players.update_best();
-        players.update_hud();
-        generic_playtime_started();
+        players.updateBest();
+        players.updateHUD();
+        genericPlaytimeStarted();
     }
 
     /*
      * The postmatch has started.
      */
-    void postmatch_started() {
-        scoreboard.set_layout(SB_POST);
+    void postmatchStarted() {
+        scoreboard.setLayout(SB_POST);
         GENERIC_SetUpEndMatch();
-        players.show_match_top_row();
+        players.showMatchTopRow();
     }
 
     /*
@@ -165,18 +165,18 @@ class HGGBase {
      * it before calling this function. This function must give permission to
      * move into the next state by returning true.
      */
-    bool match_state_finished(int new_match_state) {
+    bool matchStateFinished(int newMatchState) {
         if (match.getState() <= MATCH_STATE_WARMUP
-                && new_match_state > MATCH_STATE_WARMUP
-                && new_match_state < MATCH_STATE_POSTMATCH)
+                && newMatchState > MATCH_STATE_WARMUP
+                && newMatchState < MATCH_STATE_POSTMATCH)
             match.startAutorecord();
         else if (match.getState() == MATCH_STATE_POSTMATCH)
             match.stopAutorecord();
 
-        if (new_match_state == MATCH_STATE_PLAYTIME
-                || new_match_state == MATCH_STATE_POSTMATCH) {
-            players.check_rows();
-            if (new_match_state == MATCH_STATE_PLAYTIME)
+        if (newMatchState == MATCH_STATE_PLAYTIME
+                || newMatchState == MATCH_STATE_POSTMATCH) {
+            players.checkRows();
+            if (newMatchState == MATCH_STATE_PLAYTIME)
                 players.reset();
         }
 
@@ -202,22 +202,22 @@ class HGGBase {
      * killing opponents, like capturing a flag.
      * Warning: client can be null.
      */
-    void score_event(cClient @client, cString &score_event, cString &args) {
-        if (score_event == "kill") {
+    void scoreEvent(cClient @client, cString &scoreEvent, cString &args) {
+        if (scoreEvent == "kill") {
             cEntity @target = G_GetEntity(args.getToken(0).toInt());
             cEntity @inflictor = G_GetEntity(args.getToken(1).toInt());
 
-            cClient @target_client = null;
-            cClient @inflictor_client = null;
+            cClient @targetClient = null;
+            cClient @inflictorClient = null;
             if (@target != null)
-                @target_client = target.client;
+                @targetClient = target.client;
             if (@inflictor != null)
-                @inflictor_client = inflictor.client;
+                @inflictorClient = inflictor.client;
 
-            killed(client, target_client, inflictor_client);
-        } else if (score_event == "userinfochanged") {
+            killed(client, targetClient, inflictorClient);
+        } else if (scoreEvent == "userinfochanged") {
             players.namechange(client);
-        } else if (score_event == "disconnect") {
+        } else if (scoreEvent == "disconnect") {
             players.disconnect(client);
         }
     }
@@ -225,19 +225,19 @@ class HGGBase {
     /*
      * Sets the gametype settings.
      */
-    void set_gametype_settings() {
-        gt.set_defaults();
+    void setGametypeSettings() {
+        gt.setDefaults();
     }
 
     /*
      * Add the root account from the cVars if there is no root yet and the
      * account name is not empty.
      */
-    void check_root() {
-        if (!players.db.has_root && gt.root() != "") {
+    void checkRoot() {
+        if (!players.db.hasRoot && gt.root() != "") {
             Account @root = Account();
             root.id = gt.root();
-            root.password = gt.root_password();
+            root.password = gt.rootPassword();
             players.db.add(root);
         }
     }
@@ -248,15 +248,15 @@ class HGGBase {
      * spawning at initialization do it in GT_SpawnGametype, which is called
      * right after the map entities spawning.
      */
-    void init_gametype() {
+    void initGametype() {
         players.init();
         players.db.read();
 
-        gt.set_info();
+        gt.setInfo();
         gt.init();
-        check_root();
-        set_gametype_settings();
-        gt.check_default_config();
+        checkRoot();
+        setGametypeSettings();
+        gt.checkDefaultConfig();
 
         commands.init();
 
@@ -266,7 +266,7 @@ class HGGBase {
     /*
      * Thinking function. Called each frame.
      */
-    void think_rules() {
+    void thinkRules() {
         if (match.scoreLimitHit() || match.timeLimitHit()
                 || match.suddenDeathFinished())
             match.launchState(match.getState() + 1);
@@ -276,23 +276,23 @@ class HGGBase {
 
         GENERIC_Think();
         if (!gametype.isInstagib())
-            players.fix_health();
-        players.charge_gunblades();
-        check_time();
+            players.fixHealth();
+        players.chargeGunblades();
+        checkTime();
     }
 
     /*
      * Someone moved from the spectators to a player team.
      */
-    void new_player(cClient @client) {
-        players.new_player(client);
+    void newPlayer(cClient @client) {
+        players.newPlayer(client);
     }
 
     /*
      * Someone moved from a player team to the spectators.
      */
-    void new_spectator(cClient @client) {
-        players.new_spectator(client);
+    void newSpectator(cClient @client) {
+        players.newSpectator(client);
     }
 
     /*
@@ -307,56 +307,56 @@ class HGGBase {
      * changing team, being moved to ghost state, be placed in respawn queue,
      * being spawned from spawn queue, etc.
      */
-    void player_respawn(cEntity @ent, int old_team, int new_team) {
-        if (old_team == TEAM_SPECTATOR && new_team != TEAM_SPECTATOR)
-            new_player(ent.client);
-        else if (old_team != TEAM_SPECTATOR && new_team == TEAM_SPECTATOR)
-            new_spectator(ent.client);
+    void playerRespawn(cEntity @ent, int oldTeam, int newTeam) {
+        if (oldTeam == TEAM_SPECTATOR && newTeam != TEAM_SPECTATOR)
+            newPlayer(ent.client);
+        else if (oldTeam != TEAM_SPECTATOR && newTeam == TEAM_SPECTATOR)
+            newSpectator(ent.client);
 
-        if (new_team != TEAM_SPECTATOR)
+        if (newTeam != TEAM_SPECTATOR)
             respawn(ent.client);
     }
 
     /*
      * A new minute has started.
      */
-    void new_minute() {
-        players.new_minute();
+    void newMinute() {
+        players.newMinute();
     }
 
     /*
      * A new second has started.
      */
-    void new_second() {
-        players.new_second();
-        uint minute_second = last_minute_second + 60;
-        if (last_second == minute_second) {
-            new_minute();
-            last_minute_second = minute_second;
+    void newSecond() {
+        players.newSecond();
+        uint minuteSecond = lastMinuteSecond + 60;
+        if (lastSecond == minuteSecond) {
+            newMinute();
+            lastMinuteSecond = minuteSecond;
         }
     }
 
     /*
      * Checks for new seconds and minutes.
      */
-    void check_time() {
+    void checkTime() {
         uint second = levelTime / 1000;
-        if (second != last_second) {
-            last_second = second;
-            new_second();
+        if (second != lastSecond) {
+            lastSecond = second;
+            newSecond();
         }
     }
 
     /*
      * Create the scoreboard contents.
      */
-    cString @scoreboard_message(int max_len) {
+    cString @scoreboardMessage(int maxLen) {
         cString board = "";
         if (gametype.isTeamBased) {
-            scoreboard.add_team(board, TEAM_ALPHA, max_len, players);
-            scoreboard.add_team(board, TEAM_BETA, max_len, players);
+            scoreboard.addTeam(board, TEAM_ALPHA, maxLen, players);
+            scoreboard.addTeam(board, TEAM_BETA, maxLen, players);
         } else {
-            scoreboard.add_team(board, TEAM_PLAYERS, max_len, players);
+            scoreboard.addTeam(board, TEAM_PLAYERS, maxLen, players);
         }
         return board;
     }
@@ -364,8 +364,8 @@ class HGGBase {
     /*
      * A dummy has been killed.
      */
-    void dummy_killed(cEntity @self, cEntity @attacker, cEntity @inflictor) {
-        players.dummy_killed(self.count, attacker.client, inflictor.client);
+    void dummyKilled(cEntity @self, cEntity @attacker, cEntity @inflictor) {
+        players.dummyKilled(self.count, attacker.client, inflictor.client);
     }
 }
 

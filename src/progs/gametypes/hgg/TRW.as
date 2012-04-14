@@ -18,34 +18,27 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 class HGG : HGGBase {
-    void set_gametype_settings() {
-        HGGBase::set_gametype_settings();
+    void setGametypeSettings() {
+        HGGBase::setGametypeSettings();
 
         gametype.isTeamBased = true;
-        gametype.hasChallengersQueue = true;
-        gametype.maxPlayersPerTeam = 1;
+        gametype.teamOnlyMinimap = true;
 
-        gt.has_challengers_queue = true;
-        gt.has_map_list = false;
         gt.scorelimit = 11;
-        gt.timelimit = 0;
+        gt.timelimit = 20;
     }
 
-    void init_gametype() {
-        gt.name = "Duel";
-        gt.type = GT_DUEL;
-        HGGBase::init_gametype();
-    }
-
-    void playtime_started() {
-        players.dummies.enable();
-        HGGBase::playtime_started();
+    void initGametype() {
+        gt.name = "Team Row War";
+        gt.type = GT_DM;
+        HGGBase::initGametype();
     }
 
     void killed(cClient @attacker, cClient @target, cClient @inflictor) {
         HGGBase::killed(attacker, target, inflictor);
-        if (@target != null && @attacker != null && for_real())
-            G_GetTeam(attacker.team).stats.addScore(1
-                    - (@target == @attacker ? 2 : 0));
+        Player @player = players.get(attacker.playerNum());
+        if (player.row % SPECIAL_ROW == 0 && @attacker != @target && forReal())
+            G_GetTeam(attacker.team).stats.addScore(1);
     }
 }
+

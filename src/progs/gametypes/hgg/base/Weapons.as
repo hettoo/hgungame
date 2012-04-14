@@ -21,54 +21,54 @@ const int INFINITE_AMMO = 99;
 const int HEAVY_AMMO = 6;
 
 class Weapons {
-    int icon_instagun;
-    int icon_electro;
-    int icon_grenade;
-    int icon_rocket;
-    int icon_plasma;
-    int icon_laser;
-    int icon_machinegun;
-    int icon_riot;
-    int icon_gunblade;
-    int icon_max;
+    int iconInstagun;
+    int iconElectro;
+    int iconGrenade;
+    int iconRocket;
+    int iconPlasma;
+    int iconLaser;
+    int iconMachinegun;
+    int iconRiot;
+    int iconGunblade;
+    int iconMax;
 
     Weapons() {
-        icon_instagun = G_ImageIndex("gfx/hud/icons/weapon/instagun");
-        icon_electro = G_ImageIndex("gfx/hud/icons/weapon/electro");
-        icon_grenade = G_ImageIndex("gfx/hud/icons/weapon/grenade");
-        icon_rocket = G_ImageIndex("gfx/hud/icons/weapon/rocket");
-        icon_plasma = G_ImageIndex("gfx/hud/icons/weapon/plasma");
-        icon_laser = G_ImageIndex("gfx/hud/icons/weapon/laser");
-        icon_machinegun = G_ImageIndex("gfx/hud/icons/weapon/machinegun");
-        icon_riot = G_ImageIndex("gfx/hud/icons/weapon/riot");
-        icon_gunblade = G_ImageIndex("gfx/hud/icons/weapon/gunblade");
-        icon_max = G_ImageIndex("gfx/hud/icons/powerup/quad");
+        iconInstagun = G_ImageIndex("gfx/hud/icons/weapon/instagun");
+        iconElectro = G_ImageIndex("gfx/hud/icons/weapon/electro");
+        iconGrenade = G_ImageIndex("gfx/hud/icons/weapon/grenade");
+        iconRocket = G_ImageIndex("gfx/hud/icons/weapon/rocket");
+        iconPlasma = G_ImageIndex("gfx/hud/icons/weapon/plasma");
+        iconLaser = G_ImageIndex("gfx/hud/icons/weapon/laser");
+        iconMachinegun = G_ImageIndex("gfx/hud/icons/weapon/machinegun");
+        iconRiot = G_ImageIndex("gfx/hud/icons/weapon/riot");
+        iconGunblade = G_ImageIndex("gfx/hud/icons/weapon/gunblade");
+        iconMax = G_ImageIndex("gfx/hud/icons/powerup/quad");
     }
 
     int icon(int weapon) {
         switch (weapon) {
             case WEAP_NONE:
-                return gametype.isInstagib() ? icon_instagun : icon_gunblade;
+                return gametype.isInstagib() ? iconInstagun : iconGunblade;
             case WEAP_INSTAGUN:
-                return icon_instagun;
+                return iconInstagun;
             case WEAP_GUNBLADE:
-                return icon_gunblade;
+                return iconGunblade;
             case WEAP_ELECTROBOLT:
-                return icon_electro;
+                return iconElectro;
             case WEAP_GRENADELAUNCHER:
-                return icon_grenade;
+                return iconGrenade;
             case WEAP_ROCKETLAUNCHER:
-                return icon_rocket;
+                return iconRocket;
             case WEAP_PLASMAGUN:
-                return icon_plasma;
+                return iconPlasma;
             case WEAP_LASERGUN:
-                return icon_laser;
+                return iconLaser;
             case WEAP_MACHINEGUN:
-                return icon_machinegun;
+                return iconMachinegun;
             case WEAP_RIOTGUN:
-                return icon_riot;
+                return iconRiot;
             case WEAP_TOTAL:
-                return icon_max;
+                return iconMax;
         }
         return 0;
     }
@@ -101,7 +101,7 @@ class Weapons {
         return WEAP_TOTAL;
     }
 
-    void select_best(cClient @client) {
+    void selectBest(cClient @client) {
         int best = gametype.isInstagib() ? WEAP_INSTAGUN : WEAP_GUNBLADE;
 
         int weapon;
@@ -112,11 +112,11 @@ class Weapons {
         client.selectWeapon(best);
     }
 
-    void give_default(cClient @client) {
+    void giveDefault(cClient @client) {
         if (gametype.isInstagib())
-            give_weapon(client, WEAP_INSTAGUN, INFINITY);
+            giveWeapon(client, WEAP_INSTAGUN, INFINITY);
         else
-            give_weapon(client, WEAP_GUNBLADE, INFINITY);
+            giveWeapon(client, WEAP_GUNBLADE, INFINITY);
     }
 
     bool heavy(int weapon) {

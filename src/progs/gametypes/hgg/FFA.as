@@ -17,42 +17,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-const int MAX_COLUMNS = 16;
-
-class Table {
-    int[] sizes;
-    int columns;
-    int i;
-    cString string;
-
-    Table() {
-        sizes.resize(MAX_COLUMNS);
-        reset();
-    }
-
-    void add_column(cString &name, int size) {
-        string += fixed_field(name, size);
-        sizes[columns++] = size;
-    }
-
-    void add(cString &field) {
-        if (i == 0)
-            string += "\n";
-        string += fixed_field(field, sizes[i]);
-        i = (i + 1) % columns;
-    }
-
-    void add(int field) {
-        add(field + "");
-    }
-
-    cString @string() {
-        return string;
-    }
-
-    void reset() {
-        columns = 0;
-        i = 0;
-        string = "";
+class HGG : HGGBase {
+    void initGametype() {
+        gt.name = "Free For All";
+        gt.type = GT_FFA;
+        HGGBase::initGametype();
     }
 }
+

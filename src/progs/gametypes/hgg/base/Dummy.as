@@ -34,9 +34,9 @@ class Dummy {
         respawn = UNKNOWN;
     }
 
-    void init(cEntity @spawn, int new_id) {
+    void init(cEntity @spawn, int newID) {
         pos = spawn.getOrigin();
-        id = new_id;
+        id = newID;
     }
 
     void spawn() {
@@ -69,7 +69,7 @@ class Dummy {
         }
     }
 
-    void new_second() {
+    void newSecond() {
         if (respawn != UNKNOWN) {
             respawn--;
             if (respawn == 0) {

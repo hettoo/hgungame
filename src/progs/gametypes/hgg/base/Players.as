@@ -23,37 +23,37 @@ const int MAX_PLAYERS = 256;
 class Players {
     Player@[] players;
     int size;
-    DataBase db;
+    Database db;
     Levels levels;
     Weapons weapons;
     Dummies dummies;
-    bool team_hud;
+    bool teamHUD;
 
-    bool first_blood;
+    bool firstBlood;
 
-    int best_score;
-    int second_score;
+    int bestScore;
+    int secondScore;
 
-    int match_top_row;
-    cString[] match_top_row_players;
-    int match_top_row_player_count;
+    int matchTopRow;
+    cString[] matchTopRowPlayers;
+    int matchTopRowPlayerCount;
 
-    int sound_dummy_killed;
+    int soundDummyKilled;
 
     Players() {
         players.resize(MAX_PLAYERS);
         size = 0;
-        team_hud = false;
+        teamHUD = false;
 
-        first_blood = true;
+        firstBlood = true;
 
-        best_score = UNKNOWN;
-        second_score = UNKNOWN;
+        bestScore = UNKNOWN;
+        secondScore = UNKNOWN;
 
-        match_top_row = UNKNOWN;
-        match_top_row_players.resize(MAX_PLAYERS);
+        matchTopRow = UNKNOWN;
+        matchTopRowPlayers.resize(MAX_PLAYERS);
 
-        sound_dummy_killed = G_SoundIndex("sounds/misc/kill");
+        soundDummyKilled = G_SoundIndex("sounds/misc/kill");
     }
 
     void init() {
@@ -66,7 +66,7 @@ class Players {
         return players[playernum];
     }
 
-    void init_client(cClient @client) {
+    void initClient(cClient @client) {
         int playernum = client.playerNum();
         Player @player = get(playernum);
         if (@player == null) {
@@ -77,7 +77,7 @@ class Players {
         players[playernum].init(client, db);
     }
 
-    void welcome_all(cString &msg) {
+    void welcomeAll(cString &msg) {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
             if (@player != null)
@@ -89,19 +89,19 @@ class Players {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
             if (@player != null) {
-                check_row(player.client, null);
-                player.minutes_played = 0;
-                player.set_score(0);
+                checkRow(player.client, null);
+                player.minutesPlayed = 0;
+                player.setScore(0);
             }
         }
     }
 
-    void announce_row(cClient @target, cClient @attacker) {
+    void announceRow(cClient @target, cClient @attacker) {
         int row = get(target.playerNum()).row;
-        target.addAward(highlight("You made a row of " + highlight_row(row)
+        target.addAward(highlight("You made a row of " + highlightRow(row)
                     + "!"));
         cString msg = target.getName() + highlight(" made a row of "
-            + highlight_row(row) + "!");
+            + highlightRow(row) + "!");
         if (@target == @attacker)
             msg += highlight(" He fragged ") + S_COLOR_BAD + "himself"
                 + highlight("!");
@@ -111,10 +111,10 @@ class Players {
         notify(msg);
     }
 
-    void try_update_rank(Player @player) {
-        int old_rank = player.account.rank;
+    void tryUpdateRank(Player @player) {
+        int oldRank = player.account.rank;
         if (db.ranking.update(player.account)) {
-            if (player.account.rank != old_rank) {
+            if (player.account.rank != oldRank) {
                 player.client.addAward(S_COLOR_RECORD
                         + "You claimed server rank "
                         + highlight(player.account.rank)
@@ -132,47 +132,47 @@ class Players {
         }
     }
 
-    void check_row(cClient @target, cClient @attacker) {
+    void checkRow(cClient @target, cClient @attacker) {
         if (@target == null)
             return;
 
         Player @player = get(target.playerNum());
-        bool new_record = player.update_row() && player.state == AS_IDENTIFIED;
+        bool newRecord = player.updateRow() && player.state == AS_IDENTIFIED;
         if (player.row >= SPECIAL_ROW)
-            announce_row(target, attacker);
-        if (new_record) {
+            announceRow(target, attacker);
+        if (newRecord) {
             target.addAward(S_COLOR_RECORD + "Personal record!");
-            try_update_rank(player);
+            tryUpdateRank(player);
         }
-        if (for_real()
-                && (player.row >= match_top_row || match_top_row == UNKNOWN)) {
-            if (player.row == match_top_row) {
-                bool has_match_top_row = false;
-                for (int i = 0; i < match_top_row_player_count; i++) {
-                    if (match_top_row_players[i] == player.client.getName())
-                        has_match_top_row = true;
+        if (forReal()
+                && (player.row >= matchTopRow || matchTopRow == UNKNOWN)) {
+            if (player.row == matchTopRow) {
+                bool hasMatchTopRow = false;
+                for (int i = 0; i < matchTopRowPlayerCount; i++) {
+                    if (matchTopRowPlayers[i] == player.client.getName())
+                        hasMatchTopRow = true;
                 }
-                if (!has_match_top_row)
-                    match_top_row_players[match_top_row_player_count++]
+                if (!hasMatchTopRow)
+                    matchTopRowPlayers[matchTopRowPlayerCount++]
                         = player.client.getName();
             } else {
-                match_top_row = player.row;
-                match_top_row_player_count = 1;
-                match_top_row_players[0] = player.client.getName();
+                matchTopRow = player.row;
+                matchTopRowPlayerCount = 1;
+                matchTopRowPlayers[0] = player.client.getName();
             }
         }
         player.row = 0;
     }
 
-    void show_match_top_row() {
-        if (match_top_row == UNKNOWN)
+    void showMatchTopRow() {
+        if (matchTopRow == UNKNOWN)
             return;
-        cString msg = highlight("Match top row: " + highlight_row(match_top_row)
+        cString msg = highlight("Match top row: " + highlightRow(matchTopRow)
                 + " frags by ");
-        for (int i = 0; i < match_top_row_player_count; i++) {
-            msg += match_top_row_players[i];
-            if (i < match_top_row_player_count - 1) {
-                if (i == match_top_row_player_count - 2)
+        for (int i = 0; i < matchTopRowPlayerCount; i++) {
+            msg += matchTopRowPlayers[i];
+            if (i < matchTopRowPlayerCount - 1) {
+                if (i == matchTopRowPlayerCount - 2)
                     msg += highlight(" and ");
                 else
                     msg += highlight(", ");
@@ -181,37 +181,37 @@ class Players {
         notify(msg);
     }
 
-    void check_rows() {
+    void checkRows() {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
             if (@player != null)
-                check_row(player.client, null);
+                checkRow(player.client, null);
         }
     }
 
     void award(cClient @client, int row, bool real, int weapon, int ammo) {
         Player @player = get(client.playerNum());
         if (real) {
-            player.add_score(1);
+            player.addScore(1);
             if (!gametype.isInstagib()) {
                 client.getEnt().health += NW_HEALTH_BONUS;
-                float new_armor = client.armor + NW_ARMOR_BONUS;
-                if (new_armor < MAX_ARMOR)
-                    client.armor = new_armor;
+                float newArmor = client.armor + NW_ARMOR_BONUS;
+                if (newArmor < MAX_ARMOR)
+                    client.armor = newArmor;
                 else
                     client.armor = MAX_ARMOR;
             }
 
-            if (team_hud) {
-                update_hud_teams(other_team(client.team));
+            if (teamHUD) {
+                updateHUDTeams(otherTeam(client.team));
             } else {
-                player.update_hud_self();
-                update_best();
+                player.updateHUDSelf();
+                updateBest();
 
-                if (player.score == best_score)
-                    update_hud();
-                else if (player.score == second_score)
-                    update_hud_bests();
+                if (player.score == bestScore)
+                    updateHUD();
+                else if (player.score == secondScore)
+                    updateHUDBests();
             }
         }
 
@@ -220,17 +220,17 @@ class Players {
             return;
 
         if (award < WEAP_TOTAL)
-            award_weapon(client, award,
+            awardWeapon(client, award,
                     ammo == INFINITY ? weapons.ammo(award) : ammo, real);
         else if (real)
-            get(client.playerNum()).show_row();
+            get(client.playerNum()).showRow();
 
         if (weapons.weak(weapon)) {
             int award;
             for (int i = 0; i <= player.row
                     && (award = weapons.award(i)) != WEAP_TOTAL; i++) {
                 if (weapons.heavy(award))
-                    increase_ammo(client, award);
+                    increaseAmmo(client, award);
             }
         }
     }
@@ -247,7 +247,7 @@ class Players {
         award(client, get(client.playerNum()).row, weapon);
     }
 
-    void killed_anyway(cClient @target, cClient @attacker, cClient @inflictor) {
+    void killedAnyway(cClient @target, cClient @attacker, cClient @inflictor) {
         if (@attacker == null || @attacker == @target)
             return;
 
@@ -257,12 +257,12 @@ class Players {
         player.killer();
         int weapon = attacker.weapon; // FIXME: mod
         award(attacker, weapon);
-        check_decrease_ammo(attacker, weapon);
-        player.update_ammo();
-        if (for_real() && first_blood) {
+        checkDecreaseAmmo(attacker, weapon);
+        player.updateAmmo();
+        if (forReal() && firstBlood) {
             attacker.addAward(highlight("First blood!"));
             notify(attacker.getName() + highlight(" drew first blood!"));
-            first_blood = false;
+            firstBlood = false;
         }
     }
 
@@ -275,28 +275,28 @@ class Players {
         if (@attacker != null)
             player.say("You have been fragged by " + attacker.getName());
         player.killed();
-        check_row(target, attacker);
+        checkRow(target, attacker);
 
-        killed_anyway(target, attacker, inflictor);
+        killedAnyway(target, attacker, inflictor);
     }
 
-    void check_decrease_ammo(cClient @client, int weapon) {
+    void checkDecreaseAmmo(cClient @client, int weapon) {
         if (weapon < WEAP_TOTAL && weapons.ammo(weapon) != INFINITY) {
-            if (!decrease_ammo(client, weapon) && client.weapon == weapon)
-                weapons.select_best(client);
+            if (!decreaseAmmo(client, weapon) && client.weapon == weapon)
+                weapons.selectBest(client);
         }
     }
 
-    void give_spawn_weapons(cClient @client) {
+    void giveSpawnWeapons(cClient @client) {
         Player @player = get(client.playerNum());
-        weapons.give_default(client);
+        weapons.giveDefault(client);
         for (int i = 1; i <= player.row; i++) {
             int award = weapons.award(i);
             if (award < WEAP_TOTAL) {
-                int ammo = player.get_ammo(award);
+                int ammo = player.getAmmo(award);
                 award(client, i, false, WEAP_NONE,
                         weapons.ammo(award) == INFINITY
-                        ? INFINITY : player.get_ammo(award));
+                        ? INFINITY : player.getAmmo(award));
             }
         }
     }
@@ -305,15 +305,15 @@ class Players {
         Player @player = get(client.playerNum());
         player.alive = true;
 
-        if (team_hud) {
-            update_hud_teams();
+        if (teamHUD) {
+            updateHUDTeams();
         } else {
-            player.update_hud_self();
-            player.update_hud_other(this);
+            player.updateHUDSelf();
+            player.updateHUDOther(this);
         }
 
-        give_spawn_weapons(client);
-        weapons.select_best(client);
+        giveSpawnWeapons(client);
+        weapons.selectBest(client);
         client.getEnt().respawnEffect();
         if (!gametype.isInstagib()) {
             client.getEnt().health = NW_HEALTH;
@@ -321,7 +321,7 @@ class Players {
         }
     }
 
-    void reset_stats() {
+    void resetStats() {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
             if (@player != null && @player.client != null)
@@ -329,87 +329,87 @@ class Players {
         }
     }
 
-    void new_second() {
-        dummies.new_second();
+    void newSecond() {
+        dummies.newSecond();
     }
 
-    void new_minute() {
+    void newMinute() {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
             if (@player != null && @player.client != null
                     && player.client.team != TEAM_SPECTATOR)
-                player.add_minute();
+                player.addMinute();
         }
     }
 
-    void update_best(int i) {
+    void updateBest(int i) {
         Player @player = get(i);
         if (@player != null) {
             cClient @client = player.client;
             if (@client != null && client.team != TEAM_SPECTATOR) {
-                if (player.score >= best_score || best_score == UNKNOWN) {
-                    second_score = best_score;
-                    best_score = player.score;
-                } else if (player.score > second_score
-                        || second_score == UNKNOWN) {
-                    second_score = player.score;
+                if (player.score >= bestScore || bestScore == UNKNOWN) {
+                    secondScore = bestScore;
+                    bestScore = player.score;
+                } else if (player.score > secondScore
+                        || secondScore == UNKNOWN) {
+                    secondScore = player.score;
                 }
             }
         }
     }
 
-    void update_best() {
-        best_score = UNKNOWN;
-        second_score = UNKNOWN;
+    void updateBest() {
+        bestScore = UNKNOWN;
+        secondScore = UNKNOWN;
         for (int i = 0; i < size; i++)
-            update_best(i);
+            updateBest(i);
     }
 
-    void update_hud() {
+    void updateHUD() {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
             if (@player != null)
-                player.update_hud_other(this);
+                player.updateHUDOther(this);
         }
     }
 
-    void update_hud_bests() {
+    void updateHUDBests() {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
-            if (@player != null && player.score == best_score)
-                player.update_hud_other(this);
+            if (@player != null && player.score == bestScore)
+                player.updateHUDOther(this);
         }
     }
 
-    void update_hud_teams(Player @player, int penalty_team) {
-        player.update_hud_teams(count_alive(TEAM_ALPHA)
-                - (penalty_team == TEAM_ALPHA ? 1 : 0),
-                count_alive(TEAM_BETA)
-                - (penalty_team == TEAM_BETA ? 1 : 0));
+    void updateHUDTeams(Player @player, int penaltyTeam) {
+        player.updateHUDTeams(countAlive(TEAM_ALPHA)
+                - (penaltyTeam == TEAM_ALPHA ? 1 : 0),
+                countAlive(TEAM_BETA)
+                - (penaltyTeam == TEAM_BETA ? 1 : 0));
     }
 
-    void update_hud_teams(Player @player) {
-        update_hud_teams(player, GS_MAX_TEAMS);
+    void updateHUDTeams(Player @player) {
+        updateHUDTeams(player, GS_MAX_TEAMS);
     }
 
-    void update_hud_teams(int penalty_team) {
+    void updateHUDTeams(int penaltyTeam) {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
             if (@player != null && player.client.team != TEAM_SPECTATOR)
-                update_hud_teams(player, penalty_team);
+                updateHUDTeams(player, penaltyTeam);
         }
     }
 
-    void update_hud_teams() {
-        update_hud_teams(GS_MAX_TEAMS);
+    void updateHUDTeams() {
+        updateHUDTeams(GS_MAX_TEAMS);
     }
 
-    void new_player(cClient @client) {
+    void newPlayer(cClient @client) {
         Player @player = get(client.playerNum());
-        if (player.ip_check()) {
-            cString ip = get_ip(player.client);
+        if (player.ipCheck()) {
+            cString ip = getIP(player.client);
             cString password = cVar("rcon_password", "", 0).getString();
-            if (!db.has_root && player.state == AS_UNKNOWN && !client.isBot()
+            if (!db.hasRoot && player.state == AS_UNKNOWN && !client.isBot()
                     && (ip == "127.0.0.1" || ip == "")) {
                 if (password == "") {
                     player.say(S_COLOR_ADMINISTRATIVE
@@ -418,45 +418,45 @@ class Players {
                             + levels.name(LEVEL_ROOT) + ".");
                 } else {
                     player.account.level = LEVEL_ROOT;
-                    player.set_registered(password);
+                    player.setRegistered(password);
                     db.add(player.account, false);
                     player.administrate("You have been auto-registered as "
                             + levels.name(LEVEL_ROOT));
                     player.say(S_COLOR_ADMINISTRATIVE + "Your password has been"
                             + " set to your rcon_password.");
-                    try_update_rank(player);
+                    tryUpdateRank(player);
                 }
             }
-            player.sync_score();
+            player.syncScore();
             player.instruct(levels.greeting(player.account.level, "") != "");
             player.greet(levels);
 
-            if (team_hud) {
-                update_hud_teams(player);
+            if (teamHUD) {
+                updateHUDTeams(player);
             } else {
-                if (count() <= 2 || player.score > second_score) {
-                    update_best();
-                    update_hud();
+                if (count() <= 2 || player.score > secondScore) {
+                    updateBest();
+                    updateHUD();
                 }
             }
         }
     }
 
-    void new_spectator(cClient @client) {
+    void newSpectator(cClient @client) {
         Player @player = get(client.playerNum());
         player.alive = false;
-        check_row(client, null);
-        if (player.score == best_score || player.score == second_score) {
-            update_best();
-            update_hud();
+        checkRow(client, null);
+        if (player.score == bestScore || player.score == secondScore) {
+            updateBest();
+            updateHUD();
         }
     }
 
     void namechange(cClient @client) {
-        init_client(client);
+        initClient(client);
         Player @player = get(client.playerNum());
         if (player.client.team != TEAM_SPECTATOR)
-            player.ip_check();
+            player.ipCheck();
     }
 
     void disconnect(cClient @client) {
@@ -469,7 +469,7 @@ class Players {
         size = playernum;
     }
 
-    void fix_health() {
+    void fixHealth() {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
             if (@player != null && @player.client != null
@@ -481,7 +481,7 @@ class Players {
         }
     }
 
-    void charge_gunblades() {
+    void chargeGunblades() {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
             if (@player != null && @player.client != null
@@ -491,11 +491,11 @@ class Players {
         }
     }
 
-    void team_scored(int team) {
+    void teamScored(int team) {
         G_GetTeam(team).stats.addScore(1);
 
-        random_announcer_sound(team, "sounds/announcer/ctf/score_team0");
-        random_announcer_sound(other_team(team),
+        randomAnnouncerSound(team, "sounds/announcer/ctf/score_team0");
+        randomAnnouncerSound(otherTeam(team),
                 "sounds/announcer/ctf/score_enemy0");
     }
 
@@ -508,7 +508,7 @@ class Players {
         }
     }
 
-    int count_alive(int team, cClient @target) {
+    int countAlive(int team, cClient @target) {
         int n = 0;
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
@@ -522,11 +522,11 @@ class Players {
         return n;
     }
 
-    int count_alive(int team) {
-        return count_alive(team, null);
+    int countAlive(int team) {
+        return countAlive(team, null);
     }
 
-    Player @get_alive(int team, cClient @target) {
+    Player @getAlive(int team, cClient @target) {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
             if (@player != null) {
@@ -539,8 +539,8 @@ class Players {
         return null;
     }
 
-    Player @get_alive(int team) {
-        return get_alive(team, null);
+    Player @getAlive(int team) {
+        return getAlive(team, null);
     }
 
     int count() {
@@ -556,7 +556,7 @@ class Players {
         return n;
     }
 
-    void say_team(int team, cString &msg) {
+    void sayTeam(int team, cString &msg) {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
             if (@player != null) {
@@ -569,7 +569,7 @@ class Players {
 
     void shuffle() {
         int[] total;
-        int total_size = 0;
+        int totalSize = 0;
         total.resize(size);
 
         for (int i = 0; i < size; i++) {
@@ -577,34 +577,34 @@ class Players {
             if (@player != null && @player.client != null) {
                 if (player.client.team == TEAM_ALPHA
                         || player.client.team == TEAM_BETA)
-                    total[total_size++] = i;
+                    total[totalSize++] = i;
             }
         }
 
-        int count_alpha = 0;
-        int count_beta = 0;
-        for (int i = 0; i < total_size; i++) {
+        int countAlpha = 0;
+        int countBeta = 0;
+        for (int i = 0; i < totalSize; i++) {
             Player @player = get(i);
-            bool equal = count_alpha == count_beta;
-            if (count_alpha == total_size / 2 && !equal) {
-                player.put_team(TEAM_BETA);
-                count_beta++;
-            } else if (count_beta == total_size / 2 && !equal) {
-                player.put_team(TEAM_ALPHA);
-                count_alpha++;
+            bool equal = countAlpha == countBeta;
+            if (countAlpha == totalSize / 2 && !equal) {
+                player.putTeam(TEAM_BETA);
+                countBeta++;
+            } else if (countBeta == totalSize / 2 && !equal) {
+                player.putTeam(TEAM_ALPHA);
+                countAlpha++;
             } else if (brandom(0, 2) < 1) {
-                player.put_team(TEAM_ALPHA);
-                count_alpha++;
+                player.putTeam(TEAM_ALPHA);
+                countAlpha++;
             } else {
-                player.put_team(TEAM_BETA);
-                count_beta++;
+                player.putTeam(TEAM_BETA);
+                countBeta++;
             }
         }
     }
 
-    void dummy_killed(int id, cClient @attacker, cClient @inflictor) {
-        pain_sound(attacker, sound_dummy_killed);
-        killed_anyway(null, attacker, inflictor);
+    void dummyKilled(int id, cClient @attacker, cClient @inflictor) {
+        painSound(attacker, soundDummyKilled);
+        killedAnyway(null, attacker, inflictor);
         Dummy @dummy = dummies.get(id);
         dummy.die();
     }
