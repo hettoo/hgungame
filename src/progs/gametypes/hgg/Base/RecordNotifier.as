@@ -55,6 +55,7 @@ class RecordNotifier {
     void notify() {
         if (recordMade && external.alive())
             external.issue("record " + record + " " + orderAtSpawn
-                    + " " + (startTime / 1000 - 1) + " " + (endTime / 1000 + 1));
+                    + " " + (startTime / 1000.0f - 1)
+                    + " " + (endTime / 1000.0f + 1));
     }
 }

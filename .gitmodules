@@ -1,0 +1,3 @@
+[submodule "tools/replay"]
+	path = tools/replay
+	url = git@github.com:hettoo/wsw-replay.git
