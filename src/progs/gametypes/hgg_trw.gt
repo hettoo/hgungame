@@ -18,6 +18,8 @@ hgg/Base/Player.as;
 hgg/Base/Database.as;
 hgg/Base/Account.as;
 hgg/Base/Ranking.as;
+hgg/Base/IPC.as;
+hgg/Base/RecordNotifier.as;
 hgg/Base/Scoreboard.as;
 hgg/Base/Weapons.as;
 hgg/Base/Commands.as;

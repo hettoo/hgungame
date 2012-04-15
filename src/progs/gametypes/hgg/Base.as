@@ -127,6 +127,7 @@ class HGGBase {
      */
     void countdownStarted() {
         players.welcomeAll(gt.motd());
+        players.setMatchStartTime();
         GENERIC_SetUpCountdown();
     }
 
@@ -187,7 +188,7 @@ class HGGBase {
      * The gametype is shutting down cause of a match restart or map change.
      */
     void shutdown() {
-        players.db.write();
+        players.shutdown();
     }
 
     /*

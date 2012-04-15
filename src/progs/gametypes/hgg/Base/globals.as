@@ -225,6 +225,17 @@ void lockTeams() {
     }
 }
 
+int playerOrder(cClient @client) {
+    int order = 0;
+    cClient @other;
+    for (int i = 0; (@other = G_GetClient(i)).playerNum()
+            != client.playerNum(); i++) {
+        if (other.team != TEAM_SPECTATOR)
+            order++;
+    }
+    return order;
+}
+
 cString @wrap(cString &s) {
     return "\n" + s + "\n";
 }

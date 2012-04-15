@@ -32,6 +32,9 @@ class Player {
     int row;
     int minutesPlayed;
 
+    int orderAtSpawn;
+    uint spawnTime;
+
     int score;
 
     int state;
@@ -132,6 +135,22 @@ class Player {
     void welcome(cString &msg) {
         if (@client != null && client.team != TEAM_SPECTATOR)
             client.addAward(msg);
+    }
+
+    void spawn() {
+        client.getEnt().respawnEffect();
+        if (!gametype.isInstagib()) {
+            client.getEnt().health = NW_HEALTH;
+            client.armor = NW_ARMOR;
+        }
+
+        spawnTime = levelTime;
+        orderAtSpawn = playerOrder(client);
+    }
+
+    void respawn() {
+        if (@client != null && client.team != TEAM_SPECTATOR)
+            client.respawn(false);
     }
 
     void syncScore() {

@@ -24,6 +24,7 @@ class Players {
     Player@[] players;
     int size;
     Database db;
+    RecordNotifier recordNotifier;
     Levels levels;
     Weapons weapons;
     Dummies dummies;
@@ -37,6 +38,8 @@ class Players {
     int matchTopRow;
     cString[] matchTopRowPlayers;
     int matchTopRowPlayerCount;
+
+    uint matchStartTime;
 
     int soundDummyKilled;
 
@@ -143,6 +146,10 @@ class Players {
         if (newRecord) {
             target.addAward(S_COLOR_RECORD + "Personal record!");
             tryUpdateRank(player);
+            if (player.account.rank == 1)
+                recordNotifier.set(player.account.row, player.orderAtSpawn,
+                        player.spawnTime - matchStartTime,
+                        levelTime - matchStartTime);
         }
         if (forReal()
                 && (player.row >= matchTopRow || matchTopRow == UNKNOWN)) {
@@ -314,11 +321,7 @@ class Players {
 
         giveSpawnWeapons(client);
         weapons.selectBest(client);
-        client.getEnt().respawnEffect();
-        if (!gametype.isInstagib()) {
-            client.getEnt().health = NW_HEALTH;
-            client.armor = NW_ARMOR;
-        }
+        player.spawn();
     }
 
     void resetStats() {
@@ -502,9 +505,8 @@ class Players {
     void respawn() {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
-            if (@player != null && @player.client != null
-                    && player.client.team != TEAM_SPECTATOR)
-                player.client.respawn(false);
+            if (@player != null)
+                player.respawn();
         }
     }
 
@@ -602,10 +604,19 @@ class Players {
         }
     }
 
+    void setMatchStartTime() {
+        matchStartTime = levelTime;
+    }
+
     void dummyKilled(int id, cClient @attacker, cClient @inflictor) {
         painSound(attacker, soundDummyKilled);
         killedAnyway(null, attacker, inflictor);
         Dummy @dummy = dummies.get(id);
         dummy.die();
+    }
+
+    void shutdown() {
+        db.write();
+        recordNotifier.notify();
     }
 }
