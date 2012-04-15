@@ -174,6 +174,10 @@ class HGGBase {
         else if (match.getState() == MATCH_STATE_POSTMATCH)
             match.stopAutorecord();
 
+        if (match.getState() == MATCH_STATE_COUNTDOWN
+                && newMatchState < MATCH_STATE_COUNTDOWN)
+            players.setRecorded(false);
+
         if (newMatchState == MATCH_STATE_PLAYTIME
                 || newMatchState == MATCH_STATE_POSTMATCH) {
             players.checkRows();

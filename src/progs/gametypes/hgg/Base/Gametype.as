@@ -101,7 +101,7 @@ class Gametype {
         gametype.ultrahealthRespawn = 0;
 
         gametype.countdownEnabled = false;
-        gametype.mathAbortDisabled = true;
+        gametype.mathAbortDisabled = false;
         gametype.shootingDisabled = false;
         gametype.infiniteAmmo = true;
         gametype.canForceModels = true;

@@ -608,8 +608,13 @@ class Players {
     }
 
     void setMatchStartTime() {
-        recorded = recorded && nonBots() > 0;
+        if (nonBots() == 0)
+            recorded = false;
         matchStartTime = levelTime;
+    }
+
+    void setRecorded(bool recorded) {
+        this.recorded = recorded;
     }
 
     int nonBots() {
