@@ -39,6 +39,7 @@ class Players {
     cString[] matchTopRowPlayers;
     int matchTopRowPlayerCount;
 
+    bool recorded;
     uint matchStartTime;
 
     int soundDummyKilled;
@@ -55,6 +56,8 @@ class Players {
 
         matchTopRow = UNKNOWN;
         matchTopRowPlayers.resize(MAX_PLAYERS);
+
+        recorded = cVar("g_autorecord", "", 0).getBool();
 
         soundDummyKilled = G_SoundIndex("sounds/misc/kill");
     }
@@ -605,7 +608,21 @@ class Players {
     }
 
     void setMatchStartTime() {
+        recorded = recorded && nonBots() > 0;
         matchStartTime = levelTime;
+    }
+
+    int nonBots() {
+        int nonBots = 0;
+        for (int i = 0; i < size; i++) {
+            Player @player = get(i);
+            if (@player != null && @player.client != null) {
+                if (player.client.team != TEAM_SPECTATOR
+                        && !player.client.isBot())
+                    nonBots++;
+            }
+        }
+        return nonBots;
     }
 
     void dummyKilled(int id, cClient @attacker, cClient @inflictor) {
@@ -617,6 +634,7 @@ class Players {
 
     void shutdown() {
         db.write();
-        recordNotifier.notify();
+        if (recorded)
+            recordNotifier.notify();
     }
 }
