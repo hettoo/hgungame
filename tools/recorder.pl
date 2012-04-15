@@ -4,14 +4,23 @@ use strict;
 use warnings;
 use feature 'say';
 
+use Getopt::Long;
 use File::stat;
+use Time::HiRes 'sleep';
 
 my $game_dir = $ENV{'HOME'} . '/.warsow-0.6/';
-my $mod = 'promod';
+my $mod = 'basewsw';
 my $ipc_dir = 'ipc/';
 my $demo_dir = 'demos/server/';
+my $output = $game_dir . $mod . '/avi/toprow.md4';
 my $delay = 1;
 my $deadfile;
+
+GetOptions(
+    'dir=s' => \$game_dir,
+    'mod=s' => \$mod,
+    'output=s' => \$output
+);
 
 $ipc_dir = $game_dir . $mod . '/' . $ipc_dir;
 $demo_dir = $game_dir . $mod . '/' . $demo_dir;
@@ -81,8 +90,9 @@ sub handle_command {
             }
         }
         if (defined $latest) {
-            system "replay/replay.pl '$latest' --mod $mod --audio"
-                . " --player $player --start $start --end $end";
+            system "replay/replay.pl '$latest' --audio --mod $mod"
+                . " --player $player --start $start --end $end"
+                . " --output $output";
         } else {
             say 'No demo found :-(';
         }
