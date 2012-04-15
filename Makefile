@@ -18,7 +18,7 @@ GT_DIR = src
 TMP_DIR = tmp
 BASE_MOD = basewsw
 CONFIG_DIR = configs/server/gametypes
-GLOBALS_FILE = progs/gametypes/hgg/base/globals.as
+GLOBALS_FILE = progs/gametypes/hgg/Base/globals.as
 EVERY_PK3 = hgg-*.pk3
 EVERY_CFG = hgg_*.cfg
 
