@@ -23,9 +23,9 @@ const int DUMMY_RESPAWN = 40;
 class Dummy {
     cEntity @ent;
     int id;
-    cVec3 pos;
-    cVec3 mins;
-    cVec3 maxs;
+    Vec3 pos;
+    Vec3 mins;
+    Vec3 maxs;
     int respawn;
 
     Dummy() {

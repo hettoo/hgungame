@@ -481,7 +481,7 @@ class Commands {
             if (@other != null && @other.client != null
                     && other.client.team != TEAM_SPECTATOR) {
                 cEntity @ent = other.client.getEnt();
-                cVec3 @angles = ent.getAngles();
+                Vec3 angles = ent.getAngles();
                 for (int j = 0; j < 360; j += 60) {
                     angles.y = j;
                     G_FireGrenade(ent.getOrigin(), angles,
