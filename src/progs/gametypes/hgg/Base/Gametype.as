@@ -40,13 +40,13 @@ class Gametype {
     String name;
     String file;
 
-    bool has_challengers_queue;
-    bool has_map_list;
+    bool hasChallengersQueue;
+    bool hasMapList;
     int scorelimit;
     int timelimit;
-    int countdown_time;
+    int countdownTime;
 
-    int spawn_system;
+    int spawnSystem;
 
     cVar[] cvars;
 
@@ -54,11 +54,11 @@ class Gametype {
         name = "???";
         file = CONFIGS_DIR + gametype.getName() + ".cfg";
 
-        has_challengers_queue = false;
-        has_map_list = true;
+        hasChallengersQueue = false;
+        hasMapList = true;
         scorelimit = 0;
         timelimit = 15;
-        countdown_time = 5;
+        countdownTime = 5;
 
         cvars.resize(CV_TOTAL);
         cvars[CV_MOTD].get(CVAR_BASE + "MOTD", "Have Fun!", CVAR_ARCHIVE);
@@ -67,16 +67,16 @@ class Gametype {
                 CVAR_ARCHIVE);
     }
 
-    void set_spawn_system(int new_spawn_system, bool dead_cam) {
-        spawn_system = new_spawn_system;
+    void setSpawnSystem(int newSpawnSystem, bool deadCam) {
+        spawnSystem = newSpawnSystem;
         for (int team = 0; team < GS_MAX_TEAMS; team++) {
             if (team != TEAM_SPECTATOR)
-                gametype.setTeamSpawnsystem(team, spawn_system, 0, 0, dead_cam);
+                gametype.setTeamSpawnsystem(team, spawnSystem, 0, 0, deadCam);
         }
     }
 
-    void set_defaults() {
-        set_spawn_system(SPAWNSYSTEM_INSTANT, false);
+    void setDefaults() {
+        setSpawnSystem(SPAWNSYSTEM_INSTANT, false);
 
         gametype.isRace = false;
         gametype.hasChallengersQueue = false;
@@ -112,23 +112,23 @@ class Gametype {
             gametype.spawnpointRadius *= 2;
     }
 
-    void set_info() {
+    void setInfo() {
         gametype.setTitle(NAME + " " + name);
         gametype.setVersion(VERSION);
         gametype.setAuthor(AUTHOR);
     }
 
-    String @map_list() {
-        if (!has_map_list)
+    String @mapList() {
+        if (!hasMapList)
             return "";
 
-        String ffa_maps = "cwl4 50u1ca1 yeahwhatevahb2 jerms_ca1 inkfinal"
+        String ffaMaps = "cwl4 50u1ca1 yeahwhatevahb2 jerms_ca1 inkfinal"
             + " sandboxb5";
         switch (type) {
             case GT_FFA:
-                return ffa_maps;
+                return ffaMaps;
             case GT_CA:
-                return "wca1 " + ffa_maps;
+                return "wca1 " + ffaMaps;
             case GT_DM:
                 return "wdm1 wdm2 wdm3 wdm4 wdm5 wdm6 wdm7 wdm8 wdm9 wdm10"
                     + " wdm11 wdm12 wdm13 wdm14 wdm15 wdm16 wdm17";
@@ -137,7 +137,7 @@ class Gametype {
         return "wca3";
     }
 
-    String @cvar_defaults() {
+    String @cVarDefaults() {
         String total = "";
         for (int i = 0; i < CV_TOTAL; i++)
             total += "set " + cvars[i].getName() + " \""
@@ -145,22 +145,22 @@ class Gametype {
         return total;
     }
 
-    void check_default_config() {
+    void checkDefaultConfig() {
         if (G_FileExists(file))
             return;
 
-        String maps = map_list();
+        String maps = mapList();
 
         String config = "// '" + gametype.getTitle()
             + "' gametype configuration file\n"
             + "\n"
             + "// map rotation\n"
             + "set g_maplist \"" + maps + "\"\n"
-            + "set g_maprotation " + (has_map_list ? 1 : 0)
+            + "set g_maprotation " + (hasMapList ? 1 : 0)
             + " // 0 = same map, 1 = in order, 2 = random\n"
             + "\n"
             + "// gametype specific settings\n"
-            + cvar_defaults()
+            + cVarDefaults()
             + "\n"
             + "// game settings\n"
             + "set g_scorelimit " + scorelimit + "\n"
@@ -171,14 +171,14 @@ class Gametype {
             + "set g_allow_selfdamage 0\n"
             + "set g_allow_stun 1\n"
             + "set g_teams_maxplayers " + gametype.maxPlayersPerTeam + "\n"
-            + "set g_countdown_time " + countdown_time + "\n"
+            + "set g_countdown_time " + countdownTime + "\n"
             + "set g_instajump 1\n"
             + "set g_instashield 0\n"
             + "set g_allow_falldamage 0\n"
             + "set g_allow_selfdamage 0\n"
             + "set g_allow_teamdamage 0\n"
             + "set g_maxtimeouts 3 // -1 = unlimited\n"
-            + "set g_challengers_queue " + (has_challengers_queue ? 1 : 0)
+            + "set g_challengers_queue " + (hasChallengersQueue ? 1 : 0)
             + "\n"
             + "\n"
             + "echo \"" + gametype.getName() + ".cfg executed\"\n";
@@ -197,7 +197,7 @@ class Gametype {
         return cvars[CV_ROOT].getString();
     }
 
-    String @root_password() {
+    String @rootPassword() {
         return cvars[CV_ROOT_PASSWORD].getString();
     }
 }

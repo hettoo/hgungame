@@ -27,20 +27,20 @@ enum LevelTypes {
 };
 
 class Levels {
-    int icon_guest;
-    int icon_regular_user;
-    int icon_member;
-    int icon_vip;
-    int icon_admin;
-    int icon_root;
+    int iconGuest;
+    int iconRegularUser;
+    int iconMember;
+    int iconVip;
+    int iconAdmin;
+    int iconRoot;
 
     Levels() {
-        icon_guest = G_ImageIndex("gfx/hud/icons/backpack/spawnbp");
-        icon_regular_user = G_ImageIndex("gfx/hud/icons/backpack/electrobotbp");
-        icon_member = G_ImageIndex("gfx/hud/icons/backpack/grenadebp");
-        icon_vip = G_ImageIndex("gfx/hud/icons/backpack/rocketbp");
-        icon_admin = G_ImageIndex("gfx/hud/icons/backpack/plasmabp");
-        icon_root = G_ImageIndex("gfx/hud/icons/backpack/riotbp");
+        iconGuest = G_ImageIndex("gfx/hud/icons/backpack/spawnbp");
+        iconRegularUser = G_ImageIndex("gfx/hud/icons/backpack/electrobotbp");
+        iconMember = G_ImageIndex("gfx/hud/icons/backpack/grenadebp");
+        iconVip = G_ImageIndex("gfx/hud/icons/backpack/rocketbp");
+        iconAdmin = G_ImageIndex("gfx/hud/icons/backpack/plasmabp");
+        iconRoot = G_ImageIndex("gfx/hud/icons/backpack/riotbp");
     }
 
     String @name(int level) {
@@ -85,17 +85,17 @@ class Levels {
     int icon(int level) {
         switch (level) {
             case LEVEL_GUEST:
-                return icon_guest;
+                return iconGuest;
             case LEVEL_REGULAR_USER:
-                return icon_regular_user;
+                return iconRegularUser;
             case LEVEL_MEMBER:
-                return icon_member;
+                return iconMember;
             case LEVEL_VIP:
-                return icon_vip;
+                return iconVip;
             case LEVEL_ADMIN:
-                return icon_admin;
+                return iconAdmin;
             case LEVEL_ROOT:
-                return icon_root;
+                return iconRoot;
         }
         return 0;
     }

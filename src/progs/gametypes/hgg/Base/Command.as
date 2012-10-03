@@ -21,38 +21,38 @@ class Command {
     String name;
     String usage;
     String description;
-    int min_level;
-    bool sub_command;
+    int minLevel;
+    bool subCommand;
 
-    int min_argc;
-    int max_argc;
+    int minArgc;
+    int maxArgc;
 
-    Command(String &new_usage, String &new_description, int new_min_level,
-            bool new_sub_command) {
-        set(new_usage, new_description, new_min_level, new_sub_command);
+    Command(String &newUsage, String &newDescription, int newMinLevel,
+            bool newSubCommand) {
+        set(newUsage, newDescription, newMinLevel, newSubCommand);
     }
 
-    void set(String &new_usage, String &new_description, int new_min_level,
-            bool new_sub_command) {
+    void set(String &newUsage, String &newDescription, int newMinLevel,
+            bool newSubCommand) {
         name = "";
-        usage = new_usage;
-        description = new_description;
-        min_level = new_min_level;
-        sub_command = new_sub_command;
+        usage = newUsage;
+        description = newDescription;
+        minLevel = newMinLevel;
+        subCommand = newSubCommand;
 
-        analyze_usage();
+        analyzeUsage();
 
-        if (!sub_command)
+        if (!subCommand)
             G_RegisterCommand(name);
     }
 
     /*
      * NOTE: assumes no nesting.
      */
-    void analyze_usage() {
-        String new_usage = "";
-        min_argc = 0;
-        max_argc = 0;
+    void analyzeUsage() {
+        String newUsage = "";
+        minArgc = 0;
+        maxArgc = 0;
         int dots = 0;
         bool naming = true;
         for (int i = 0; i < usage.len(); i++) {
@@ -64,31 +64,31 @@ class Command {
                     name += c;
             } else {
                 if (c == "<") {
-                    min_argc++;
-                    if (max_argc != INFINITY)
-                        max_argc++;
+                    minArgc++;
+                    if (maxArgc != INFINITY)
+                        maxArgc++;
                 } else if (c == "[") {
-                    if (max_argc != INFINITY)
-                        max_argc++;
+                    if (maxArgc != INFINITY)
+                        maxArgc++;
                 }
 
                 if (c == ".") {
                     dots++;
                     if (dots == 3)
-                        max_argc = INFINITY;
+                        maxArgc = INFINITY;
                 } else {
                     for (int i = 0; i < dots; i++)
-                        new_usage += ".";
-                    new_usage += c;
+                        newUsage += ".";
+                    newUsage += c;
                     dots = 0;
                 }
             }
         }
-        usage = new_usage;
+        usage = newUsage;
     }
 
-    bool valid_usage(int argc) {
-        return argc >= min_argc && (argc <= max_argc || max_argc == INFINITY);
+    bool validUsage(int argc) {
+        return argc >= minArgc && (argc <= maxArgc || maxArgc == INFINITY);
     }
 
     void say(String &msg) {

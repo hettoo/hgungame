@@ -29,74 +29,74 @@ enum ScoreboardStates {
 class Scoreboard {
     int state;
 
-    int icon_yes;
-    int icon_no;
+    int iconYes;
+    int iconNo;
 
     Scoreboard() {
-        icon_yes = G_ImageIndex("gfx/hud/icons/vsay/yes");
-        icon_no = G_ImageIndex("gfx/hud/icons/vsay/no");
+        iconYes = G_ImageIndex("gfx/hud/icons/vsay/yes");
+        iconNo = G_ImageIndex("gfx/hud/icons/vsay/no");
     }
 
-    void warmup_layout() {
+    void warmupLayout() {
         G_ConfigString(CS_SCB_PLAYERTAB_LAYOUT, SB_BASE_LAYOUT + " %p 18");
         G_ConfigString(CS_SCB_PLAYERTAB_TITLES, SB_BASE_TITLE + " R");
     }
 
-    void match_layout() {
+    void matchLayout() {
         G_ConfigString(CS_SCB_PLAYERTAB_LAYOUT, SB_BASE_LAYOUT + " %p 18");
         G_ConfigString(CS_SCB_PLAYERTAB_TITLES, SB_BASE_TITLE + " W");
     }
 
-    void post_layout() {
+    void postLayout() {
         G_ConfigString(CS_SCB_PLAYERTAB_LAYOUT, SB_BASE_LAYOUT);
         G_ConfigString(CS_SCB_PLAYERTAB_TITLES, SB_BASE_TITLE);
     }
 
-    void set_layout(int new_state) {
-        state = new_state;
+    void setLayout(int newState) {
+        state = newState;
         switch (state) {
             case SB_WARMUP:
-                warmup_layout();
+                warmupLayout();
                 break;
             case SB_MATCH:
-                match_layout();
+                matchLayout();
                 break;
             case SB_POST:
-                post_layout();
+                postLayout();
                 break;
         }
     }
 
-    void add_team(String &scoreboard, int id, int max_len, Players @players) {
+    void addTeam(String &scoreboard, int id, int maxLen, Players @players) {
         cTeam @team = @G_GetTeam(id);
-        string_add_maxed(scoreboard, "&t " + id + " " + team.stats.score + " "
-                + team.ping + " ", max_len);
-        add_team_players(scoreboard, id, max_len, players);
+        stringAddMaxed(scoreboard, "&t " + id + " " + team.stats.score + " "
+                + team.ping + " ", maxLen);
+        addTeamPlayers(scoreboard, id, maxLen, players);
     }
 
-    void add_team_players(String &scoreboard, int id, int max_len,
+    void addTeamPlayers(String &scoreboard, int id, int maxLen,
             Players @players) {
         cTeam @team = @G_GetTeam(id);
         for (int i = 0; @team.ent(i) != null; i++)
-            add_player(scoreboard, team.ent(i), max_len, players);
+            addPlayer(scoreboard, team.ent(i), maxLen, players);
     }
 
-    void add_player(String &scoreboard, cEntity @ent, int max_len,
+    void addPlayer(String &scoreboard, cEntity @ent, int maxLen,
             Players @players) {
         Player @player = players.get(ent.client.playerNum());
-        int id = ent.isGhosting() && for_real() ? -(ent.playerNum() + 1)
+        int id = ent.isGhosting() && forReal() ? -(ent.playerNum() + 1)
             : ent.playerNum();
-        String registered_color = player.state == AS_IDENTIFIED
+        String registeredColor = player.state == AS_IDENTIFIED
             ? S_COLOR_PERSISTENT : S_COLOR_TEMPORARY;
         String entry = "&p " + players.levels.icon(player.account.level) + " "
             + id + " " + ent.client.getClanName() + " " + ent.client.stats.score
-            + " " + registered_color + player.account.row + " "
-            + ent.client.ping + " " + player.minutes_played + " ";
+            + " " + registeredColor + player.account.row + " "
+            + ent.client.ping + " " + player.minutesPlayed + " ";
         if (state == SB_WARMUP)
-            entry += (ent.client.isReady() ? icon_yes : icon_no) + " ";
+            entry += (ent.client.isReady() ? iconYes : iconNo) + " ";
         else if (state == SB_MATCH)
             entry += players.weapons.icon(players.weapons.award(player.row))
                 + " ";
-        string_add_maxed(scoreboard, entry, max_len);
+        stringAddMaxed(scoreboard, entry, maxLen);
     }
 }

@@ -29,46 +29,46 @@ bool GT_Command(cClient @client, String &cmd, String &args, int argc) {
 }
 
 bool GT_UpdateBotStatus(cEntity @self) {
-    return hgg.update_bot_status(self);
+    return hgg.updateBotStatus(self);
 }
 
 cEntity @GT_SelectSpawnPoint(cEntity @self) {
-    return hgg.select_spawn_point(self);
+    return hgg.selectSpawnPoint(self);
 }
 
 String @GT_ScoreboardMessage(int maxlen) {
-    return hgg.scoreboard_message(maxlen);
+    return hgg.scoreboardMessage(maxlen);
 }
 
-void GT_scoreEvent(cClient @client, String &score_event, String &args) {
-    hgg.score_event(client, score_event, args);
+void GT_scoreEvent(cClient @client, String &scoreEvent, String &args) {
+    hgg.scoreEvent(client, scoreEvent, args);
 }
 
-void GT_playerRespawn(cEntity @ent, int old_team, int new_team) {
-    hgg.player_respawn(ent, old_team, new_team);
+void GT_playerRespawn(cEntity @ent, int oldTeam, int newTeam) {
+    hgg.playerRespawn(ent, oldTeam, newTeam);
 }
 
 void GT_ThinkRules() {
-    hgg.think_rules();
+    hgg.thinkRules();
 }
 
-bool GT_MatchStateFinished(int new_match_state) {
-    return hgg.match_state_finished(new_match_state);
+bool GT_MatchStateFinished(int newMatchState) {
+    return hgg.matchStateFinished(newMatchState);
 }
 
 void GT_MatchStateStarted() {
     switch (match.getState()) {
         case MATCH_STATE_WARMUP:
-            hgg.warmup_started();
+            hgg.warmupStarted();
             break;
         case MATCH_STATE_COUNTDOWN:
-            hgg.countdown_started();
+            hgg.countdownStarted();
             break;
         case MATCH_STATE_PLAYTIME:
-            hgg.playtime_started();
+            hgg.playtimeStarted();
             break;
         case MATCH_STATE_POSTMATCH:
-            hgg.postmatch_started();
+            hgg.postmatchStarted();
             break;
     }
 }
@@ -78,14 +78,14 @@ void GT_Shutdown() {
 }
 
 void GT_SpawnGametype() {
-    hgg.spawn_gametype();
+    hgg.spawnGametype();
 }
 
 void GT_InitGametype() {
-    hgg.init_gametype();
+    hgg.initGametype();
 }
 
 void dummy_die(cEntity @self, cEntity @inflictor, cEntity @attacker)
 {
-    hgg.dummy_killed(self, attacker, inflictor);
+    hgg.dummyKilled(self, attacker, inflictor);
 }

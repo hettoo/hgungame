@@ -27,7 +27,7 @@ class Account {
     int rank;
     int kills;
     int deaths;
-    int minutes_played;
+    int minutesPlayed;
 
     Account() {
         id = "";
@@ -39,16 +39,16 @@ class Account {
         rank = NO_RANK;
         kills = 0;
         deaths = 0;
-        minutes_played = 0;
+        minutesPlayed = 0;
     }
 
     void init(cClient @client) {
         id = raw(client.getName());
-        ip = get_ip(client);
+        ip = getIP(client);
     }
 
-    void set_password(String &new_password) {
-        password = new_password;
+    void setPassword(String &newPassword) {
+        password = newPassword;
     }
 
     int read(String &file, int index) {
@@ -64,7 +64,7 @@ class Account {
         rank = file.getToken(index++).toInt();
         kills = file.getToken(index++).toInt();
         deaths = file.getToken(index++).toInt();
-        minutes_played = file.getToken(index++).toInt();
+        minutesPlayed = file.getToken(index++).toInt();
 
         return index;
     }
@@ -79,27 +79,27 @@ class Account {
         file += "\"" + rank + "\" ";
         file += "\"" + kills + "\" ";
         file += "\"" + deaths + "\" ";
-        file += "\"" + minutes_played + "\"\n";
+        file += "\"" + minutesPlayed + "\"\n";
     }
 
-    void add_kill() {
-        if (for_real())
+    void addKill() {
+        if (forReal())
             kills++;
     }
 
-    void add_death() {
-        if (for_real())
+    void addDeath() {
+        if (forReal())
             deaths++;
     }
 
-    void add_minute() {
-        if (for_real())
-            minutes_played++;
+    void addMinute() {
+        if (forReal())
+            minutesPlayed++;
     }
 
-    bool update_row(int new_row) {
-        if (new_row > row) {
-            row = new_row;
+    bool updateRow(int newRow) {
+        if (newRow > row) {
+            row = newRow;
             return true;
         }
         return false;

@@ -22,28 +22,28 @@ const String DB_FILE = "users_";
 const int MAX_DB_ITEMS = 2048;
 const int TOP_PLAYERS = 100;
 
-class DataBase {
+class Database {
     Account@[] accounts;
     int size;
-    bool has_root;
-    String file_name;
+    bool hasRoot;
+    String fileName;
     Ranking @ranking;
 
-    DataBase() {
+    Database() {
         accounts.resize(MAX_DB_ITEMS);
         size = 0;
-        has_root = false;
+        hasRoot = false;
         @ranking = Ranking(TOP_PLAYERS);
     }
 
     void init() {
-        file_name = data_file(DB_FILE + DATA_VERSION);
+        fileName = dataFile(DB_FILE + DATA_VERSION);
     }
 
     void read() {
         size = 0;
-        has_root = false;
-        String file = G_LoadFile(file_name);
+        hasRoot = false;
+        String file = G_LoadFile(fileName);
 
         int index = 0;
         Account @account;
@@ -55,14 +55,14 @@ class DataBase {
         } while (index != END);
     }
 
-    int add(Account @account, bool update_ranking) {
+    int add(Account @account, bool updateRanking) {
         if (account.ip == "")
             account.ip = "127.0.0.1";
         int index = size++;
         @accounts[index] = @account;
         if (account.level == LEVEL_ROOT)
-            has_root = true;
-        if (update_ranking)
+            hasRoot = true;
+        if (updateRanking)
             ranking.update(account);
         return index;
     }
@@ -84,6 +84,6 @@ class DataBase {
             + DATA_VERSION + "\n";
         for (int i = 0; i < size; i++)
             accounts[i].write(file);
-        G_WriteFile(file_name, file);
+        G_WriteFile(fileName, file);
     }
 }
