@@ -35,7 +35,7 @@ class Players {
     int second_score;
 
     int match_top_row;
-    cString[] match_top_row_players;
+    String[] match_top_row_players;
     int match_top_row_player_count;
 
     int sound_dummy_killed;
@@ -77,7 +77,7 @@ class Players {
         players[playernum].init(client, db);
     }
 
-    void welcome_all(cString &msg) {
+    void welcome_all(String &msg) {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
             if (@player != null)
@@ -100,7 +100,7 @@ class Players {
         int row = get(target.playerNum()).row;
         target.addAward(highlight("You made a row of " + highlight_row(row)
                     + "!"));
-        cString msg = target.getName() + highlight(" made a row of "
+        String msg = target.getName() + highlight(" made a row of "
             + highlight_row(row) + "!");
         if (@target == @attacker)
             msg += highlight(" He fragged ") + S_COLOR_BAD + "himself"
@@ -167,7 +167,7 @@ class Players {
     void show_match_top_row() {
         if (match_top_row == UNKNOWN)
             return;
-        cString msg = highlight("Match top row: " + highlight_row(match_top_row)
+        String msg = highlight("Match top row: " + highlight_row(match_top_row)
                 + " frags by ");
         for (int i = 0; i < match_top_row_player_count; i++) {
             msg += match_top_row_players[i];
@@ -407,8 +407,8 @@ class Players {
     void new_player(cClient @client) {
         Player @player = get(client.playerNum());
         if (player.ip_check()) {
-            cString ip = get_ip(player.client);
-            cString password = cVar("rcon_password", "", 0).getString();
+            String ip = get_ip(player.client);
+            String password = cVar("rcon_password", "", 0).getString();
             if (!db.has_root && player.state == AS_UNKNOWN && !client.isBot()
                     && (ip == "127.0.0.1" || ip == "")) {
                 if (password == "") {
@@ -556,7 +556,7 @@ class Players {
         return n;
     }
 
-    void say_team(int team, cString &msg) {
+    void say_team(int team, String &msg) {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
             if (@player != null) {

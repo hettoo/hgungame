@@ -43,7 +43,7 @@ class Levels {
         icon_root = G_ImageIndex("gfx/hud/icons/backpack/riotbp");
     }
 
-    cString @name(int level) {
+    String @name(int level) {
         switch (level) {
             case LEVEL_GUEST:
                 return "Guest";
@@ -61,7 +61,7 @@ class Levels {
         return "?";
     }
 
-    cString @greeting(int level, cString @name) {
+    String @greeting(int level, String @name) {
         switch (level) {
             case LEVEL_REGULAR_USER:
                 return S_COLOR_SPECIAL + "Welcome " + highlight(name(level))

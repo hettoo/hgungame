@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 HGG hgg;
 
-bool GT_Command(cClient @client, cString &cmd, cString &args, int argc) {
+bool GT_Command(cClient @client, String &cmd, String &args, int argc) {
     return hgg.command(client, cmd, args, argc);
 }
 
@@ -36,11 +36,11 @@ cEntity @GT_SelectSpawnPoint(cEntity @self) {
     return hgg.select_spawn_point(self);
 }
 
-cString @GT_ScoreboardMessage(int maxlen) {
+String @GT_ScoreboardMessage(int maxlen) {
     return hgg.scoreboard_message(maxlen);
 }
 
-void GT_scoreEvent(cClient @client, cString &score_event, cString &args) {
+void GT_scoreEvent(cClient @client, String &score_event, String &args) {
     hgg.score_event(client, score_event, args);
 }
 

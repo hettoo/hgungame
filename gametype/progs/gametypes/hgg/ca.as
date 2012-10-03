@@ -21,8 +21,8 @@ const int COUNTDOWN_START = 6;
 const int COUNTDOWN_END = 4;
 const int COUNTDOWN_SOUND_MAX = 3;
 
-const cString ONE_VS_ONE = "1v1! Good luck!";
-const cString LAST_PLAYER = S_COLOR_GREEN + "Last Player Standing!";
+const String ONE_VS_ONE = "1v1! Good luck!";
+const String LAST_PLAYER = S_COLOR_GREEN + "Last Player Standing!";
 
 class HGG : HGGBase {
     int countdown_start;

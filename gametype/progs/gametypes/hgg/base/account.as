@@ -18,9 +18,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 class Account {
-    cString id;
-    cString ip;
-    cString password;
+    String id;
+    String ip;
+    String password;
 
     int level;
     int row;
@@ -47,11 +47,11 @@ class Account {
         ip = get_ip(client);
     }
 
-    void set_password(cString &new_password) {
+    void set_password(String &new_password) {
         password = new_password;
     }
 
-    int read(cString &file, int index) {
+    int read(String &file, int index) {
         if (file.getToken(index) == "")
             return END;
 
@@ -69,7 +69,7 @@ class Account {
         return index;
     }
 
-    void write(cString &file) {
+    void write(String &file) {
         file += "\"" + id + "\" ";
         file += "\"" + ip + "\" ";
         file += "\"" + password + "\" ";

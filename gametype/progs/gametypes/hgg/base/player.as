@@ -69,7 +69,7 @@ class Player {
                 @account = @backup;
             }
         } else {
-            cString ip = get_ip(client);
+            String ip = get_ip(client);
             if (ip == account.ip || (ip == "" && account.ip == "127.0.0.1"))
                 state = AS_IDENTIFIED;
             else
@@ -90,7 +90,7 @@ class Player {
         put_team(team, team == TEAM_SPECTATOR || client.getEnt().isGhosting());
     }
 
-    void force_spec(cString &msg) {
+    void force_spec(String &msg) {
         put_team(TEAM_SPECTATOR, true);
         client.addAward(S_COLOR_BAD + msg);
     }
@@ -103,7 +103,7 @@ class Player {
         return true;
     }
 
-    void set_registered(cString &password) {
+    void set_registered(String &password) {
         state = AS_IDENTIFIED;
         account.set_password(password);
     }
@@ -129,7 +129,7 @@ class Player {
                 + " to see the commands you may use here!");
     }
 
-    void welcome(cString &msg) {
+    void welcome(String &msg) {
         if (@client != null && client.team != TEAM_SPECTATOR)
             client.addAward(msg);
     }
@@ -215,23 +215,23 @@ class Player {
         G_ConfigString(CS_GENERAL + 1, "- " + count_beta + " -");
     }
 
-    void print(cString &msg) {
+    void print(String &msg) {
         client.printMessage(msg);
     }
 
-    void center(cString &msg) {
+    void center(String &msg) {
         G_CenterPrintMsg(client.getEnt(), msg);
     }
 
-    void say(cString &msg) {
+    void say(String &msg) {
         print(msg + "\n");
     }
 
-    void say_bad(cString &msg) {
+    void say_bad(String &msg) {
         say(S_COLOR_BAD + msg);
     }
 
-    void administrate(cString &msg) {
+    void administrate(String &msg) {
         client.addAward(S_COLOR_ADMINISTRATIVE + msg);
     }
 }

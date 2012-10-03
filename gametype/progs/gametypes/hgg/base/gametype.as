@@ -17,9 +17,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-const cString CONFIGS_DIR = "configs/server/gametypes/";
+const String CONFIGS_DIR = "configs/server/gametypes/";
 
-const cString CVAR_BASE = "g_hgg_";
+const String CVAR_BASE = "g_hgg_";
 
 enum Gametypes {
     GT_FFA,
@@ -37,8 +37,8 @@ enum CVars {
 
 class Gametype {
     int type;
-    cString name;
-    cString file;
+    String name;
+    String file;
 
     bool has_challengers_queue;
     bool has_map_list;
@@ -118,11 +118,11 @@ class Gametype {
         gametype.setAuthor(AUTHOR);
     }
 
-    cString @map_list() {
+    String @map_list() {
         if (!has_map_list)
             return "";
 
-        cString ffa_maps = "cwl4 50u1ca1 yeahwhatevahb2 jerms_ca1 inkfinal"
+        String ffa_maps = "cwl4 50u1ca1 yeahwhatevahb2 jerms_ca1 inkfinal"
             + " sandboxb5";
         switch (type) {
             case GT_FFA:
@@ -137,8 +137,8 @@ class Gametype {
         return "wca3";
     }
 
-    cString @cvar_defaults() {
-        cString total = "";
+    String @cvar_defaults() {
+        String total = "";
         for (int i = 0; i < CV_TOTAL; i++)
             total += "set " + cvars[i].getName() + " \""
                 + cvars[i].getDefaultString() + "\"\n";
@@ -149,9 +149,9 @@ class Gametype {
         if (G_FileExists(file))
             return;
 
-        cString maps = map_list();
+        String maps = map_list();
 
-        cString config = "// '" + gametype.getTitle()
+        String config = "// '" + gametype.getTitle()
             + "' gametype configuration file\n"
             + "\n"
             + "// map rotation\n"
@@ -189,15 +189,15 @@ class Gametype {
         G_CmdExecute("exec " + file + " silent");
     }
 
-    cString @motd() {
+    String @motd() {
         return cvars[CV_MOTD].getString();
     }
 
-    cString @root() {
+    String @root() {
         return cvars[CV_ROOT].getString();
     }
 
-    cString @root_password() {
+    String @root_password() {
         return cvars[CV_ROOT_PASSWORD].getString();
     }
 }

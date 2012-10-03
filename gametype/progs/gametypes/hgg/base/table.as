@@ -23,19 +23,19 @@ class Table {
     int[] sizes;
     int columns;
     int i;
-    cString string;
+    String string;
 
     Table() {
         sizes.resize(MAX_COLUMNS);
         reset();
     }
 
-    void add_column(cString &name, int size) {
+    void add_column(String &name, int size) {
         string += fixed_field(name, size);
         sizes[columns++] = size;
     }
 
-    void add(cString &field) {
+    void add(String &field) {
         if (i == 0)
             string += "\n";
         string += fixed_field(field, sizes[i]);
@@ -46,7 +46,7 @@ class Table {
         add(field + "");
     }
 
-    cString @string() {
+    String @string() {
         return string;
     }
 

@@ -18,21 +18,21 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 class Command {
-    cString name;
-    cString usage;
-    cString description;
+    String name;
+    String usage;
+    String description;
     int min_level;
     bool sub_command;
 
     int min_argc;
     int max_argc;
 
-    Command(cString &new_usage, cString &new_description, int new_min_level,
+    Command(String &new_usage, String &new_description, int new_min_level,
             bool new_sub_command) {
         set(new_usage, new_description, new_min_level, new_sub_command);
     }
 
-    void set(cString &new_usage, cString &new_description, int new_min_level,
+    void set(String &new_usage, String &new_description, int new_min_level,
             bool new_sub_command) {
         name = "";
         usage = new_usage;
@@ -50,13 +50,13 @@ class Command {
      * NOTE: assumes no nesting.
      */
     void analyze_usage() {
-        cString new_usage = "";
+        String new_usage = "";
         min_argc = 0;
         max_argc = 0;
         int dots = 0;
         bool naming = true;
         for (int i = 0; i < usage.len(); i++) {
-            cString c = usage.substr(i, 1);
+            String c = usage.substr(i, 1);
             if (naming) {
                 if (c == " ")
                     naming = false;
@@ -91,7 +91,7 @@ class Command {
         return argc >= min_argc && (argc <= max_argc || max_argc == INFINITY);
     }
 
-    void say(cString &msg) {
+    void say(String &msg) {
         notify(highlight(name) + ": " + msg);
     }
 }

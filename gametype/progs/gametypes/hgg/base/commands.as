@@ -69,17 +69,17 @@ class Commands {
         add("shutdown", "Shutdown the server.", LEVEL_ROOT);
     }
 
-    void add(cString &usage, cString &description,
+    void add(String &usage, String &description,
             int min_level, bool sub_command) {
         @commands[size++] = Command(usage, description, min_level, sub_command);
     }
 
-    void add(cString &usage, cString &description,
+    void add(String &usage, String &description,
             int min_level) {
         add(usage, description, min_level, true);
     }
 
-    Command @find(cString &name) {
+    Command @find(String &name) {
         for (int i = 0; i < size; i++) {
             if (commands[i].name == name)
                 return commands[i];
@@ -88,7 +88,7 @@ class Commands {
         return null;
     }
 
-    bool handle(cClient @client, cString &cmd, cString &args, int argc,
+    bool handle(cClient @client, String &cmd, String &args, int argc,
             Players @players) {
         if (cmd == "cvarinfo")
             return cmd_cvarinfo(client, args, argc, players);
@@ -125,18 +125,18 @@ class Commands {
         return true;
     }
 
-    bool cmd_cvarinfo(cClient @client, cString &args, int argc,
+    bool cmd_cvarinfo(cClient @client, String &args, int argc,
             Players @players) {
         GENERIC_CheatVarResponse(client, "cvarinfo", args, argc);
         return true;
     }
 
-    cString @full_usage(Command @command) {
+    String @full_usage(Command @command) {
         return "/" + (command.sub_command ? COMMAND_BASE + " " : "")
             + command.name + " " + command.usage;
     }
 
-    bool handle_base(Command @command, Player @player, cString &args, int argc,
+    bool handle_base(Command @command, Player @player, String &args, int argc,
             Players @players) {
         if (command.name == "gametype")
             cmd_gametype(command, player, args, argc, players);
@@ -186,10 +186,10 @@ class Commands {
         return true;
     }
 
-    bool cmd_gametype(Command @command, Player @player, cString &args, int argc,
+    bool cmd_gametype(Command @command, Player @player, String &args, int argc,
             Players @players) {
         cVar fs_game("fs_game", "", 0);
-        cString manifest = gametype.getManifest();
+        String manifest = gametype.getManifest();
 
         player.say("Gametype " + gametype.getName() + " : "
             + gametype.getTitle() + "\n"
@@ -204,9 +204,9 @@ class Commands {
         return true;
     }
 
-    void cmd_register(Command @command, Player @player, cString &args,
+    void cmd_register(Command @command, Player @player, String &args,
             int argc, Players @players) {
-        cString password = args.getToken(0);
+        String password = args.getToken(0);
         if (player.state != AS_UNKNOWN) {
             player.say_bad("Your name is already registered.");
         } else if (@players.db.find(raw(player.client.getName())) != null) {
@@ -227,7 +227,7 @@ class Commands {
         }
     }
 
-    void cmd_identify(Command @command, Player @player, cString &args,
+    void cmd_identify(Command @command, Player @player, String &args,
             int argc, Players @players) {
         if (player.state != AS_WRONG_IP) {
             player.say_bad("You did not need to identify.");
@@ -241,14 +241,14 @@ class Commands {
         }
     }
 
-    void cmd_whoami(Command @command, Player @player, cString &args,
+    void cmd_whoami(Command @command, Player @player, String &args,
             int argc, Players @players) {
         command.say(player.client.getName() + " is a level "
                 + player.account.level + " user ("
                 + highlight(players.levels.name(player.account.level)) + ")");
     }
 
-    void cmd_listplayers(Command @command, Player @player, cString &args,
+    void cmd_listplayers(Command @command, Player @player, String &args,
             int argc, Players @players) {
         Table table;
         table.add_column("id", 3);
@@ -275,33 +275,33 @@ class Commands {
         player.print(table.string());
     }
 
-    void pm_message(Player @from, Player @to, cString &message,
+    void pm_message(Player @from, Player @to, String &message,
             bool is_self_notification) {
         to.say(from.client.getName() + S_COLOR_PM + " " + (is_self_notification
                     ? "<<" : ">>" ) + " " + S_COLOR_RESET + message);
     }
 
-    void send_pm(Player @from, Player @to, cString &message) {
+    void send_pm(Player @from, Player @to, String &message) {
         voice(to.client, sound_pm);
         pm_message(to, from, message, true);
         pm_message(from, to, message, false);
     }
 
-    void cmd_pm(Command @command, Player @player, cString &args, int argc,
+    void cmd_pm(Command @command, Player @player, String &args, int argc,
             Players @players) {
         int n = args.getToken(0).toInt();
         Player @other = players.get(n);
         if (@other == null || @other.client == null) {
             player.say_bad("Target player does not exist.");
         } else {
-            cString message = "";
+            String message = "";
             int pos = args.locate("" + n, 0) + 1;
             message = args.substr(pos,args.len());
             send_pm(player, other, message);
         }
     }
 
-    void cmd_stats(Command @command, Player @player, cString &args, int argc,
+    void cmd_stats(Command @command, Player @player, String &args, int argc,
             Players @players) {
         int id;
         if (argc >= 1)
@@ -329,7 +329,7 @@ class Commands {
         }
     }
 
-    void cmd_ranking(Command @command, Player @player, cString &args, int argc,
+    void cmd_ranking(Command @command, Player @player, String &args, int argc,
             Players @players) {
         Table table;
         table.add_column("rank", 5);
@@ -346,7 +346,7 @@ class Commands {
         player.print(table.string());
     }
 
-    void cmd_help(Command @command, Player @player, cString &args, int argc,
+    void cmd_help(Command @command, Player @player, String &args, int argc,
             Players @players) {
         player.say("Available commands, sorted by level:");
         for (int level = 0; level <= player.account.level; level++) {
@@ -365,19 +365,19 @@ class Commands {
         }
     }
 
-    void cmd_restart(Command @command, Player @player, cString &args,
+    void cmd_restart(Command @command, Player @player, String &args,
             int argc, Players @players) {
         command.say(player.client.getName() + " is restarting the match");
         exec("match restart");
     }
 
-    void cmd_nextmap(Command @command, Player @player, cString &args,
+    void cmd_nextmap(Command @command, Player @player, String &args,
             int argc, Players @players) {
         command.say(player.client.getName() + " is advancing the match");
         exec("match advance");
     }
 
-    void cmd_putteam(Command @command, Player @player, cString &args,
+    void cmd_putteam(Command @command, Player @player, String &args,
             int argc, Players @players) {
         int id = args.getToken(0).toInt();
         Player @other = players.get(id);
@@ -388,7 +388,7 @@ class Commands {
             player.say_bad("You can only change the team of people with lower"
                     + " levels than yours.");
         } else {
-            cString team_name = args.getToken(1);
+            String team_name = args.getToken(1);
             int team;
             if (team_name == "alpha") {
                 team = TEAM_ALPHA;
@@ -417,7 +417,7 @@ class Commands {
         }
     }
 
-    void cmd_shuffle(Command @command, Player @player, cString &args, int argc,
+    void cmd_shuffle(Command @command, Player @player, String &args, int argc,
             Players @players) {
         if (!gametype.isTeamBased) {
             player.say_bad("This gametype is not team-based.");
@@ -427,7 +427,7 @@ class Commands {
         }
     }
 
-    void cmd_kick(Command @command, Player @player, cString &args, int argc,
+    void cmd_kick(Command @command, Player @player, String &args, int argc,
             Players @players) {
         int id = args.getToken(0).toInt();
         Player @other = players.get(id);
@@ -443,7 +443,7 @@ class Commands {
         }
     }
 
-    void cmd_setlevel(Command @command, Player @player, cString &args,
+    void cmd_setlevel(Command @command, Player @player, String &args,
             int argc, Players @players) {
         int id = args.getToken(0).toInt();
         int level = args.getToken(1).toInt();
@@ -467,14 +467,14 @@ class Commands {
         }
     }
 
-    void cmd_toggledummies(Command @command, Player @player, cString &args,
+    void cmd_toggledummies(Command @command, Player @player, String &args,
             int argc, Players @players) {
         players.dummies.toggle();
         command.say(player.client.getName() + " " + (players.dummies.enabled
                     ? "enabled" : "disabled") + " dummmies");
     }
 
-    void cmd_lol(Command @command, Player @player, cString &args, int argc,
+    void cmd_lol(Command @command, Player @player, String &args, int argc,
             Players @players) {
         for (int i = 0; i < players.size; i++) {
             Player @other = players.get(i);
@@ -492,24 +492,24 @@ class Commands {
         command.say(player.client.getName() + " threw grenades at everyone");
     }
 
-    void cmd_map(Command @command, Player @player, cString &args, int argc,
+    void cmd_map(Command @command, Player @player, String &args, int argc,
             Players @players) {
-        cString @map = args.getToken(0);
+        String @map = args.getToken(0);
         command.say(player.client.getName() + " is changing to map " + map);
         exec("map", map);
     }
 
-    void cmd_devmap(Command @command, Player @player, cString &args,
+    void cmd_devmap(Command @command, Player @player, String &args,
             int argc, Players @players) {
-        cString @map = args.getToken(0);
+        String @map = args.getToken(0);
         command.say(player.client.getName() + " is changing to devmap " + map);
         exec("devmap ", map);
     }
 
-    void cmd_cvar(Command @command, Player @player, cString &args, int argc,
+    void cmd_cvar(Command @command, Player @player, String &args, int argc,
             Players @players) {
-        cString name = args.getToken(0);
-        cString clean_name = clean(name);
+        String name = args.getToken(0);
+        String clean_name = clean(name);
         cVar @cvar = cVar(name, "", 0); // NOTE: resets the default value :-(
         if ((clean_name == "g_operator_password"
                     || clean_name == "rcon_password")
@@ -521,7 +521,7 @@ class Commands {
                 && player.account.level < LEVEL_ADMIN) {
             player.say_bad("Forget it.");
         } else {
-            cString value = args.getToken(1);
+            String value = args.getToken(1);
             cvar.set(value);
             if (cvar.getString() != value)
                 player.say_bad(
@@ -534,20 +534,20 @@ class Commands {
         }
     }
 
-    void cmd_shutdown(Command @command, Player @player, cString &args,
+    void cmd_shutdown(Command @command, Player @player, String &args,
             int argc, Players @players) {
         command.say(player.client.getName() + " is shutting down the server");
         exec("quit");
     }
 
-    void cmd_do(Command @command, Player @player, cString &args,
+    void cmd_do(Command @command, Player @player, String &args,
             int argc, Players @players) {
-        cString @cmd = args.getToken(0);
+        String @cmd = args.getToken(0);
         //command.say(player.client.getName() + " is doing " + cmd);
         exec(cmd);
     }
 
-    void cmd_unimplemented(Command @command, Player @player, cString &args,
+    void cmd_unimplemented(Command @command, Player @player, String &args,
             int argc, Players @players) {
         player.say("Somehow this command was not implemented.\n"
                 + "Please report this bug to a developer.");

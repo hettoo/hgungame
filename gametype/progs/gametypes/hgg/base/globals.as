@@ -17,9 +17,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-const cString NAME = "hGunGame";
-const cString VERSION = "0.1-dev";
-const cString AUTHOR = "^0<].^7h^2e^9tt^2o^7o^0.[>^7";
+const String NAME = "hGunGame";
+const String VERSION = "0.1-dev";
+const String AUTHOR = "^0<].^7h^2e^9tt^2o^7o^0.[>^7";
 
 const int DATA_VERSION = 1;
 
@@ -29,56 +29,56 @@ const int NW_ARMOR = 50;
 const int NW_ARMOR_BONUS = 8;
 const float MAX_ARMOR = 100.0;
 
-const cString S_COLOR_ITEM_AWARD = S_COLOR_GREEN;
-const cString S_COLOR_ROW = S_COLOR_ORANGE;
-const cString S_COLOR_BAD = S_COLOR_RED;
-const cString S_COLOR_RESET = S_COLOR_WHITE;
-const cString S_COLOR_PERSISTENT = S_COLOR_RESET;
-const cString S_COLOR_TEMPORARY = S_COLOR_GREY;
-const cString S_COLOR_ADMINISTRATIVE = S_COLOR_CYAN;
-const cString S_COLOR_HIGHLIGHT = S_COLOR_YELLOW;
-const cString S_COLOR_HIGHLIGHT_ROW = S_COLOR_RED;
-const cString S_COLOR_DESCRIPTION = S_COLOR_GREY;
-const cString S_COLOR_PM = S_COLOR_GREEN;
-const cString S_COLOR_SPECIAL = S_COLOR_ORANGE;
-const cString S_COLOR_RECORD = S_COLOR_GREEN;
+const String S_COLOR_ITEM_AWARD = S_COLOR_GREEN;
+const String S_COLOR_ROW = S_COLOR_ORANGE;
+const String S_COLOR_BAD = S_COLOR_RED;
+const String S_COLOR_RESET = S_COLOR_WHITE;
+const String S_COLOR_PERSISTENT = S_COLOR_RESET;
+const String S_COLOR_TEMPORARY = S_COLOR_GREY;
+const String S_COLOR_ADMINISTRATIVE = S_COLOR_CYAN;
+const String S_COLOR_HIGHLIGHT = S_COLOR_YELLOW;
+const String S_COLOR_HIGHLIGHT_ROW = S_COLOR_RED;
+const String S_COLOR_DESCRIPTION = S_COLOR_GREY;
+const String S_COLOR_PM = S_COLOR_GREEN;
+const String S_COLOR_SPECIAL = S_COLOR_ORANGE;
+const String S_COLOR_RECORD = S_COLOR_GREEN;
 
-const cString COMMAND_BASE = "gt";
+const String COMMAND_BASE = "gt";
 
-const cString INDENT = "    ";
+const String INDENT = "    ";
 
 const float ATTN_UNHEARABLE = 999f;
 
-const cString DATA_DIR = "gtdata/";
+const String DATA_DIR = "gtdata/";
 
 const int UNKNOWN = -1;
 const int INFINITY = -1;
 const int END = -1;
 
-cString @data_file(cString &filename) {
+String @data_file(String &filename) {
     return DATA_DIR + gametype.getName() + "/"
         + (gametype.isInstagib() ? "insta" : "nw") + "/" + filename;
 }
 
-void string_add_maxed(cString &string, cString &addition, int max) {
+void string_add_maxed(String &string, String &addition, int max) {
     if (string.len() + addition.len() <= max)
         string += addition;
 }
 
-bool is_vowel(cString character) {
+bool is_vowel(String character) {
     character = character.substr(0, 1).tolower();
     return character == "a" || character == "e" || character == "o"
         || character == "i" || character == "u";
 }
 
-cString @clean(cString &str) {
+String @clean(String &str) {
     return str.removeColorTokens().tolower();
 }
 
-cString @remove_additive(cString &str) {
+String @remove_additive(String &str) {
     if (str.substr(str.len() - 1, 1) == ")") {
         int i;
-        cString sub;
+        String sub;
         for (i = str.len() - 2; (sub = str.substr(i, 1)) != "("; i--) {
             if (!sub.isNumerical())
                 return str;
@@ -88,12 +88,12 @@ cString @remove_additive(cString &str) {
     return str;
 }
 
-cString @raw(cString &str) {
+String @raw(String &str) {
     return remove_additive(clean(str));
 }
 
-cString get_ip(cClient @client) {
-    cString ip = client.getUserInfoKey("ip");
+String get_ip(cClient @client) {
+    String ip = client.getUserInfoKey("ip");
     ip = ip.substr(0, ip.locate(":", 0));
     return ip;
 }
@@ -116,13 +116,13 @@ void give_weapon(cClient @client, int weapon, int ammo) {
     }
 }
 
-void show_award(cClient @client, cString &msg) {
+void show_award(cClient @client, String &msg) {
     client.addAward(S_COLOR_ITEM_AWARD + msg);
 }
 
 void show_item_award(cClient @client, int tag) {
     cItem @item = G_GetItem(tag);
-    cString name = item.getName().tolower();
+    String name = item.getName().tolower();
     show_award(client, "You've got a" + (is_vowel(item.getShortName()) ? "n"
                 : "") + " " + name + "!");
 }
@@ -181,20 +181,20 @@ int other_team(int team) {
     return team == TEAM_ALPHA ? TEAM_BETA : TEAM_ALPHA;
 }
 
-cString @fixed_field(cString &text, int size) {
-    cString field;
-    cString replacement = "..";
+String @fixed_field(String &text, int size) {
+    String field;
+    String replacement = "..";
     int real_size = 0;
     int no_color_size = 0;
     bool stopped = false;
-    cString backup_field = "";
+    String backup_field = "";
     int backup_size = 0;
     while (real_size < text.len()) {
         if (no_color_size == size) {
             field = backup_field + S_COLOR_RESET + replacement;
             break;
         } else {
-            cString next = text.substr(real_size, 1);
+            String next = text.substr(real_size, 1);
             field += next;
 
             if (next == "^")
@@ -225,45 +225,45 @@ void lock_teams() {
     }
 }
 
-cString @wrap(cString &s) {
+String @wrap(String &s) {
     return "\n" + s + "\n";
 }
 
-cString @fixed_field(int n, int size) {
+String @fixed_field(int n, int size) {
     return fixed_field(n + "", size);
 }
 
-cString @highlight(cString &s) {
+String @highlight(String &s) {
     return S_COLOR_HIGHLIGHT + s + S_COLOR_RESET;
 }
 
-cString @highlight(int i) {
+String @highlight(int i) {
     return highlight(i + "");
 }
 
-cString @highlight_row(int row) {
+String @highlight_row(int row) {
     return S_COLOR_HIGHLIGHT_ROW + row + S_COLOR_HIGHLIGHT;
 }
 
-void notify(cString &msg) {
+void notify(String &msg) {
     if (msg != "")
         G_PrintMsg(null, msg + "\n");
 }
 
-void center_notify(cString &msg) {
+void center_notify(String &msg) {
     G_CenterPrintMsg(null, msg + "\n");
 }
 
-void debug(cString &msg) {
+void debug(String &msg) {
     G_Print(msg + "\n");
 }
 
-void random_announcer_sound(int team, cString &sound) {
+void random_announcer_sound(int team, String &sound) {
     G_AnnouncerSound(null, G_SoundIndex(sound + int(brandom(1, 2))), team,
             false, null);
 }
 
-void random_announcer_sound(cString &sound) {
+void random_announcer_sound(String &sound) {
     random_announcer_sound(GS_MAX_TEAMS, sound);
 }
 
@@ -279,10 +279,10 @@ void pain_sound(cClient @client, int sound) {
     sound(client, sound, CHAN_PAIN);
 }
 
-void exec(cString &cmd){
+void exec(String &cmd){
     G_CmdExecute(cmd + "\n");
 }
 
-void exec(cString &cmd, cString &arg) {
+void exec(String &cmd, String &arg) {
     exec(cmd + " \"" + arg + "\"");
 }

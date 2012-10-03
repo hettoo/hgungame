@@ -107,7 +107,7 @@ class HGGBase {
     /*
      * A client has issued a command.
      */
-    bool command(cClient @client, cString &cmd, cString &args, int argc) {
+    bool command(cClient @client, String &cmd, String &args, int argc) {
         return commands.handle(client, cmd, args, argc, players);
     }
 
@@ -202,7 +202,7 @@ class HGGBase {
      * killing opponents, like capturing a flag.
      * Warning: client can be null.
      */
-    void score_event(cClient @client, cString &score_event, cString &args) {
+    void score_event(cClient @client, String &score_event, String &args) {
         if (score_event == "kill") {
             cEntity @target = G_GetEntity(args.getToken(0).toInt());
             cEntity @inflictor = G_GetEntity(args.getToken(1).toInt());
@@ -350,8 +350,8 @@ class HGGBase {
     /*
      * Create the scoreboard contents.
      */
-    cString @scoreboard_message(int max_len) {
-        cString board = "";
+    String @scoreboard_message(int max_len) {
+        String board = "";
         if (gametype.isTeamBased) {
             scoreboard.add_team(board, TEAM_ALPHA, max_len, players);
             scoreboard.add_team(board, TEAM_BETA, max_len, players);

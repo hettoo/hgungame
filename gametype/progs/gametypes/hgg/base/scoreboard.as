@@ -17,8 +17,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-const cString SB_BASE_LAYOUT = "%p 18 %n 112 %s 52 %i 39 %s 39 %l 52 %i 26";
-const cString SB_BASE_TITLE = "L Name Clan Scr Row Ping Tm";
+const String SB_BASE_LAYOUT = "%p 18 %n 112 %s 52 %i 39 %s 39 %l 52 %i 26";
+const String SB_BASE_TITLE = "L Name Clan Scr Row Ping Tm";
 
 enum ScoreboardStates {
     SB_WARMUP,
@@ -67,28 +67,28 @@ class Scoreboard {
         }
     }
 
-    void add_team(cString &scoreboard, int id, int max_len, Players @players) {
+    void add_team(String &scoreboard, int id, int max_len, Players @players) {
         cTeam @team = @G_GetTeam(id);
         string_add_maxed(scoreboard, "&t " + id + " " + team.stats.score + " "
                 + team.ping + " ", max_len);
         add_team_players(scoreboard, id, max_len, players);
     }
 
-    void add_team_players(cString &scoreboard, int id, int max_len,
+    void add_team_players(String &scoreboard, int id, int max_len,
             Players @players) {
         cTeam @team = @G_GetTeam(id);
         for (int i = 0; @team.ent(i) != null; i++)
             add_player(scoreboard, team.ent(i), max_len, players);
     }
 
-    void add_player(cString &scoreboard, cEntity @ent, int max_len,
+    void add_player(String &scoreboard, cEntity @ent, int max_len,
             Players @players) {
         Player @player = players.get(ent.client.playerNum());
         int id = ent.isGhosting() && for_real() ? -(ent.playerNum() + 1)
             : ent.playerNum();
-        cString registered_color = player.state == AS_IDENTIFIED
+        String registered_color = player.state == AS_IDENTIFIED
             ? S_COLOR_PERSISTENT : S_COLOR_TEMPORARY;
-        cString entry = "&p " + players.levels.icon(player.account.level) + " "
+        String entry = "&p " + players.levels.icon(player.account.level) + " "
             + id + " " + ent.client.getClanName() + " " + ent.client.stats.score
             + " " + registered_color + player.account.row + " "
             + ent.client.ping + " " + player.minutes_played + " ";

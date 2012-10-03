@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-const cString DB_FILE = "users_";
+const String DB_FILE = "users_";
 
 const int MAX_DB_ITEMS = 2048;
 const int TOP_PLAYERS = 100;
@@ -26,7 +26,7 @@ class DataBase {
     Account@[] accounts;
     int size;
     bool has_root;
-    cString file_name;
+    String file_name;
     Ranking @ranking;
 
     DataBase() {
@@ -43,7 +43,7 @@ class DataBase {
     void read() {
         size = 0;
         has_root = false;
-        cString file = G_LoadFile(file_name);
+        String file = G_LoadFile(file_name);
 
         int index = 0;
         Account @account;
@@ -71,7 +71,7 @@ class DataBase {
         return add(account, true);
     }
 
-    Account @find(cString &id) {
+    Account @find(String &id) {
         for (int i = 0; i < size; i++) {
             if (accounts[i].id == id)
                 return accounts[i];
@@ -80,7 +80,7 @@ class DataBase {
     }
 
     void write() {
-        cString file = "// " + gametype.getName() + " user database version "
+        String file = "// " + gametype.getName() + " user database version "
             + DATA_VERSION + "\n";
         for (int i = 0; i < size; i++)
             accounts[i].write(file);
