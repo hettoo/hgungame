@@ -36,7 +36,7 @@ cEntity @GT_SelectSpawnPoint(cEntity @self) {
     return hgg.selectSpawnPoint(self);
 }
 
-String @GT_ScoreboardMessage(int maxlen) {
+String @GT_ScoreboardMessage(uint maxlen) {
     return hgg.scoreboardMessage(maxlen);
 }
 

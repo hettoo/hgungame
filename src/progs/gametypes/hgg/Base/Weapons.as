@@ -48,7 +48,7 @@ class Weapons {
     int icon(int weapon) {
         switch (weapon) {
             case WEAP_NONE:
-                return gametype.isInstagib() ? iconInstagun : iconGunblade;
+                return gametype.get_isInstagib() ? iconInstagun : iconGunblade;
             case WEAP_INSTAGUN:
                 return iconInstagun;
             case WEAP_GUNBLADE:
@@ -102,7 +102,7 @@ class Weapons {
     }
 
     void selectBest(cClient @client) {
-        int best = gametype.isInstagib() ? WEAP_INSTAGUN : WEAP_GUNBLADE;
+        int best = gametype.get_isInstagib() ? WEAP_INSTAGUN : WEAP_GUNBLADE;
 
         int weapon;
         for (int i = 0; (weapon = award(i)) != WEAP_TOTAL; i++) {
@@ -113,19 +113,19 @@ class Weapons {
     }
 
     void giveDefault(cClient @client) {
-        if (gametype.isInstagib())
+        if (gametype.get_isInstagib())
             giveWeapon(client, WEAP_INSTAGUN, INFINITY);
         else
             giveWeapon(client, WEAP_GUNBLADE, INFINITY);
     }
 
     bool heavy(int weapon) {
-        return gametype.isInstagib()
+        return gametype.get_isInstagib()
             && (weapon == WEAP_MACHINEGUN || weapon == WEAP_RIOTGUN);
     }
 
     bool weak(int weapon) {
-        return gametype.isInstagib()
+        return gametype.get_isInstagib()
             && (weapon == WEAP_INSTAGUN || weapon == WEAP_ELECTROBOLT
                     || weapon == WEAP_GUNBLADE);
     }

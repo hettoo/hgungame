@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 const String NAME = "hGunGame";
 const String VERSION = "0.1-dev";
-const String AUTHOR = "^0<].^7h^2e^9tt^2o^7o^0.[>^7";
+const String AUTHOR = "^0<^7inc^2.^7hettoo^9/^7";
 
 const int DATA_VERSION = 1;
 
@@ -56,11 +56,11 @@ const int INFINITY = -1;
 const int END = -1;
 
 String @dataFile(String &filename) {
-    return DATA_DIR + gametype.getName() + "/"
-        + (gametype.isInstagib() ? "insta" : "nw") + "/" + filename;
+    return DATA_DIR + gametype.get_name() + "/"
+        + (gametype.get_isInstagib() ? "insta" : "nw") + "/" + filename;
 }
 
-void stringAddMaxed(String &string, String &addition, int max) {
+void stringAddMaxed(String &string, String &addition, uint max) {
     if (string.len() + addition.len() <= max)
         string += addition;
 }
@@ -103,17 +103,12 @@ void giveWeapon(cClient @client, int weapon, int ammo) {
 
     cItem @item = G_GetItem(weapon);
     cItem @ammoItem = G_GetItem(item.ammoTag);
-    cItem @weakAmmoItem = G_GetItem(item.weakAmmoTag);
 
-    if (ammo == INFINITY) {
+    if (ammo == INFINITY)
         client.inventorySetCount(ammoItem.tag,
                 (weapon == WEAP_GUNBLADE ? 4 : INFINITE_AMMO));
-        client.inventorySetCount(weakAmmoItem.tag, 0);
-    } else {
+    else
         client.inventorySetCount(ammoItem.tag, ammo);
-        client.inventorySetCount(weakAmmoItem.tag,
-                (weapon == WEAP_GUNBLADE ? INFINITE_AMMO : 0));
-    }
 }
 
 void showAward(cClient @client, String &msg) {
@@ -122,8 +117,8 @@ void showAward(cClient @client, String &msg) {
 
 void showItemAward(cClient @client, int tag) {
     cItem @item = G_GetItem(tag);
-    String name = item.getName().tolower();
-    showAward(client, "You've got a" + (isVowel(item.getShortName()) ? "n"
+    String name = item.get_name().tolower();
+    showAward(client, "You've got a" + (isVowel(item.get_shortName()) ? "n"
                 : "") + " " + name + "!");
 }
 
@@ -137,7 +132,7 @@ void awardWeapon(cClient @client, int weapon, int ammo) {
     awardWeapon(client, weapon, ammo, true);
 }
 
-int ammo(cClient @client, int weapon) {
+int clientAmmo(cClient @client, int weapon) {
     if (weapon == WEAP_NONE)
         return INFINITY;
     cItem @item = G_GetItem(weapon);
@@ -181,16 +176,16 @@ int otherTeam(int team) {
     return team == TEAM_ALPHA ? TEAM_BETA : TEAM_ALPHA;
 }
 
-String @fixedField(String &text, int size) {
+String @fixedField(String &text, uint size) {
     String field;
     String replacement = "..";
-    int realSize = 0;
+    uint realSize = 0;
     int noColorSize = 0;
     bool stopped = false;
     String backupField = "";
-    int backupSize = 0;
+    uint backupSize = 0;
     while (realSize < text.len()) {
-        if (noColorSize == size) {
+        if (noColorSize == int(size)) {
             field = backupField + S_COLOR_RESET + replacement;
             break;
         } else {
@@ -203,14 +198,12 @@ String @fixedField(String &text, int size) {
                 noColorSize++;
 
             realSize++;
-            while (backupField.removeColorTokens().len()
-                    < noColorSize - replacement.removeColorTokens().len()) {
-                backupField += field.substr(backupSize, 1);
-                backupSize++;
-            }
+            while (int(backupField.removeColorTokens().len()
+                    + replacement.removeColorTokens().len()) < noColorSize)
+                backupField += field.substr(backupSize++, 1);
         }
     }
-    while (noColorSize < size) {
+    while (noColorSize < int(size)) {
         field += " ";
         noColorSize++;
     }
@@ -229,7 +222,7 @@ String @wrap(String &s) {
     return "\n" + s + "\n";
 }
 
-String @fixedField(int n, int size) {
+String @fixedField(int n, uint size) {
     return fixedField(n + "", size);
 }
 
@@ -267,16 +260,16 @@ void randomAnnouncerSound(String &sound) {
     randomAnnouncerSound(GS_MAX_TEAMS, sound);
 }
 
-void sound(cClient @client, int sound, int channel) {
+void clientSound(cClient @client, int sound, int channel) {
     G_Sound(client.getEnt(), channel, sound, ATTN_UNHEARABLE);
 }
 
 void voice(cClient @client, int sound) {
-    sound(client, sound, CHAN_VOICE);
+    clientSound(client, sound, CHAN_VOICE);
 }
 
 void painSound(cClient @client, int sound) {
-    sound(client, sound, CHAN_PAIN);
+    clientSound(client, sound, CHAN_PAIN);
 }
 
 void exec(String &cmd){

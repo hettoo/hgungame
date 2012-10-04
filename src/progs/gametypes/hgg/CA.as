@@ -113,7 +113,7 @@ class HGG : HGGBase {
             otherAlive.client.addAward(S_COLOR_SPECIAL + ONE_VS_ONE);
         } else {
             alive.client.addAward("1v" + count + "! You're on your own!");
-            players.sayTeam(team, "1v" + count + "! " + alive.client.getName()
+            players.sayTeam(team, "1v" + count + "! " + alive.client.get_name()
                     + " is on its own!");
         }
     }
@@ -174,7 +174,7 @@ class HGG : HGGBase {
     }
 
     void newSpectator(cClient @client) {
-        bool wasAlive = players.get(client.playerNum()).alive;
+        bool wasAlive = players.get(client.playerNum).alive;
         HGGBase::newSpectator(client);
 
         if(!forReal())

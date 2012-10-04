@@ -35,7 +35,7 @@ class Dummy {
     }
 
     void init(cEntity @spawn, int newID) {
-        pos = spawn.getOrigin();
+        pos = spawn.origin;
         id = newID;
     }
 
@@ -48,12 +48,12 @@ class Dummy {
                 + "/tris.skm");
         ent.team = TEAM_PLAYERS;
         ent.setSize(mins, maxs);
-        ent.setOrigin(pos);
+        ent.origin = pos;
         ent.solid = SOLID_YES;
         ent.clipMask = MASK_PLAYERSOLID;
         ent.moveType = MOVETYPE_TOSS;
         ent.svflags &= ~SVF_NOCLIENT;
-        ent.health = gametype.isInstagib() ? 100 : NW_HEALTH;
+        ent.health = gametype.get_isInstagib() ? 100 : NW_HEALTH;
         ent.mass = 400;
         ent.takeDamage = 1;
         ent.nextThink = levelTime + 1;

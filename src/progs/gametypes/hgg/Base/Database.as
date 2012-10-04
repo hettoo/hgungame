@@ -20,7 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 const String DB_FILE = "users_";
 
 const int MAX_DB_ITEMS = 2048;
-const int TOP_PLAYERS = 100;
+const int TOP_PLAYERS = 10;
 
 class Database {
     Account@[] accounts;
@@ -80,7 +80,7 @@ class Database {
     }
 
     void write() {
-        String file = "// " + gametype.getName() + " user database version "
+        String file = "// " + gametype.get_name() + " user database version "
             + DATA_VERSION + "\n";
         for (int i = 0; i < size; i++)
             accounts[i].write(file);

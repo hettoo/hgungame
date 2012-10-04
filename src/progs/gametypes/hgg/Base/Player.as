@@ -59,7 +59,7 @@ class Player {
         }
 
         Account @backup = @account;
-        @account = db.find(raw(client.getName()));
+        @account = db.find(raw(client.get_name()));
         if (@account == null) {
             if (!update || state != AS_UNKNOWN) {
                 state = AS_UNKNOWN;
@@ -115,7 +115,7 @@ class Player {
 
     void greet(Levels @levels) {
         if (!greeted && state == AS_IDENTIFIED) {
-            notify(levels.greeting(account.level, client.getName()));
+            notify(levels.greeting(account.level, client.get_name()));
             greeted = true;
         }
     }
@@ -123,7 +123,7 @@ class Player {
     void instruct(bool greeted) {
         say("Fork me on GitHub: github.com/hettoo/hgungame");
         if (!greeted)
-            say(S_COLOR_SPECIAL + "Welcome " + S_COLOR_RESET + client.getName()
+            say(S_COLOR_SPECIAL + "Welcome " + S_COLOR_RESET + client.get_name()
                     + S_COLOR_SPECIAL + " and have fun!");
         say(S_COLOR_SPECIAL + "Use /" + COMMAND_BASE
                 + " to see the commands you may use here.");
@@ -159,7 +159,7 @@ class Player {
 
     void updateAmmo() {
         for (int i = 0; i < WEAP_TOTAL; i++)
-            ammo[i] = ammo(client, i);
+            ammo[i] = clientAmmo(client, i);
     }
 
     void killed() {
@@ -185,7 +185,7 @@ class Player {
         if (client.team == TEAM_SPECTATOR)
             return;
 
-        int configIndex = CS_GENERAL + client.playerNum() + 2;
+        int configIndex = CS_GENERAL + client.playerNum + 2;
         client.setHUDStat(STAT_MESSAGE_ALPHA, configIndex);
         G_ConfigString(configIndex, "[ " + score + " ]");
     }

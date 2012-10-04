@@ -63,7 +63,7 @@ class Commands {
 
         add("devmap <mapname>", "Change the current map and enable cheats.",
                 LEVEL_ADMIN);
-        add("cvar <name> [value]", "Get or set a cVar.", LEVEL_ADMIN);
+        add("cvar <name> [value]", "Get or set a Cvar.", LEVEL_ADMIN);
 
         add("do <command>...", "Execute a server command.", LEVEL_ROOT);
         add("shutdown", "Shutdown the server.", LEVEL_ROOT);
@@ -101,7 +101,7 @@ class Commands {
         }
         Command @command = find(cmd);
 
-        Player @player = players.get(client.playerNum());
+        Player @player = players.get(client.playerNum);
         if (@player == null) {
         } else if (@command == null) {
             if (subCommand)
@@ -188,15 +188,15 @@ class Commands {
 
     bool cmdGametype(Command @command, Player @player, String &args, int argc,
             Players @players) {
-        cVar mod("fs_game", "", 0);
-        String manifest = gametype.getManifest();
+        Cvar mod("fs_game", "", 0);
+        String manifest = gametype.get_manifest();
 
-        player.say("Gametype " + gametype.getName() + " : "
-            + gametype.getTitle() + "\n"
+        player.say("Gametype " + gametype.get_name() + " : "
+            + gametype.get_title() + "\n"
             + "----------------\n"
-            + "Version: " + gametype.getVersion() + "\n"
-            + "Author: " + gametype.getAuthor() + "\n"
-            + "Mod: " + mod.getString()
+            + "Version: " + gametype.get_version() + "\n"
+            + "Author: " + gametype.get_author() + "\n"
+            + "Mod: " + mod.get_string()
             + (manifest.length() > 0 ? " (manifest: " + manifest + ")" : "")
             + "\n"
             + "----------------");
@@ -209,10 +209,10 @@ class Commands {
         String password = args.getToken(0);
         if (player.state != AS_UNKNOWN) {
             player.sayBad("Your name is already registered.");
-        } else if (@players.db.find(raw(player.client.getName())) != null) {
+        } else if (@players.db.find(raw(player.client.get_name())) != null) {
             player.sayBad("This name has been registered by another player"
                     + " during this match.");
-        } else if (raw(player.client.getName()) == "player") {
+        } else if (raw(player.client.get_name()) == "player") {
             player.sayBad("You are not allowed to register this name.");
         } else if (password == "") {
             player.sayBad("Your password should not be empty.");
@@ -222,7 +222,7 @@ class Commands {
             player.setRegistered(password);
             players.db.add(player.account, false);
             player.administrate("You are now registered!");
-            command.say(player.client.getName() + " registered himself");
+            command.say(player.client.get_name() + " registered himself");
             players.tryUpdateRank(player);
         }
     }
@@ -237,13 +237,13 @@ class Commands {
             player.state = AS_IDENTIFIED;
             player.account.ip = getIP(player.client);
             player.administrate("IP changed successfully!");
-            command.say(player.client.getName() + " identified himself");
+            command.say(player.client.get_name() + " identified himself");
         }
     }
 
     void cmdWhoami(Command @command, Player @player, String &args,
             int argc, Players @players) {
-        command.say(player.client.getName() + " is a level "
+        command.say(player.client.get_name() + " is a level "
                 + player.account.level + " user ("
                 + highlight(players.levels.name(player.account.level)) + ")");
     }
@@ -263,21 +263,21 @@ class Commands {
             Player @other = players.get(i);
             if (@other != null && @other.client != null) {
                 table.add(i);
-                table.add(other.client.getName());
-                table.add(other.client.getClanName());
-                table.add(G_GetTeam(other.client.team).getName());
+                table.add(other.client.get_name());
+                table.add(other.client.get_clanName());
+                table.add(G_GetTeam(other.client.team).get_name());
                 table.add(other.account.level);
                 if (player.state == AS_IDENTIFIED
                         && player.account.level == LEVEL_ROOT)
                     table.add(getIP(other.client));
             }
         }
-        player.print(table.string());
+        player.print(table.getString());
     }
 
     void pmMessage(Player @from, Player @to, String &message,
             bool isSelfNotification) {
-        to.say(from.client.getName() + S_COLOR_PM + " " + (isSelfNotification
+        to.say(from.client.get_name() + S_COLOR_PM + " " + (isSelfNotification
                     ? "<<" : ">>" ) + " " + S_COLOR_RESET + message);
     }
 
@@ -307,14 +307,14 @@ class Commands {
         if (argc >= 1)
             id = args.getToken(0).toInt();
         else
-            id = player.client.playerNum();
+            id = player.client.playerNum;
         Player @other = players.get(id);
         if (@other == null || @other.client == null) {
             player.sayBad("Target player does not exist.");
         } else {
-            player.print(wrap("Stats for " + other.client.getName()
-                    + (raw(other.client.getClanName()) == "" ? ""
-                        : " of " + other.client.getClanName()) + "\n"
+            player.print(wrap("Stats for " + other.client.get_name()
+                    + (raw(other.client.get_clanName()) == "" ? ""
+                        : " of " + other.client.get_clanName()) + "\n"
                 + "Level: " + other.account.level + " ("
                 + highlight(players.levels.name(other.account.level)) + ")\n"
                 + "Top row: " + S_COLOR_ROW + other.account.row
@@ -343,7 +343,7 @@ class Commands {
                 table.add(S_COLOR_ROW + account.row + S_COLOR_RESET);
             }
         }
-        player.print(table.string());
+        player.print(table.getString());
     }
 
     void cmdHelp(Command @command, Player @player, String &args, int argc,
@@ -367,13 +367,13 @@ class Commands {
 
     void cmdRestart(Command @command, Player @player, String &args,
             int argc, Players @players) {
-        command.say(player.client.getName() + " is restarting the match");
+        command.say(player.client.get_name() + " is restarting the match");
         exec("match restart");
     }
 
     void cmdNextmap(Command @command, Player @player, String &args,
             int argc, Players @players) {
-        command.say(player.client.getName() + " is advancing the match");
+        command.say(player.client.get_name() + " is advancing the match");
         exec("match advance");
     }
 
@@ -384,7 +384,7 @@ class Commands {
         if (@other == null) {
             player.sayBad("Target player does not exist.");
         } else if (other.account.level >= player.account.level
-                && player.client.playerNum() != id) {
+                && player.client.playerNum != id) {
             player.sayBad("You can only change the team of people with lower"
                     + " levels than yours.");
         } else {
@@ -410,9 +410,9 @@ class Commands {
                 return;
             }
 
-            command.say(player.client.getName() + " is putting "
-                    + other.client.getName() + " in team "
-                    + G_GetTeam(team).getName());
+            command.say(player.client.get_name() + " is putting "
+                    + other.client.get_name() + " in team "
+                    + G_GetTeam(team).get_name());
             other.putTeam(team);
         }
     }
@@ -422,7 +422,7 @@ class Commands {
         if (!gametype.isTeamBased) {
             player.sayBad("This gametype is not team-based.");
         } else {
-            command.say(player.client.getName() + " is shuffling the teams.");
+            command.say(player.client.get_name() + " is shuffling the teams.");
             players.shuffle();
         }
     }
@@ -437,8 +437,8 @@ class Commands {
             player.sayBad(
                     "You can only kick people with lower levels than yours.");
         } else {
-            command.say(player.client.getName() + " is kicking "
-                    + other.client.getName());
+            command.say(player.client.get_name() + " is kicking "
+                    + other.client.get_name());
             exec("kick " + id);
         }
     }
@@ -460,8 +460,8 @@ class Commands {
             player.sayBad(
                     "You can only set levels to lower levels than yours.");
         } else {
-            command.say(player.client.getName() + " set the level of "
-                    + other.client.getName() + " to " + level + " ("
+            command.say(player.client.get_name() + " set the level of "
+                    + other.client.get_name() + " to " + level + " ("
                     + highlight(players.levels.name(level)) + ")");
             other.setLevel(level);
         }
@@ -470,7 +470,7 @@ class Commands {
     void cmdToggledummies(Command @command, Player @player, String &args,
             int argc, Players @players) {
         players.dummies.toggle();
-        command.say(player.client.getName() + " " + (players.dummies.enabled
+        command.say(player.client.get_name() + " " + (players.dummies.enabled
                     ? "enabled" : "disabled") + " dummmies");
     }
 
@@ -481,28 +481,28 @@ class Commands {
             if (@other != null && @other.client != null
                     && other.client.team != TEAM_SPECTATOR) {
                 cEntity @ent = other.client.getEnt();
-                Vec3 angles = ent.getAngles();
+                Vec3 angles = ent.angles;
                 for (int j = 0; j < 360; j += 60) {
                     angles.y = j;
-                    G_FireGrenade(ent.getOrigin(), angles,
+                    G_FireGrenade(ent.origin, angles,
                             200, 100, 100, 100, 100, player.client.getEnt());
                 }
             }
         }
-        command.say(player.client.getName() + " threw grenades at everyone");
+        command.say(player.client.get_name() + " threw grenades at everyone");
     }
 
     void cmdMap(Command @command, Player @player, String &args, int argc,
             Players @players) {
         String @map = args.getToken(0);
-        command.say(player.client.getName() + " is changing to map " + map);
+        command.say(player.client.get_name() + " is changing to map " + map);
         exec("map", map);
     }
 
     void cmdDevmap(Command @command, Player @player, String &args,
             int argc, Players @players) {
         String @map = args.getToken(0);
-        command.say(player.client.getName() + " is changing to devmap " + map);
+        command.say(player.client.get_name() + " is changing to devmap " + map);
         exec("devmap ", map);
     }
 
@@ -510,25 +510,25 @@ class Commands {
             Players @players) {
         String name = args.getToken(0);
         String cleanName = clean(name);
-        cVar @cvar = cVar(name, "", 0); // NOTE: resets the default value :-(
+        Cvar cvar = Cvar(name, "", 0); // NOTE: resets the default value :-(
         if ((cleanName == "g_operator_password"
                     || cleanName == "rcon_password")
                 && player.account.level < LEVEL_ROOT) {
             player.sayBad("Forget it.");
         } else if (argc == 1) {
-            player.say(name + " is \"" + cvar.getString() + "\"");
+            player.say(name + " is \"" + cvar.get_string() + "\"");
         } else if (clean(name).substr(0, 3) == "sv_"
                 && player.account.level < LEVEL_ADMIN) {
             player.sayBad("Forget it.");
         } else {
             String value = args.getToken(1);
             cvar.set(value);
-            if (cvar.getString() != value)
+            if (cvar.get_string() != value)
                 player.sayBad(
-                        "Setting the cVar seems to have failed. It's value is "
-                        + cvar.getString());
+                        "Setting the Cvar seems to have failed. It's value is "
+                        + cvar.get_string());
             else
-                command.say(player.client.getName() + " set " + name
+                command.say(player.client.get_name() + " set " + name
                         + S_COLOR_RESET + " to \"" + value + S_COLOR_RESET
                         + "\"");
         }
@@ -536,14 +536,14 @@ class Commands {
 
     void cmdShutdown(Command @command, Player @player, String &args,
             int argc, Players @players) {
-        command.say(player.client.getName() + " is shutting down the server");
+        command.say(player.client.get_name() + " is shutting down the server");
         exec("quit");
     }
 
     void cmdDo(Command @command, Player @player, String &args,
             int argc, Players @players) {
         String @cmd = args.getToken(0);
-        //command.say(player.client.getName() + " is doing " + cmd);
+        //command.say(player.client.get_name() + " is doing " + cmd);
         exec(cmd);
     }
 

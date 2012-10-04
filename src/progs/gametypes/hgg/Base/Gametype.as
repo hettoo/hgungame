@@ -48,11 +48,11 @@ class Gametype {
 
     int spawnSystem;
 
-    cVar[] cvars;
+    Cvar[] cvars;
 
     void init() {
         name = "???";
-        file = CONFIGS_DIR + gametype.getName() + ".cfg";
+        file = CONFIGS_DIR + gametype.get_name() + ".cfg";
 
         hasChallengersQueue = false;
         hasMapList = true;
@@ -61,9 +61,9 @@ class Gametype {
         countdownTime = 5;
 
         cvars.resize(CV_TOTAL);
-        cvars[CV_MOTD].get(CVAR_BASE + "MOTD", "Have Fun!", CVAR_ARCHIVE);
-        cvars[CV_ROOT].get(CVAR_BASE + "root", "", CVAR_ARCHIVE);
-        cvars[CV_ROOT_PASSWORD].get(CVAR_BASE + "rootPassword", "",
+        cvars[CV_MOTD] = Cvar(CVAR_BASE + "MOTD", "Have Fun!", CVAR_ARCHIVE);
+        cvars[CV_ROOT]= Cvar(CVAR_BASE + "root", "", CVAR_ARCHIVE);
+        cvars[CV_ROOT_PASSWORD] = Cvar(CVAR_BASE + "rootPassword", "",
                 CVAR_ARCHIVE);
     }
 
@@ -108,14 +108,14 @@ class Gametype {
 
         gametype.spawnpointRadius = 256;
 
-        if (gametype.isInstagib())
+        if (gametype.get_isInstagib())
             gametype.spawnpointRadius *= 2;
     }
 
     void setInfo() {
-        gametype.setTitle(NAME + " " + name);
-        gametype.setVersion(VERSION);
-        gametype.setAuthor(AUTHOR);
+        gametype.set_title(NAME + " " + name);
+        gametype.set_version(VERSION);
+        gametype.set_author(AUTHOR);
     }
 
     String @mapList() {
@@ -137,11 +137,11 @@ class Gametype {
         return "wca3";
     }
 
-    String @cVarDefaults() {
+    String @CvarDefaults() {
         String total = "";
         for (int i = 0; i < CV_TOTAL; i++)
-            total += "set " + cvars[i].getName() + " \""
-                + cvars[i].getDefaultString() + "\"\n";
+            total += "set " + cvars[i].get_name() + " \""
+                + cvars[i].get_defaultString() + "\"\n";
         return total;
     }
 
@@ -151,7 +151,7 @@ class Gametype {
 
         String maps = mapList();
 
-        String config = "// '" + gametype.getTitle()
+        String config = "// '" + gametype.get_title()
             + "' gametype configuration file\n"
             + "\n"
             + "// map rotation\n"
@@ -160,7 +160,7 @@ class Gametype {
             + " // 0 = same map, 1 = in order, 2 = random\n"
             + "\n"
             + "// gametype specific settings\n"
-            + cVarDefaults()
+            + CvarDefaults()
             + "\n"
             + "// game settings\n"
             + "set g_scorelimit " + scorelimit + "\n"
@@ -181,23 +181,23 @@ class Gametype {
             + "set g_challengers_queue " + (hasChallengersQueue ? 1 : 0)
             + "\n"
             + "\n"
-            + "echo \"" + gametype.getName() + ".cfg executed\"\n";
+            + "echo \"" + gametype.get_name() + ".cfg executed\"\n";
 
         G_WriteFile(file, config);
-        G_Print("Created default config file for '" + gametype.getName()
+        G_Print("Created default config file for '" + gametype.get_name()
                 + "'\n");
         G_CmdExecute("exec " + file + " silent");
     }
 
     String @motd() {
-        return cvars[CV_MOTD].getString();
+        return cvars[CV_MOTD].get_string();
     }
 
     String @root() {
-        return cvars[CV_ROOT].getString();
+        return cvars[CV_ROOT].get_string();
     }
 
     String @rootPassword() {
-        return cvars[CV_ROOT_PASSWORD].getString();
+        return cvars[CV_ROOT_PASSWORD].get_string();
     }
 }

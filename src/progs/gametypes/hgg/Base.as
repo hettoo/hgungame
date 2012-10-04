@@ -67,7 +67,7 @@ class HGGBase {
         cBot @bot = self.client.getBot();
         float offensiveness = GENERIC_OffensiveStatus(self);
         for (int i = 0; (@goal = bot.getGoalEnt(i)) != null; i++) {
-            if (goal.getClassname() == "dummy")
+            if (goal.get_classname() == "dummy")
                 bot.setGoalWeight(i, DUMMY_WEIGHT_MULTIPLIER
                         * GENERIC_PlayerWeight(self, goal) * offensiveness);
         }
@@ -89,8 +89,8 @@ class HGGBase {
                     @betaSpawn = G_FindEntityWithClassname(betaSpawn,
                             "info_player_deathmatch");
                     if (@betaSpawn != null) {
-                        int dist = alphaSpawn.getOrigin().distance(
-                                betaSpawn.getOrigin());
+                        int dist = alphaSpawn.origin.distance(
+                                betaSpawn.origin);
                         if (dist > maxDist || maxDist == UNKNOWN) {
                             @max = betaSpawn;
                             maxDist = dist;
@@ -230,7 +230,7 @@ class HGGBase {
     }
 
     /*
-     * Add the root account from the cVars if there is no root yet and the
+     * Add the root account from the Cvars if there is no root yet and the
      * account name is not empty.
      */
     void checkRoot() {
@@ -260,7 +260,7 @@ class HGGBase {
 
         commands.init();
 
-        debug("Gametype '" + gametype.getTitle() + "' initialized");
+        debug("Gametype '" + gametype.get_title() + "' initialized");
     }
 
     /*
@@ -275,7 +275,7 @@ class HGGBase {
             return;
 
         GENERIC_Think();
-        if (!gametype.isInstagib())
+        if (!gametype.get_isInstagib())
             players.fixHealth();
         players.chargeGunblades();
         checkTime();

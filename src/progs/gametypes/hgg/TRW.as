@@ -36,7 +36,7 @@ class HGG : HGGBase {
 
     void killed(cClient @attacker, cClient @target, cClient @inflictor) {
         HGGBase::killed(attacker, target, inflictor);
-        Player @player = players.get(attacker.playerNum());
+        Player @player = players.get(attacker.playerNum);
         if (player.row % SPECIAL_ROW == 0 && @attacker != @target && forReal())
             G_GetTeam(attacker.team).stats.addScore(1);
     }

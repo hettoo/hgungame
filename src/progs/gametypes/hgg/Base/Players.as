@@ -67,7 +67,7 @@ class Players {
     }
 
     void initClient(cClient @client) {
-        int playernum = client.playerNum();
+        int playernum = client.playerNum;
         Player @player = get(playernum);
         if (@player == null) {
             @players[playernum] = Player();
@@ -97,16 +97,16 @@ class Players {
     }
 
     void announceRow(cClient @target, cClient @attacker) {
-        int row = get(target.playerNum()).row;
+        int row = get(target.playerNum).row;
         target.addAward(highlight("You made a row of " + highlightRow(row)
                     + "!"));
-        String msg = target.getName() + highlight(" made a row of "
+        String msg = target.get_name() + highlight(" made a row of "
             + highlightRow(row) + "!");
         if (@target == @attacker)
             msg += highlight(" He fragged ") + S_COLOR_BAD + "himself"
                 + highlight("!");
         else if (@attacker != null)
-            msg += highlight(" He was fragged by ") + attacker.getName()
+            msg += highlight(" He was fragged by ") + attacker.get_name()
                 + highlight("!");
         notify(msg);
     }
@@ -119,12 +119,12 @@ class Players {
                         + "You claimed server rank "
                         + highlight(player.account.rank)
                         + S_COLOR_RECORD + "!");
-                notify(player.client.getName() + S_COLOR_RECORD
+                notify(player.client.get_name() + S_COLOR_RECORD
                         + " claimed server rank "
                         + highlight(player.account.rank)
                         + S_COLOR_RECORD + "!");
             } else {
-                notify(player.client.getName() + S_COLOR_RECORD
+                notify(player.client.get_name() + S_COLOR_RECORD
                         + " still holds server rank "
                         + highlight(player.account.rank)
                         + S_COLOR_RECORD + "!");
@@ -136,7 +136,7 @@ class Players {
         if (@target == null)
             return;
 
-        Player @player = get(target.playerNum());
+        Player @player = get(target.playerNum);
         bool newRecord = player.updateRow() && player.state == AS_IDENTIFIED;
         if (player.row >= SPECIAL_ROW)
             announceRow(target, attacker);
@@ -149,16 +149,16 @@ class Players {
             if (player.row == matchTopRow) {
                 bool hasMatchTopRow = false;
                 for (int i = 0; i < matchTopRowPlayerCount; i++) {
-                    if (matchTopRowPlayers[i] == player.client.getName())
+                    if (matchTopRowPlayers[i] == player.client.get_name())
                         hasMatchTopRow = true;
                 }
                 if (!hasMatchTopRow)
                     matchTopRowPlayers[matchTopRowPlayerCount++]
-                        = player.client.getName();
+                        = player.client.get_name();
             } else {
                 matchTopRow = player.row;
                 matchTopRowPlayerCount = 1;
-                matchTopRowPlayers[0] = player.client.getName();
+                matchTopRowPlayers[0] = player.client.get_name();
             }
         }
         player.row = 0;
@@ -190,10 +190,10 @@ class Players {
     }
 
     void award(cClient @client, int row, bool real, int weapon, int ammo) {
-        Player @player = get(client.playerNum());
+        Player @player = get(client.playerNum);
         if (real) {
             player.addScore(1);
-            if (!gametype.isInstagib()) {
+            if (!gametype.get_isInstagib()) {
                 client.getEnt().health += NW_HEALTH_BONUS;
                 float newArmor = client.armor + NW_ARMOR_BONUS;
                 if (newArmor < MAX_ARMOR)
@@ -223,7 +223,7 @@ class Players {
             awardWeapon(client, award,
                     ammo == INFINITY ? weapons.ammo(award) : ammo, real);
         else if (real)
-            get(client.playerNum()).showRow();
+            get(client.playerNum).showRow();
 
         if (weapons.weak(weapon)) {
             int award;
@@ -244,14 +244,14 @@ class Players {
     }
 
     void award(cClient @client, int weapon) {
-        award(client, get(client.playerNum()).row, weapon);
+        award(client, get(client.playerNum).row, weapon);
     }
 
     void killedAnyway(cClient @target, cClient @attacker, cClient @inflictor) {
         if (@attacker == null || @attacker == @target)
             return;
 
-        Player @player = get(attacker.playerNum());
+        Player @player = get(attacker.playerNum);
         if (@target == null)
             player.center("YOU FRAGGED " + highlight("A DUMMY"));
         player.killer();
@@ -261,7 +261,7 @@ class Players {
         player.updateAmmo();
         if (forReal() && firstBlood) {
             attacker.addAward(highlight("First blood!"));
-            notify(attacker.getName() + highlight(" drew first blood!"));
+            notify(attacker.get_name() + highlight(" drew first blood!"));
             firstBlood = false;
         }
     }
@@ -270,10 +270,10 @@ class Players {
         if (match.getState() > MATCH_STATE_PLAYTIME || @target == null)
             return;
 
-        Player @player = get(target.playerNum());
+        Player @player = get(target.playerNum);
         player.alive = false;
         if (@attacker != null)
-            player.say("You have been fragged by " + attacker.getName());
+            player.say("You have been fragged by " + attacker.get_name());
         player.killed();
         checkRow(target, attacker);
 
@@ -288,7 +288,7 @@ class Players {
     }
 
     void giveSpawnWeapons(cClient @client) {
-        Player @player = get(client.playerNum());
+        Player @player = get(client.playerNum);
         weapons.giveDefault(client);
         for (int i = 1; i <= player.row; i++) {
             int award = weapons.award(i);
@@ -302,7 +302,7 @@ class Players {
     }
 
     void respawn(cClient @client) {
-        Player @player = get(client.playerNum());
+        Player @player = get(client.playerNum);
         player.alive = true;
 
         if (teamHUD) {
@@ -315,7 +315,7 @@ class Players {
         giveSpawnWeapons(client);
         weapons.selectBest(client);
         client.getEnt().respawnEffect();
-        if (!gametype.isInstagib()) {
+        if (!gametype.get_isInstagib()) {
             client.getEnt().health = NW_HEALTH;
             client.armor = NW_ARMOR;
         }
@@ -405,10 +405,10 @@ class Players {
     }
 
     void newPlayer(cClient @client) {
-        Player @player = get(client.playerNum());
+        Player @player = get(client.playerNum);
         if (player.ipCheck()) {
             String ip = getIP(player.client);
-            String password = cVar("rcon_password", "", 0).getString();
+            String password = Cvar("rcon_password", "", 0).get_string();
             if (!db.hasRoot && player.state == AS_UNKNOWN && !client.isBot()
                     && (ip == "127.0.0.1" || ip == "")) {
                 if (password == "") {
@@ -443,7 +443,7 @@ class Players {
     }
 
     void newSpectator(cClient @client) {
-        Player @player = get(client.playerNum());
+        Player @player = get(client.playerNum);
         player.alive = false;
         checkRow(client, null);
         if (player.score == bestScore || player.score == secondScore) {
@@ -454,13 +454,13 @@ class Players {
 
     void namechange(cClient @client) {
         initClient(client);
-        Player @player = get(client.playerNum());
+        Player @player = get(client.playerNum);
         if (player.client.team != TEAM_SPECTATOR)
             player.ipCheck();
     }
 
     void disconnect(cClient @client) {
-        int playernum = client.playerNum();
+        int playernum = client.playerNum;
         @players[playernum] = null;
         for (int i = playernum; i < size; i++) {
             if (@players[i] != null)

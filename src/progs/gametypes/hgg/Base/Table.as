@@ -46,8 +46,8 @@ class Table {
         add(field + "");
     }
 
-    String @string() {
-        return string;
+    String @getString() {
+        return string + (i == 0 && string != "" ? "\n" : "");
     }
 
     void reset() {

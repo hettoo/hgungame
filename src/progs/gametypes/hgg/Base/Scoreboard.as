@@ -83,13 +83,13 @@ class Scoreboard {
 
     void addPlayer(String &scoreboard, cEntity @ent, int maxLen,
             Players @players) {
-        Player @player = players.get(ent.client.playerNum());
-        int id = ent.isGhosting() && forReal() ? -(ent.playerNum() + 1)
-            : ent.playerNum();
+        Player @player = players.get(ent.client.playerNum);
+        int id = ent.isGhosting() && forReal() ? -(ent.playerNum + 1)
+            : ent.playerNum;
         String registeredColor = player.state == AS_IDENTIFIED
             ? S_COLOR_PERSISTENT : S_COLOR_TEMPORARY;
         String entry = "&p " + players.levels.icon(player.account.level) + " "
-            + id + " " + ent.client.getClanName() + " " + ent.client.stats.score
+            + id + " " + ent.client.get_clanName() + " " + ent.client.stats.score
             + " " + registeredColor + player.account.row + " "
             + ent.client.ping + " " + player.minutesPlayed + " ";
         if (state == SB_WARMUP)

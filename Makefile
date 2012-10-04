@@ -1,8 +1,9 @@
 # You may want to edit these, either here or from the commandline using
 # VARIABLE=value
-WSW_DIR = ~/.warsow-0.6
+WSW_DIR = ~/.warsow-1.0
+EXECUTE_DIR = .
 EXECUTABLE = wsw-server
-MOD = promod
+MOD = basewsw
 NAME = hGunGame Server
 GT = hgg_ffa
 PORT = 44400
@@ -10,7 +11,7 @@ INSTAGIB = 1
 
 NORMAL_INPUT = { echo set sv_hostname '"$(NAME)"' && cat; }
 LOOP_INPUT = { echo set sv_hostname '"$(NAME)"'; }
-SERVER_CMD = $(EXECUTABLE) +set fs_game $(MOD) +set sv_port $(PORT) \
+SERVER_CMD = cd $(EXECUTE_DIR) && $(EXECUTABLE) +set fs_game $(MOD) +set sv_port $(PORT) \
 			 +set g_gametype $(GT) +set g_instagib $(INSTAGIB)
 
 THIS = Makefile
@@ -57,6 +58,6 @@ destroy:
 restart: destroy local
 
 dev: restart
-	$(NORMAL_INPUT) | $(SERVER_CMD)
+	$(SERVER_CMD)
 
-.PHONY: all local production clean destroy restart dev
+.PHONY: all local production productionloop clean destroy restart dev

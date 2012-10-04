@@ -43,7 +43,7 @@ class Account {
     }
 
     void init(cClient @client) {
-        id = raw(client.getName());
+        id = raw(client.get_name());
         ip = getIP(client);
     }
 

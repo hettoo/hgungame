@@ -55,7 +55,7 @@ class Command {
         maxArgc = 0;
         int dots = 0;
         bool naming = true;
-        for (int i = 0; i < usage.len(); i++) {
+        for (uint i = 0; i < usage.len(); i++) {
             String c = usage.substr(i, 1);
             if (naming) {
                 if (c == " ")
