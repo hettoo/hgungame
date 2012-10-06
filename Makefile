@@ -11,7 +11,8 @@ INSTAGIB = 1
 
 NORMAL_INPUT = { echo set sv_hostname '"$(NAME)"' && cat; }
 LOOP_INPUT = { echo set sv_hostname '"$(NAME)"'; }
-SERVER_CMD = cd $(EXECUTE_DIR) && $(EXECUTABLE) +set fs_game $(MOD) +set sv_port $(PORT) \
+CD = cd $(EXECUTE_DIR)
+SERVER_CMD = $(EXECUTABLE) +set fs_game $(MOD) +set sv_port $(PORT) \
 			 +set g_gametype $(GT) +set g_instagib $(INSTAGIB)
 
 THIS = Makefile
@@ -42,10 +43,10 @@ local: $(GT_PK3)
 	cp $(GT_PK3) $(WSW_DIR)/$(BASE_MOD)/
 
 production: local
-	$(NORMAL_INPUT) | $(SERVER_CMD)
+	$(CD) && $(NORMAL_INPUT) | $(SERVER_CMD)
 
 productionloop: local
-	while true; do $(LOOP_INPUT) | $(SERVER_CMD); done
+	$(CD) && while true; do $(LOOP_INPUT) | $(SERVER_CMD); done
 
 clean:
 	rm -f *.pk3
@@ -58,6 +59,6 @@ destroy:
 restart: destroy local
 
 dev: restart
-	$(SERVER_CMD)
+	$(CD) && $(NORMAL_INPUT) | $(SERVER_CMD)
 
 .PHONY: all local production productionloop clean destroy restart dev
