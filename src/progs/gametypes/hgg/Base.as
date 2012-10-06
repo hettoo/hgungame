@@ -126,7 +126,6 @@ class HGGBase {
      * The countdown has started.
      */
     void countdownStarted() {
-        players.welcomeAll(gt.motd());
         GENERIC_SetUpCountdown();
     }
 

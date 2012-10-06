@@ -29,7 +29,6 @@ enum Gametypes {
 };
 
 enum CVars {
-    CV_MOTD,
     CV_ROOT,
     CV_ROOT_PASSWORD,
     CV_TOTAL
@@ -61,7 +60,6 @@ class Gametype {
         countdownTime = 5;
 
         cvars.resize(CV_TOTAL);
-        cvars[CV_MOTD] = Cvar(CVAR_BASE + "MOTD", "Have Fun!", CVAR_ARCHIVE);
         cvars[CV_ROOT]= Cvar(CVAR_BASE + "root", "", CVAR_ARCHIVE);
         cvars[CV_ROOT_PASSWORD] = Cvar(CVAR_BASE + "rootPassword", "",
                 CVAR_ARCHIVE);
@@ -187,10 +185,6 @@ class Gametype {
         G_Print("Created default config file for '" + gametype.get_name()
                 + "'\n");
         G_CmdExecute("exec " + file + " silent");
-    }
-
-    String @motd() {
-        return cvars[CV_MOTD].get_string();
     }
 
     String @root() {

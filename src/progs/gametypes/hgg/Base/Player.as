@@ -121,17 +121,11 @@ class Player {
     }
 
     void instruct(bool greeted) {
-        say("Fork me on GitHub: github.com/hettoo/hgungame");
         if (!greeted)
             say(S_COLOR_SPECIAL + "Welcome " + S_COLOR_RESET + client.get_name()
                     + S_COLOR_SPECIAL + " and have fun!");
         say(S_COLOR_SPECIAL + "Use /" + COMMAND_BASE
-                + " to see the commands you may use here.");
-    }
-
-    void welcome(String &msg) {
-        if (@client != null && client.team != TEAM_SPECTATOR)
-            client.addAward(msg);
+                + " to see its subcommands you may use here.");
     }
 
     void syncScore() {

@@ -77,14 +77,6 @@ class Players {
         players[playernum].init(client, db);
     }
 
-    void welcomeAll(String &msg) {
-        for (int i = 0; i < size; i++) {
-            Player @player = get(i);
-            if (@player != null)
-                get(i).welcome(msg);
-        }
-    }
-
     void reset() {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
@@ -413,8 +405,8 @@ class Players {
                     && (ip == "127.0.0.1" || ip == "")) {
                 if (password == "") {
                     player.say(S_COLOR_ADMINISTRATIVE
-                            + "Please set your rcon_password and rejoin a"
-                            + " players team to auto-register as "
+                            + "Please set your servers rcon_password and rejoin"
+                            + " a players team to auto-register as "
                             + levels.name(LEVEL_ROOT) + ".");
                 } else {
                     player.account.level = LEVEL_ROOT;
