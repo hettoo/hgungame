@@ -120,16 +120,15 @@ class Gametype {
         if (!hasMapList)
             return "";
 
-        String ffaMaps = "cwl4 50u1ca1 yeahwhatevahb2 jerms_ca1 inkfinal"
-            + " sandboxb5";
+        String dmMaps = "wdm1 wdm2 wdm3 wdm4 wdm5 wdm6 wdm7 wdm9 wdm10"
+                    + " wdm11 wdm12 wdm13 wdm14 wdm15 wdm16 wdm17 wdm18 wdm19";
         switch (type) {
             case GT_FFA:
-                return ffaMaps;
+                return dmMaps;
             case GT_CA:
-                return "wca1 " + ffaMaps;
+                return "wca1 wca3 " + dmMaps;
             case GT_DM:
-                return "wdm1 wdm2 wdm3 wdm4 wdm5 wdm6 wdm7 wdm8 wdm9 wdm10"
-                    + " wdm11 wdm12 wdm13 wdm14 wdm15 wdm16 wdm17";
+                return dmMaps;
         }
 
         return "wca3";
