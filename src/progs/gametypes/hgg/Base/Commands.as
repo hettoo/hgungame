@@ -35,12 +35,12 @@ class Commands {
         G_RegisterCommand(COMMAND_BASE);
 
         add("gametype", "See some global gametype info.", LEVEL_GUEST, false);
-        add("listplayers", "List all players with their ids.", LEVEL_GUEST,
+        add("list", "List all players with their ids.", LEVEL_GUEST,
                 false);
         add("pm <id> <message>...", "Send a message to a player.", LEVEL_GUEST,
                 false);
         add("stats [id]", "Show the statistics of a player.", LEVEL_GUEST);
-        add("ranking", "List all top ranked accounts with their row.",
+        add("top", "List all top ranked accounts with their row.",
                 LEVEL_GUEST);
         add("register <password> <password>", "Register yourself.",
                 LEVEL_GUEST);
@@ -140,13 +140,13 @@ class Commands {
             Players @players) {
         if (command.name == "gametype")
             cmdGametype(command, player, args, argc, players);
-        else if (command.name == "listplayers")
+        else if (command.name == "list")
             cmdListplayers(command, player, args, argc, players);
         else if (command.name == "pm")
             cmdPM(command, player, args, argc, players);
         else if (command.name == "stats")
             cmdStats(command, player, args, argc, players);
-        else if (command.name == "ranking")
+        else if (command.name == "top")
             cmdRanking(command, player, args, argc, players);
         else if (command.name == "register")
             cmdRegister(command, player, args, argc, players);
