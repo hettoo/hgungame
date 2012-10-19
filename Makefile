@@ -40,6 +40,7 @@ $(GT_PK3): $(shell find $(GT_DIR)/) $(THIS)
 	rm -r $(TMP_DIR)
 
 local: $(GT_PK3)
+	mkdir -p $(WSW_DIR)/$(BASE_MOD)/
 	cp $(GT_PK3) $(WSW_DIR)/$(BASE_MOD)/
 
 production: local
