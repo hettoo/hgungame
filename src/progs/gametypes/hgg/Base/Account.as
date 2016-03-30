@@ -51,7 +51,7 @@ class Account {
         password = newPassword;
     }
 
-    int read(String &file, int index) {
+    int read(const String &file, int index) {
         if (file.getToken(index) == "")
             return END;
 

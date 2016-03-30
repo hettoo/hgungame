@@ -30,12 +30,12 @@ class Table {
         reset();
     }
 
-    void addColumn(String &name, int size) {
+    void addColumn(const String &name, int size) {
         string += fixedField(name, size);
         sizes[columns++] = size;
     }
 
-    void add(String &field) {
+    void add(const String &field) {
         if (i == 0)
             string += "\n";
         string += fixedField(field, sizes[i]);
