@@ -226,7 +226,7 @@ String @fixedField(int n, uint size) {
     return fixedField(n + "", size);
 }
 
-String @highlight(String &s) {
+String @highlight(const String &s) {
     return S_COLOR_HIGHLIGHT + s + S_COLOR_RESET;
 }
 
