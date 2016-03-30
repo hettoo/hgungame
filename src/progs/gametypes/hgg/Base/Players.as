@@ -101,11 +101,6 @@ class Players {
                         + " claimed server rank "
                         + highlight(player.account.rank)
                         + S_COLOR_RECORD + "!");
-            } else {
-                notify(player.client.get_name() + S_COLOR_RECORD
-                        + " still holds server rank "
-                        + highlight(player.account.rank)
-                        + S_COLOR_RECORD + "!");
             }
         }
     }
