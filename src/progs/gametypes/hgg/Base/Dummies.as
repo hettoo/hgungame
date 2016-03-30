@@ -30,10 +30,11 @@ class Dummies {
     }
 
     void init() {
-        cEntity @spawn = null;
+        Entity @spawn = null;
         size = 0;
-        do {
-            @spawn = @G_FindEntityWithClassname(@spawn, "info_player_deathmatch");
+        array<Entity @> spawns = G_FindByClassname("info_player_deathmatch");
+        for (uint i = 0; i < spawns.size(); i++) {
+            @spawn = spawns[i];
             if (@spawn != null) {
                 dummies[size].init(spawn, size);
                 size++;

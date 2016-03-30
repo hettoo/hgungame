@@ -18,8 +18,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 const String NAME = "hGunGame";
-const String VERSION = "0.1-dev";
-const String AUTHOR = "^0<^7inc^2.^7hettoo^9/^7";
+const String VERSION = "0.2-dev";
+const String AUTHOR = "^7hettoo^7";
 
 const int DATA_VERSION = 1;
 
@@ -47,7 +47,7 @@ const String COMMAND_BASE = "gt";
 
 const String INDENT = "    ";
 
-const float ATTN_UNHEARABLE = 999f;
+const float ATTN_UNHEARABLE = 999.0f;
 
 const String DATA_DIR = "gtdata/";
 
@@ -92,17 +92,17 @@ String @raw(String &str) {
     return removeAdditive(clean(str));
 }
 
-String getIP(cClient @client) {
+String getIP(Client @client) {
     String ip = client.getUserInfoKey("ip");
     ip = ip.substr(0, ip.locate(":", 0));
     return ip;
 }
 
-void giveWeapon(cClient @client, int weapon, int ammo) {
+void giveWeapon(Client @client, int weapon, int ammo) {
     client.inventoryGiveItem(weapon);
 
-    cItem @item = G_GetItem(weapon);
-    cItem @ammoItem = G_GetItem(item.ammoTag);
+    Item @item = G_GetItem(weapon);
+    Item @ammoItem = G_GetItem(item.ammoTag);
 
     if (ammo == INFINITY)
         client.inventorySetCount(ammoItem.tag,
@@ -111,41 +111,41 @@ void giveWeapon(cClient @client, int weapon, int ammo) {
         client.inventorySetCount(ammoItem.tag, ammo);
 }
 
-void showAward(cClient @client, String &msg) {
+void showAward(Client @client, String &msg) {
     client.addAward(S_COLOR_ITEM_AWARD + msg);
 }
 
-void showItemAward(cClient @client, int tag) {
-    cItem @item = G_GetItem(tag);
+void showItemAward(Client @client, int tag) {
+    Item @item = G_GetItem(tag);
     String name = item.get_name().tolower();
     showAward(client, "You've got a" + (isVowel(item.get_shortName()) ? "n"
                 : "") + " " + name + "!");
 }
 
-void awardWeapon(cClient @client, int weapon, int ammo, bool show) {
+void awardWeapon(Client @client, int weapon, int ammo, bool show) {
     giveWeapon(client, weapon, ammo);
     if (show)
         showItemAward(client, weapon);
 }
 
-void awardWeapon(cClient @client, int weapon, int ammo) {
+void awardWeapon(Client @client, int weapon, int ammo) {
     awardWeapon(client, weapon, ammo, true);
 }
 
-int clientAmmo(cClient @client, int weapon) {
+int clientAmmo(Client @client, int weapon) {
     if (weapon == WEAP_NONE)
         return INFINITY;
-    cItem @item = G_GetItem(weapon);
-    cItem @ammoItem = G_GetItem(item.ammoTag);
+    Item @item = G_GetItem(weapon);
+    Item @ammoItem = G_GetItem(item.ammoTag);
     return client.inventoryCount(ammoItem.tag);
 }
 
-bool decreaseAmmo(cClient @client, int weapon) {
+bool decreaseAmmo(Client @client, int weapon) {
     if(weapon == WEAP_NONE)
         return false;
 
-    cItem @item = G_GetItem(weapon);
-    cItem @ammoItem = G_GetItem(item.ammoTag);
+    Item @item = G_GetItem(weapon);
+    Item @ammoItem = G_GetItem(item.ammoTag);
     int ammo = client.inventoryCount(ammoItem.tag) - 1;
     if (ammo >= 0) {
         client.inventorySetCount(ammoItem.tag, ammo);
@@ -156,12 +156,12 @@ bool decreaseAmmo(cClient @client, int weapon) {
     return false;
 }
 
-bool increaseAmmo(cClient @client, int weapon) {
+bool increaseAmmo(Client @client, int weapon) {
     if(weapon == WEAP_NONE)
         return false;
 
-    cItem @item = G_GetItem(weapon);
-    cItem @ammoItem = G_GetItem(item.ammoTag);
+    Item @item = G_GetItem(weapon);
+    Item @ammoItem = G_GetItem(item.ammoTag);
     int ammo = client.inventoryCount(ammoItem.tag) + 1;
     client.inventorySetCount(ammoItem.tag, ammo);
 
@@ -260,15 +260,15 @@ void randomAnnouncerSound(String &sound) {
     randomAnnouncerSound(GS_MAX_TEAMS, sound);
 }
 
-void clientSound(cClient @client, int sound, int channel) {
+void clientSound(Client @client, int sound, int channel) {
     G_Sound(client.getEnt(), channel, sound, ATTN_UNHEARABLE);
 }
 
-void voice(cClient @client, int sound) {
+void voice(Client @client, int sound) {
     clientSound(client, sound, CHAN_VOICE);
 }
 
-void painSound(cClient @client, int sound) {
+void painSound(Client @client, int sound) {
     clientSound(client, sound, CHAN_PAIN);
 }
 

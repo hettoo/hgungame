@@ -43,7 +43,7 @@ class Levels {
         iconRoot = G_ImageIndex("gfx/hud/icons/backpack/riotbp");
     }
 
-    String @name(int level) {
+    const String @name(int level) {
         switch (level) {
             case LEVEL_GUEST:
                 return "Guest";
@@ -61,23 +61,23 @@ class Levels {
         return "?";
     }
 
-    String @greeting(int level, String @name) {
+    const String @greeting(int level, const String @player) {
         switch (level) {
             case LEVEL_REGULAR_USER:
                 return S_COLOR_SPECIAL + "Welcome " + highlight(name(level))
-                    + " " + name + S_COLOR_SPECIAL + "!";
+                    + " " + player + S_COLOR_SPECIAL + "!";
             case LEVEL_MEMBER:
                 return S_COLOR_SPECIAL + "All welcome " + highlight(name(level))
-                    + " " + name + S_COLOR_SPECIAL + " to the game!";
+                    + " " + player + S_COLOR_SPECIAL + " to the game!";
             case LEVEL_VIP:
                 return S_COLOR_SPECIAL + "Ohohhh! " + highlight(name(level))
-                    + " " + name + S_COLOR_SPECIAL + " entered the game!";
+                    + " " + player + S_COLOR_SPECIAL + " entered the game!";
             case LEVEL_ADMIN:
                 return S_COLOR_SPECIAL + "Stand up! " + highlight(name(level))
-                    + " " + name + S_COLOR_SPECIAL + " entered the game!";
+                    + " " + player + S_COLOR_SPECIAL + " entered the game!";
             case LEVEL_ROOT:
                 return S_COLOR_SPECIAL + "Attention! " + highlight(name(level))
-                    + " " + name + S_COLOR_SPECIAL + " entered the game!";
+                    + " " + player + S_COLOR_SPECIAL + " entered the game!";
         }
         return "";
     }

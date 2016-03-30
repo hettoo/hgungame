@@ -29,8 +29,6 @@ class Players {
     Dummies dummies;
     bool teamHUD;
 
-    bool firstBlood;
-
     int bestScore;
     int secondScore;
 
@@ -44,8 +42,6 @@ class Players {
         players.resize(MAX_PLAYERS);
         size = 0;
         teamHUD = false;
-
-        firstBlood = true;
 
         bestScore = UNKNOWN;
         secondScore = UNKNOWN;
@@ -66,7 +62,7 @@ class Players {
         return players[playernum];
     }
 
-    void initClient(cClient @client) {
+    void initClient(Client @client) {
         int playernum = client.playerNum;
         Player @player = get(playernum);
         if (@player == null) {
@@ -88,19 +84,9 @@ class Players {
         }
     }
 
-    void announceRow(cClient @target, cClient @attacker) {
+    void announceRow(Client @target, Client @attacker) {
         int row = get(target.playerNum).row;
-        target.addAward(highlight("You made a row of " + highlightRow(row)
-                    + "!"));
-        String msg = target.get_name() + highlight(" made a row of "
-            + highlightRow(row) + "!");
-        if (@target == @attacker)
-            msg += highlight(" He fragged ") + S_COLOR_BAD + "himself"
-                + highlight("!");
-        else if (@attacker != null)
-            msg += highlight(" He was fragged by ") + attacker.get_name()
-                + highlight("!");
-        notify(msg);
+        target.addAward(highlight("You made a spree of " + highlightRow(row) + "!"));
     }
 
     void tryUpdateRank(Player @player) {
@@ -124,7 +110,7 @@ class Players {
         }
     }
 
-    void checkRow(cClient @target, cClient @attacker) {
+    void checkRow(Client @target, Client @attacker) {
         if (@target == null)
             return;
 
@@ -181,7 +167,7 @@ class Players {
         }
     }
 
-    void award(cClient @client, int row, bool real, int weapon, int ammo) {
+    void award(Client @client, int row, bool real, int weapon, int ammo) {
         Player @player = get(client.playerNum);
         if (real) {
             player.addScore(1);
@@ -218,7 +204,6 @@ class Players {
             get(client.playerNum).showRow();
 
         if (weapons.weak(weapon)) {
-            int award;
             for (int i = 0; i <= player.row
                     && (award = weapons.award(i)) != WEAP_TOTAL; i++) {
                 if (weapons.heavy(award))
@@ -227,19 +212,19 @@ class Players {
         }
     }
 
-    void award(cClient @client, int row, bool real, int weapon) {
+    void award(Client @client, int row, bool real, int weapon) {
         award(client, row, true, weapon, INFINITY);
     }
 
-    void award(cClient @client, int row, int weapon) {
+    void award(Client @client, int row, int weapon) {
         award(client, row, true, weapon);
     }
 
-    void award(cClient @client, int weapon) {
+    void award(Client @client, int weapon) {
         award(client, get(client.playerNum).row, weapon);
     }
 
-    void killedAnyway(cClient @target, cClient @attacker, cClient @inflictor) {
+    void killedAnyway(Client @target, Client @attacker, Client @inflictor) {
         if (@attacker == null || @attacker == @target)
             return;
 
@@ -251,14 +236,9 @@ class Players {
         award(attacker, weapon);
         checkDecreaseAmmo(attacker, weapon);
         player.updateAmmo();
-        if (forReal() && firstBlood) {
-            attacker.addAward(highlight("First blood!"));
-            notify(attacker.get_name() + highlight(" drew first blood!"));
-            firstBlood = false;
-        }
     }
 
-    void killed(cClient @target, cClient @attacker, cClient @inflictor) {
+    void killed(Client @target, Client @attacker, Client @inflictor) {
         if (match.getState() > MATCH_STATE_PLAYTIME || @target == null)
             return;
 
@@ -272,28 +252,28 @@ class Players {
         killedAnyway(target, attacker, inflictor);
     }
 
-    void checkDecreaseAmmo(cClient @client, int weapon) {
+    void checkDecreaseAmmo(Client @client, int weapon) {
         if (weapon < WEAP_TOTAL && weapons.ammo(weapon) != INFINITY) {
             if (!decreaseAmmo(client, weapon) && client.weapon == weapon)
                 weapons.selectBest(client);
         }
     }
 
-    void giveSpawnWeapons(cClient @client) {
+    void giveSpawnWeapons(Client @client) {
         Player @player = get(client.playerNum);
         weapons.giveDefault(client);
         for (int i = 1; i <= player.row; i++) {
             int award = weapons.award(i);
             if (award < WEAP_TOTAL) {
                 int ammo = player.getAmmo(award);
-                award(client, i, false, WEAP_NONE,
+                this.award(client, i, false, WEAP_NONE,
                         weapons.ammo(award) == INFINITY
                         ? INFINITY : player.getAmmo(award));
             }
         }
     }
 
-    void respawn(cClient @client) {
+    void respawn(Client @client) {
         Player @player = get(client.playerNum);
         player.alive = true;
 
@@ -337,7 +317,7 @@ class Players {
     void updateBest(int i) {
         Player @player = get(i);
         if (@player != null) {
-            cClient @client = player.client;
+            Client @client = player.client;
             if (@client != null && client.team != TEAM_SPECTATOR) {
                 if (player.score >= bestScore || bestScore == UNKNOWN) {
                     secondScore = bestScore;
@@ -396,7 +376,7 @@ class Players {
         updateHUDTeams(GS_MAX_TEAMS);
     }
 
-    void newPlayer(cClient @client) {
+    void newPlayer(Client @client) {
         Player @player = get(client.playerNum);
         if (player.ipCheck()) {
             String ip = getIP(player.client);
@@ -434,7 +414,7 @@ class Players {
         }
     }
 
-    void newSpectator(cClient @client) {
+    void newSpectator(Client @client) {
         Player @player = get(client.playerNum);
         player.alive = false;
         checkRow(client, null);
@@ -444,14 +424,14 @@ class Players {
         }
     }
 
-    void namechange(cClient @client) {
+    void namechange(Client @client) {
         initClient(client);
         Player @player = get(client.playerNum);
         if (player.client.team != TEAM_SPECTATOR)
             player.ipCheck();
     }
 
-    void disconnect(cClient @client) {
+    void disconnect(Client @client) {
         int playernum = client.playerNum;
         @players[playernum] = null;
         for (int i = playernum; i < size; i++) {
@@ -466,20 +446,10 @@ class Players {
             Player @player = get(i);
             if (@player != null && @player.client != null
                     && player.client.state() >= CS_SPAWNED) {
-                cEntity @ent = player.client.getEnt();
+                Entity @ent = player.client.getEnt();
                 if (ent.team != TEAM_SPECTATOR && ent.health > ent.maxHealth)
                     ent.health -= (frameTime * 0.001f);
             }
-        }
-    }
-
-    void chargeGunblades() {
-        for (int i = 0; i < size; i++) {
-            Player @player = get(i);
-            if (@player != null && @player.client != null
-                    && player.client.state() >= CS_SPAWNED
-                    && player.client.getEnt().team != TEAM_SPECTATOR)
-                GENERIC_ChargeGunblade(player.client);
         }
     }
 
@@ -500,12 +470,12 @@ class Players {
         }
     }
 
-    int countAlive(int team, cClient @target) {
+    int countAlive(int team, Client @target) {
         int n = 0;
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
             if (@player != null) {
-                cClient @client = player.client;
+                Client @client = player.client;
                 if (@client != null && @client != @target && client.team == team
                         && !client.getEnt().isGhosting())
                     n++;
@@ -518,11 +488,11 @@ class Players {
         return countAlive(team, null);
     }
 
-    Player @getAlive(int team, cClient @target) {
+    Player @getAlive(int team, Client @target) {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
             if (@player != null) {
-                cClient @client = player.client;
+                Client @client = player.client;
                 if (@client != null && @client != @target && client.team == team
                         && !client.getEnt().isGhosting())
                     return player;
@@ -540,7 +510,7 @@ class Players {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
             if (@player != null) {
-                cClient @client = player.client;
+                Client @client = player.client;
                 if (@client != null && client.team != TEAM_SPECTATOR)
                     n++;
             }
@@ -552,7 +522,7 @@ class Players {
         for (int i = 0; i < size; i++) {
             Player @player = get(i);
             if (@player != null) {
-                cClient @client = player.client;
+                Client @client = player.client;
                 if (@client != null && client.team == team)
                     player.say(msg);
             }
@@ -594,7 +564,7 @@ class Players {
         }
     }
 
-    void dummyKilled(int id, cClient @attacker, cClient @inflictor) {
+    void dummyKilled(int id, Client @attacker, Client @inflictor) {
         painSound(attacker, soundDummyKilled);
         killedAnyway(null, attacker, inflictor);
         Dummy @dummy = dummies.get(id);

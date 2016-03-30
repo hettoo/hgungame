@@ -24,15 +24,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 HGG hgg;
 
-bool GT_Command(cClient @client, String &cmd, String &args, int argc) {
+bool GT_Command(Client @client, const String &cmd, const String &args, int argc) {
     return hgg.command(client, cmd, args, argc);
 }
 
-bool GT_UpdateBotStatus(cEntity @self) {
+bool GT_UpdateBotStatus(Entity @self) {
     return hgg.updateBotStatus(self);
 }
 
-cEntity @GT_SelectSpawnPoint(cEntity @self) {
+Entity @GT_SelectSpawnPoint(Entity @self) {
     return hgg.selectSpawnPoint(self);
 }
 
@@ -40,11 +40,11 @@ String @GT_ScoreboardMessage(uint maxlen) {
     return hgg.scoreboardMessage(maxlen);
 }
 
-void GT_scoreEvent(cClient @client, String &scoreEvent, String &args) {
+void GT_ScoreEvent(Client @client, const String &scoreEvent, const String &args) {
     hgg.scoreEvent(client, scoreEvent, args);
 }
 
-void GT_playerRespawn(cEntity @ent, int oldTeam, int newTeam) {
+void GT_PlayerRespawn(Entity @ent, int oldTeam, int newTeam) {
     hgg.playerRespawn(ent, oldTeam, newTeam);
 }
 
@@ -85,7 +85,7 @@ void GT_InitGametype() {
     hgg.initGametype();
 }
 
-void dummy_die(cEntity @self, cEntity @inflictor, cEntity @attacker)
+void dummy_die(Entity @self, Entity @inflictor, Entity @attacker)
 {
     hgg.dummyKilled(self, attacker, inflictor);
 }

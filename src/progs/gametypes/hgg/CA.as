@@ -99,15 +99,15 @@ class HGG : HGGBase {
             players.teamScored(TEAM_BETA);
         }
 
-        @spawnAlpha = null;
-        @spawnBeta = null;
+        @alphaSpawn = null;
+        @betaSpawn = null;
     }
 
-    void oneVersus(int count, int team, cClient @target) {
+    void oneVersus(int count, int team, Client @target) {
         Player @alive = players.getAlive(team, target);
         if (count == 1) {
-            int otherTeam = otherTeam(team);
-            Player @otherAlive = players.getAlive(otherTeam, target);
+            int other = otherTeam(team);
+            Player @otherAlive = players.getAlive(other, target);
             notify(ONE_VS_ONE);
             alive.client.addAward(S_COLOR_SPECIAL + ONE_VS_ONE);
             otherAlive.client.addAward(S_COLOR_SPECIAL + ONE_VS_ONE);
@@ -118,7 +118,7 @@ class HGG : HGGBase {
         }
     }
 
-    void checkTeams(cClient @target) {
+    void checkTeams(Client @target) {
         int countAlpha = players.countAlive(TEAM_ALPHA, target);
         int countBeta = players.countAlive(TEAM_BETA, target);
         if (countAlpha == 0 || countBeta == 0) {
@@ -173,7 +173,7 @@ class HGG : HGGBase {
             countDownEnd();
     }
 
-    void newSpectator(cClient @client) {
+    void newSpectator(Client @client) {
         bool wasAlive = players.get(client.playerNum).alive;
         HGGBase::newSpectator(client);
 
@@ -184,7 +184,7 @@ class HGG : HGGBase {
             checkTeams();
     }
 
-    void killed(cClient @attacker, cClient @target, cClient @inflictor) {
+    void killed(Client @attacker, Client @target, Client @inflictor) {
         HGGBase::killed(attacker, target, inflictor);
 
         if (!forReal())

@@ -21,7 +21,7 @@ const String DUMMY_MODEL = "bigvic";
 const int DUMMY_RESPAWN = 40;
 
 class Dummy {
-    cEntity @ent;
+    Entity @ent;
     int id;
     Vec3 pos;
     Vec3 mins;
@@ -34,7 +34,7 @@ class Dummy {
         respawn = UNKNOWN;
     }
 
-    void init(cEntity @spawn, int newID) {
+    void init(Entity @spawn, int newID) {
         pos = spawn.origin;
         id = newID;
     }

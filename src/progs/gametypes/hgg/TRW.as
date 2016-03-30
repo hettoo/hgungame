@@ -34,7 +34,7 @@ class HGG : HGGBase {
         HGGBase::initGametype();
     }
 
-    void killed(cClient @attacker, cClient @target, cClient @inflictor) {
+    void killed(Client @attacker, Client @target, Client @inflictor) {
         HGGBase::killed(attacker, target, inflictor);
         Player @player = players.get(attacker.playerNum);
         if (player.row % SPECIAL_ROW == 0 && @attacker != @target && forReal())

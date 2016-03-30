@@ -25,7 +25,7 @@ enum AccountStates {
 
 class Player {
     bool inited;
-    cClient @client;
+    Client @client;
     bool alive;
     bool greeted;
     int[] ammo;
@@ -44,7 +44,7 @@ class Player {
         ammo.resize(WEAP_TOTAL);
     }
 
-    void init(cClient @newClient, Database @db) {
+    void init(Client @newClient, Database @db) {
         bool update = @client == @newClient;
         if (!update) {
             if (@newClient == null || inited)

@@ -101,7 +101,7 @@ class Weapons {
         return WEAP_TOTAL;
     }
 
-    void selectBest(cClient @client) {
+    void selectBest(Client @client) {
         int best = gametype.get_isInstagib() ? WEAP_INSTAGUN : WEAP_GUNBLADE;
 
         int weapon;
@@ -112,7 +112,7 @@ class Weapons {
         client.selectWeapon(best);
     }
 
-    void giveDefault(cClient @client) {
+    void giveDefault(Client @client) {
         if (gametype.get_isInstagib())
             giveWeapon(client, WEAP_INSTAGUN, INFINITY);
         else

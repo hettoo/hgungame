@@ -77,7 +77,7 @@ class Command {
                     if (dots == 3)
                         maxArgc = INFINITY;
                 } else {
-                    for (int i = 0; i < dots; i++)
+                    for (int j = 0; j < dots; j++)
                         newUsage += ".";
                     newUsage += c;
                     dots = 0;

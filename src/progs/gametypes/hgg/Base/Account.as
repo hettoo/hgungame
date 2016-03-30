@@ -42,7 +42,7 @@ class Account {
         minutesPlayed = 0;
     }
 
-    void init(cClient @client) {
+    void init(Client @client) {
         id = raw(client.get_name());
         ip = getIP(client);
     }

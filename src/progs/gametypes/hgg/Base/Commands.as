@@ -88,7 +88,7 @@ class Commands {
         return null;
     }
 
-    bool handle(cClient @client, String &cmd, String &args, int argc,
+    bool handle(Client @client, String &cmd, String &args, int argc,
             Players @players) {
         if (cmd == "cvarinfo")
             return cmdCVarinfo(client, args, argc, players);
@@ -125,7 +125,7 @@ class Commands {
         return true;
     }
 
-    bool cmdCVarinfo(cClient @client, String &args, int argc,
+    bool cmdCVarinfo(Client @client, String &args, int argc,
             Players @players) {
         GENERIC_CheatVarResponse(client, "cvarinfo", args, argc);
         return true;
@@ -480,7 +480,7 @@ class Commands {
             Player @other = players.get(i);
             if (@other != null && @other.client != null
                     && other.client.team != TEAM_SPECTATOR) {
-                cEntity @ent = other.client.getEnt();
+                Entity @ent = other.client.getEnt();
                 Vec3 angles = ent.angles;
                 for (int j = 0; j < 360; j += 60) {
                     angles.y = j;

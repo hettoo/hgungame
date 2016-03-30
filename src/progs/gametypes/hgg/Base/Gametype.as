@@ -116,7 +116,7 @@ class Gametype {
         gametype.set_author(AUTHOR);
     }
 
-    String @mapList() {
+    const String @mapList() {
         if (!hasMapList)
             return "";
 
@@ -186,11 +186,11 @@ class Gametype {
         G_CmdExecute("exec " + file + " silent");
     }
 
-    String @root() {
+    const String @root() {
         return cvars[CV_ROOT].get_string();
     }
 
-    String @rootPassword() {
+    const String @rootPassword() {
         return cvars[CV_ROOT_PASSWORD].get_string();
     }
 }

@@ -17,8 +17,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-const String SB_BASE_LAYOUT = "%p 18 %n 112 %s 52 %i 39 %s 39 %l 52 %i 26";
-const String SB_BASE_TITLE = "L Name Clan Scr Row Ping Tm";
+const String SB_BASE_LAYOUT = "%n 112 %s 52 %i 39 %s 39 %l 52 %i 26";
+const String SB_BASE_TITLE = "Name Clan Scr Row Ping Tm";
+//const String SB_BASE_LAYOUT = "%p 18 %n 112 %s 52 %i 39 %s 39 %l 52 %i 26";
+//const String SB_BASE_TITLE = "L Name Clan Scr Row Ping Tm";
 
 enum ScoreboardStates {
     SB_WARMUP,
@@ -68,7 +70,7 @@ class Scoreboard {
     }
 
     void addTeam(String &scoreboard, int id, int maxLen, Players @players) {
-        cTeam @team = @G_GetTeam(id);
+        Team @team = @G_GetTeam(id);
         stringAddMaxed(scoreboard, "&t " + id + " " + team.stats.score + " "
                 + team.ping + " ", maxLen);
         addTeamPlayers(scoreboard, id, maxLen, players);
@@ -76,27 +78,29 @@ class Scoreboard {
 
     void addTeamPlayers(String &scoreboard, int id, int maxLen,
             Players @players) {
-        cTeam @team = @G_GetTeam(id);
+        Team @team = @G_GetTeam(id);
         for (int i = 0; @team.ent(i) != null; i++)
             addPlayer(scoreboard, team.ent(i), maxLen, players);
     }
 
-    void addPlayer(String &scoreboard, cEntity @ent, int maxLen,
+    void addPlayer(String &scoreboard, Entity @ent, int maxLen,
             Players @players) {
         Player @player = players.get(ent.client.playerNum);
-        int id = ent.isGhosting() && forReal() ? -(ent.playerNum + 1)
-            : ent.playerNum;
-        String registeredColor = player.state == AS_IDENTIFIED
-            ? S_COLOR_PERSISTENT : S_COLOR_TEMPORARY;
-        String entry = "&p " + players.levels.icon(player.account.level) + " "
-            + id + " " + ent.client.get_clanName() + " " + ent.client.stats.score
-            + " " + registeredColor + player.account.row + " "
-            + ent.client.ping + " " + player.minutesPlayed + " ";
-        if (state == SB_WARMUP)
-            entry += (ent.client.isReady() ? iconYes : iconNo) + " ";
-        else if (state == SB_MATCH)
-            entry += players.weapons.icon(players.weapons.award(player.row))
-                + " ";
-        stringAddMaxed(scoreboard, entry, maxLen);
+        if (@player != null) {
+            int id = ent.isGhosting() && forReal() ? -(ent.playerNum + 1)
+                : ent.playerNum;
+            String registeredColor = player.state == AS_IDENTIFIED
+                ? S_COLOR_PERSISTENT : S_COLOR_TEMPORARY;
+            String entry = "&p " + //players.levels.icon(player.account.level) + " "
+                + id + " " + ent.client.get_clanName() + " " + ent.client.stats.score
+                + " " + registeredColor + player.account.row + " "
+                + ent.client.ping + " " + player.minutesPlayed + " ";
+            if (state == SB_WARMUP)
+                entry += (ent.client.isReady() ? iconYes : iconNo) + " ";
+            else if (state == SB_MATCH)
+                entry += players.weapons.icon(players.weapons.award(player.row))
+                    + " ";
+            stringAddMaxed(scoreboard, entry, maxLen);
+        }
     }
 }

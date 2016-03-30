@@ -30,8 +30,8 @@ class HGGBase {
     Scoreboard scoreboard;
     Commands commands;
 
-    cEntity @alphaSpawn;
-    cEntity @betaSpawn;
+    Entity @alphaSpawn;
+    Entity @betaSpawn;
 
     uint lastSecond;
     uint lastMinuteSecond;
@@ -61,12 +61,12 @@ class HGGBase {
      * Player, and non-item entities don't have any weight set. So they will be
      * ignored by the bot unless a weight is assigned here.
      */
-    bool updateBotStatus(cEntity @self) {
+    bool updateBotStatus(Entity @self) {
         GENERIC_UpdateBotStatus(self);
-        cEntity @goal;
-        cBot @bot = self.client.getBot();
+        Entity @goal;
+        Bot @bot = self.client.getBot();
         float offensiveness = GENERIC_OffensiveStatus(self);
-        for (int i = 0; (@goal = bot.getGoalEnt(i)) != null; i++) {
+        for (int i = 0; (@goal = AI::GetGoalEntity(i)) != null; i++) {
             if (goal.get_classname() == "dummy")
                 bot.setGoalWeight(i, DUMMY_WEIGHT_MULTIPLIER
                         * GENERIC_PlayerWeight(self, goal) * offensiveness);
@@ -77,19 +77,19 @@ class HGGBase {
     /*
      * Select a spawning point for a player.
      */
-    cEntity @selectSpawnPoint(cEntity @self) {
-        cEntity @random = GENERIC_SelectBestRandomSpawnPoint(self,
+    Entity @selectSpawnPoint(Entity @self) {
+        Entity @random = GENERIC_SelectBestRandomSpawnPoint(self,
                 "info_player_deathmatch");
         if (gt.spawnSystem != SPAWNSYSTEM_INSTANT && gametype.isTeamBased) {
             if (@alphaSpawn == null) {
                 @alphaSpawn = random;
-                cEntity @max;
-                int maxDist = UNKNOWN;
-                do {
-                    @betaSpawn = G_FindEntityWithClassname(betaSpawn,
-                            "info_player_deathmatch");
+                Entity @max;
+                float maxDist = UNKNOWN;
+                array<Entity @> ents = G_FindByClassname("info_player_deathmatch");
+                for (uint i = 0; i < ents.size(); i++) {
+                    @betaSpawn = ents[i];
                     if (@betaSpawn != null) {
-                        int dist = alphaSpawn.origin.distance(
+                        float dist = alphaSpawn.origin.distance(
                                 betaSpawn.origin);
                         if (dist > maxDist || maxDist == UNKNOWN) {
                             @max = betaSpawn;
@@ -107,7 +107,7 @@ class HGGBase {
     /*
      * A client has issued a command.
      */
-    bool command(cClient @client, String &cmd, String &args, int argc) {
+    bool command(Client @client, String &cmd, String &args, int argc) {
         return commands.handle(client, cmd, args, argc, players);
     }
 
@@ -116,8 +116,6 @@ class HGGBase {
      */
     void warmupStarted() {
         scoreboard.setLayout(SB_WARMUP);
-        CreateSpawnIndicators("info_player_deathmatch", gametype.isTeamBased
-                ? TEAM_BETA : TEAM_PLAYERS);
         players.dummies.spawn();
         GENERIC_SetUpWarmup();
     }
@@ -144,7 +142,6 @@ class HGGBase {
         lastSecond = levelTime / 1000;
         lastMinuteSecond = lastSecond;
         scoreboard.setLayout(SB_MATCH);
-        DeleteSpawnIndicators();
         players.updateBest();
         players.updateHUD();
         genericPlaytimeStarted();
@@ -192,7 +189,7 @@ class HGGBase {
     /*
      * A player has been killed.
      */
-    void killed(cClient @attacker, cClient @target, cClient @inflictor) {
+    void killed(Client @attacker, Client @target, Client @inflictor) {
         players.killed(target, attacker, inflictor);
     }
 
@@ -201,13 +198,13 @@ class HGGBase {
      * killing opponents, like capturing a flag.
      * Warning: client can be null.
      */
-    void scoreEvent(cClient @client, String &scoreEvent, String &args) {
+    void scoreEvent(Client @client, String &scoreEvent, String &args) {
         if (scoreEvent == "kill") {
-            cEntity @target = G_GetEntity(args.getToken(0).toInt());
-            cEntity @inflictor = G_GetEntity(args.getToken(1).toInt());
+            Entity @target = G_GetEntity(args.getToken(0).toInt());
+            Entity @inflictor = G_GetEntity(args.getToken(1).toInt());
 
-            cClient @targetClient = null;
-            cClient @inflictorClient = null;
+            Client @targetClient = null;
+            Client @inflictorClient = null;
             if (@target != null)
                 @targetClient = target.client;
             if (@inflictor != null)
@@ -276,28 +273,27 @@ class HGGBase {
         GENERIC_Think();
         if (!gametype.get_isInstagib())
             players.fixHealth();
-        players.chargeGunblades();
         checkTime();
     }
 
     /*
      * Someone moved from the spectators to a player team.
      */
-    void newPlayer(cClient @client) {
+    void newPlayer(Client @client) {
         players.newPlayer(client);
     }
 
     /*
      * Someone moved from a player team to the spectators.
      */
-    void newSpectator(cClient @client) {
+    void newSpectator(Client @client) {
         players.newSpectator(client);
     }
 
     /*
      * A non-spectator is respawning.
      */
-    void respawn(cClient @client) {
+    void respawn(Client @client) {
         players.respawn(client);
     }
 
@@ -306,7 +302,7 @@ class HGGBase {
      * changing team, being moved to ghost state, be placed in respawn queue,
      * being spawned from spawn queue, etc.
      */
-    void playerRespawn(cEntity @ent, int oldTeam, int newTeam) {
+    void playerRespawn(Entity @ent, int oldTeam, int newTeam) {
         if (oldTeam == TEAM_SPECTATOR && newTeam != TEAM_SPECTATOR)
             newPlayer(ent.client);
         else if (oldTeam != TEAM_SPECTATOR && newTeam == TEAM_SPECTATOR)
@@ -363,7 +359,7 @@ class HGGBase {
     /*
      * A dummy has been killed.
      */
-    void dummyKilled(cEntity @self, cEntity @attacker, cEntity @inflictor) {
+    void dummyKilled(Entity @self, Entity @attacker, Entity @inflictor) {
         players.dummyKilled(self.count, attacker.client, inflictor.client);
     }
 }
